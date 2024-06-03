@@ -12,6 +12,7 @@ class JadwalVotes extends Model
 
     protected $fillable = [
         'periode_id',
+        'tanggal_result_vote',
         'tanggal_awal_vote',
         'tanggal_akhir_vote',
         'tanggal_orasi_vote',

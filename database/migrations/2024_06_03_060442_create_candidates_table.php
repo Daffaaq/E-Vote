@@ -19,7 +19,7 @@ return new class extends Migration
             $table->longText('misi');
             $table->longText('desc');
             $table->string('foto')->nullable();
-            $table->string('prodi');
+            $table->string('Kelas');
             $table->string('link')->nullable();
             $table->unsignedBigInteger('periode_id');
             $table->foreign('periode_id')->references('id')->on('periode');

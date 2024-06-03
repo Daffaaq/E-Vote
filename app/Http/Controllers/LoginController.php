@@ -7,31 +7,32 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    public function indexlandingpage()
+    {
+        return view('landingpage.index');
+    }
     public function index()
     {
-        return view('login');
+        return view('Auth.login');
     }
 
     function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email', // Mengganti 'username' dengan 'email' dan menambahkan validasi email
+            'username' => 'required', // Mengganti 'username' dengan 'username' dan menambahkan validasi username
             'password' => 'required'
         ], [
-            'email.required' => 'Email wajib diisi', // Mengganti pesan validasi
-            'email.email' => 'Format email tidak valid', // Menambahkan pesan validasi untuk format email
+            'username.required' => 'username wajib diisi', // Mengganti pesan validasi
             'password.required' => 'Password wajib diisi',
         ]);
 
         $infologin = [
-            'email' => $request->email, // Menggunakan 'email' dari form input
+            'username' => $request->username, // Menggunakan 'email' dari form input
             'password' => $request->password,
         ];
 
         if (Auth::attempt($infologin)) {
             $user = Auth::user();
-            // dd($infologin);
-            // dd($user);
             if ($user->role === 'admin') {
                 return redirect('dashboardAdmin');
             } elseif ($user->role === 'superadmin') {

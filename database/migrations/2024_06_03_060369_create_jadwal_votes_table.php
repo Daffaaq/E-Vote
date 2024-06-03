@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('periode_id');
             $table->foreign('periode_id')->references('id')->on('periode');
+            $table->date('tanggal_result_vote');
             $table->date('tanggal_awal_vote');
             $table->date('tanggal_akhir_vote');
             $table->date('tanggal_orasi_vote');

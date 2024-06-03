@@ -21,7 +21,7 @@ class CheckUserStatus
     {
         $user = Auth::user();
 
-        if ($user && $user->status !== $status) {
+        if ($user && $user->role === 'voter' && $user->status !== 1) {
             Auth::logout(); // Logout pengguna
             return redirect()->route('login')->withErrors('Akun Anda tidak aktif. Harap hubungi administrator.');
         }

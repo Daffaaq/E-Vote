@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,24 +16,21 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Route::get('/', function () {
-//     return view('welcome');
+//     return view('superadmin.layouts.content');
 // });
 
 Route::middleware(['guest'])->group(function () {
-    Route::get('/', [
-        LoginController::class, 'index'
-    ])->name('login');
-    Route::post('/', [LoginController::class, 'login']);
+    Route::get('/', [LoginController::class, 'indexlandingpage'])->name('landing-page');
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
+    Route::post('/loginProcess', [LoginController::class, 'login'])->name('loginProcess');
 });
 
-Route::get('/logout', [LoginController::class, 'logout']);
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::middleware(['auth', 'checkStatus:aktif', 'check.role:superadmin'])->group(function () {
-
+Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
+    Route::get('/dashboardSuperadmin', [DashboardController::class, 'indexSuperadmin']);
 });
-Route::middleware(['auth', 'checkStatus:aktif', 'check.role:admin'])->group(function () {
-
+Route::middleware(['auth', 'check.role:admin'])->group(function () {
 });
-Route::middleware(['auth', 'checkStatus:aktif', 'check.role:voter'])->group(function () {
-    
+Route::middleware(['auth', 'checkVoterStatus', 'check.role:voter'])->group(function () {
 });
