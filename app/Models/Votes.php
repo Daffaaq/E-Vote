@@ -17,7 +17,6 @@ class Votes extends Model
         'candidate_id',
         'jadwal_votes_id',
         'status_vote',
-        'tanggal_vote',
         'jam_vote',
     ];
 

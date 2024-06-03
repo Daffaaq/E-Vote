@@ -21,7 +21,6 @@ return new class extends Migration
             $table->foreign('candidate_id')->references('id')->on('candidates');
             $table->unsignedBigInteger('jadwal_votes_id');
             $table->foreign('jadwal_votes_id')->references('id')->on('jadwal_votes');
-            $table->tinyInteger('status_vote')->comment('1: active, 2: nonactive');
             $table->date('tanggal_vote');
             $table->time('jam_vote');
             $table->timestamps();

@@ -37,7 +37,7 @@ class UsersTableSeeder extends Seeder
 
         // Tambahkan pengguna dengan role voter
         $voterId1 = DB::table('users')->insertGetId([
-            'username' => 'Student 1',
+            'username' => '11223344',
             'foto_profile' => null,
             'role' => 'voter',
             'password' => Hash::make('voterpassword1'), // Ganti dengan password yang lebih aman
@@ -46,7 +46,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $voterId2 = DB::table('users')->insertGetId([
-            'username' => 'Student 2',
+            'username' => '44332211',
             'foto_profile' => null,
             'role' => 'voter',
             'password' => Hash::make('voterpassword2'), // Ganti dengan password yang lebih aman
@@ -54,7 +54,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now(),
         ]);
         $voterId2 = DB::table('users')->insertGetId([
-            'username' => 'Student 3',
+            'username' => '44332219',
             'foto_profile' => null,
             'role' => 'voter',
             'password' => Hash::make('voterpassword2'), // Ganti dengan password yang lebih aman
@@ -62,7 +62,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now(),
         ]);
         $voterId2 = DB::table('users')->insertGetId([
-            'username' => 'Student 4',
+            'username' => '44332218',
             'foto_profile' => null,
             'role' => 'voter',
             'password' => Hash::make('voterpassword2'), // Ganti dengan password yang lebih aman
@@ -73,7 +73,7 @@ class UsersTableSeeder extends Seeder
         // Tambahkan data siswa yang terhubung dengan pengguna voter
         DB::table('students')->insert([
             [
-                'nama' => 'Student 1',
+                'nama' => 'Faza Rahardian',
                 'nis' => '11223344',
                 'kelas' => 'VII A',
                 'jenis_kelamin' => 'Laki-laki',
@@ -83,7 +83,7 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Student 2',
+                'nama' => 'Sindiana Karim',
                 'nis' => '44332211',
                 'kelas' => 'VII B',
                 'jenis_kelamin' => 'Perempuan',
@@ -93,7 +93,7 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Student 3',
+                'nama' => 'Queen Nayla',
                 'nis' => '44332219',
                 'kelas' => 'VII C',
                 'jenis_kelamin' => 'Perempuan',
@@ -103,7 +103,7 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nama' => 'Student 4',
+                'nama' => 'Muhammad Syamsul Arifin',
                 'nis' => '44332218',
                 'kelas' => 'VII D',
                 'jenis_kelamin' => 'Laki-laki',
