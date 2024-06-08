@@ -11,7 +11,7 @@
     {{-- <link href="css/styles.css" rel="stylesheet" /> --}}
     <link rel="stylesheet" href="{{ asset('Dashboard/css/styles.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
-    
+
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
@@ -22,12 +22,35 @@
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
                 class="fas fa-bars"></i></button>
+        @php
+            $actif = session()->get('actif', 1);
+            $periode = DB::table('periode')->where('actif', $actif)->first();
+        @endphp
+        @if ($periode)
+            <button class="btn btn-light btn-sm mr-2">
+                Periode : &nbsp;
+                <i class="fa fa-check-square text-primary"></i>&nbsp;
+                <span class="text-primary font-weight-bold">
+                    <strong>{{ $periode->periode_nama }}</strong>
+                </span>
+            </button>
+        @else
+            <button class="btn btn-light btn-sm mr-2">
+                Periode : &nbsp;
+                <i class="fa fa-check-square text-primary"></i>&nbsp;
+                <span class="text-primary font-weight-bold">
+                    <strong></strong>
+                </span>
+            </button>
+            <!-- Tindakan yang diambil jika tidak ada periode yang sesuai -->
+        @endif
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
 
         </form>
         <!-- Navbar-->
         <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                     data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>

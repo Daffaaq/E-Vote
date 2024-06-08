@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\StudentsController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,7 +38,14 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::get('/Siswa/edit/{id}', [StudentsController::class, 'edit']);
         Route::put('/Siswa/update/{id}', [StudentsController::class, 'update']);
         Route::delete('/Siswa/destroy/{id}', [StudentsController::class, 'destroy']);
-        Route::get('/Siswa/data', [StudentsController::class, 'list']);
+    });
+    Route::prefix('/dashboardSuperadmin')->group(function () {
+        Route::get('/Periode', [PeriodeController::class, 'index'])->name('periode.index');
+        Route::get('/Periode/create', [PeriodeController::class, 'create'])->name('periode.create');
+        Route::post('/Periode/store', [PeriodeController::class, 'store'])->name('periode.store');
+        Route::get('/Periode/edit/{id}', [PeriodeController::class, 'edit'])->name('periode.edit');
+        Route::put('/Periode/update/{id}', [PeriodeController::class, 'update'])->name('periode.update');
+        Route::delete('/Periode/destroy/{id}', [PeriodeController::class, 'destroy'])->name('periode.destroy');
     });
 });
 Route::middleware(['auth', 'check.role:admin'])->group(function () {

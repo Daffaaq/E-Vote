@@ -1,3 +1,11 @@
+<style>
+    .nav-link.active {
+        color: #fff;
+        /* Warna teks saat link aktif */
+        background-color: #007bff;
+        /* Warna latar belakang saat link aktif */
+    }
+</style>
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
@@ -11,6 +19,11 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Daftar Admin
                     </a>
+                    <a class="nav-link {{ request()->routeIs('periode.index') ? 'active' : '' }}"
+                        href="{{ route('periode.index') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                        Periode
+                    </a>
                     <a class="nav-link" href="charts.html">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Baner
@@ -19,7 +32,8 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Jadwal
                     </a>
-                    <a class="nav-link" href="{{ url('dashboardSuperadmin/Siswa') }}">
+                    <a class="nav-link {{ request()->routeIs('students.index') ? 'active' : '' }}"
+                        href="{{ route('students.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Daftar Pemilih
                     </a>

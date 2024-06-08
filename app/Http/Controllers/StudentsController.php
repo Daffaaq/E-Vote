@@ -21,7 +21,9 @@ class StudentsController extends Controller
         // Apply the status filter if provided
         if ($request->has('status')) {
             $status = $request->input('status');
-            $query->where('status_students', $status);
+            if ($status == '1' || $status == '2') {
+                $query->where('status_students', $status);
+            }
         }
 
         // Apply the search filter if provided

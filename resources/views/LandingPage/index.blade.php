@@ -422,7 +422,6 @@ https://templatemo.com/tm-586-scholar
                             <img src="assets/images/member-02.jpg" alt="">
                             <span class="category">Graphic Teacher</span>
                             <h4>Cindy Walker</h4>
-                            <h4>VII-A</h4>
                             <a href="#" class="btn btn-primary mt-3"
                                 style="background-color: #7a6ad8;">Detail</a>
                         </div>
