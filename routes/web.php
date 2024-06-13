@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PeriodeController;
@@ -46,6 +47,14 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::get('/Periode/edit/{id}', [PeriodeController::class, 'edit'])->name('periode.edit');
         Route::put('/Periode/update/{id}', [PeriodeController::class, 'update'])->name('periode.update');
         Route::delete('/Periode/destroy/{id}', [PeriodeController::class, 'destroy'])->name('periode.destroy');
+    });
+    Route::prefix('/dashboardSuperadmin')->group(function () {
+        Route::get('/Banner', [BannerController::class, 'index'])->name('banner.index');
+        Route::get('/Banner/create', [BannerController::class, 'create'])->name('banner.create');
+        Route::post('/Banner/store', [BannerController::class, 'store'])->name('banner.store');
+        Route::get('/Banner/edit/{id}', [BannerController::class, 'edit'])->name('banner.edit');
+        Route::put('/Banner/update/{id}', [BannerController::class, 'update'])->name('banner.update');
+        Route::delete('/Banner/destroy/{id}', [BannerController::class, 'destroy'])->name('banner.destroy');
     });
 });
 Route::middleware(['auth', 'check.role:admin'])->group(function () {
