@@ -30,7 +30,10 @@ https://templatemo.com/tm-586-scholar
 </head>
 
 <body>
-
+    @php
+        use Carbon\Carbon;
+        Carbon::setLocale('id');
+    @endphp
     <!-- ***** Preloader Start ***** -->
     <div id="js-preloader" class="js-preloader">
         <div class="preloader-inner">
@@ -301,7 +304,7 @@ https://templatemo.com/tm-586-scholar
                 <div class="col-lg-12 text-center">
                     <div class="section-heading">
                         <h6>Timeline</h6>
-                        <h2>Pemilihan Ketua OSIS Masa Bakti()</h2>
+                        <h2>Pemilihan Ketua OSIS Masa Bakti</h2>
                     </div>
                 </div>
                 <div class="col-lg-12 col-md-6">
@@ -315,19 +318,33 @@ https://templatemo.com/tm-586-scholar
                             <div class="col-lg-9">
                                 <ul>
                                     <li>
-                                        <span class="category">Orasi Eksternal</span>
+                                        <span class="category">Jadwal Orasi</span>
                                     </li>
                                     <li>
                                         <span>Date:</span>
-                                        <h6>16 Feb 2036</h6>
+                                        @if ($jadwalOrasi)
+                                            <h6>{{ Carbon::parse($jadwalOrasi->tanggal_orasi_vote)->translatedFormat('l, d F Y') }}
+                                            </h6>
+                                        @else
+                                            <h6>Tanggal belum ditentukan</h6>
+                                        @endif
                                     </li>
                                     <li>
                                         <span>Time</span>
-                                        <h6>22 Hours</h6>
+                                        @if ($jadwalOrasi)
+                                            <h6>{{ Carbon::parse($jadwalOrasi->jam_orasi_mulai)->format('H:i') }} -
+                                                Selesai</h6>
+                                        @else
+                                            <h6>Jam belum ditentukan</h6>
+                                        @endif
                                     </li>
                                     <li>
                                         <span>Place</span>
-                                        <h6>$120</h6>
+                                        @if ($jadwalOrasi)
+                                            <h6>{{ $jadwalOrasi->tempat_orasi }}</h6>
+                                        @else
+                                            <h6>Tempat belum ditentukan</h6>
+                                        @endif
                                     </li>
                                 </ul>
                                 <a><i class="fa fa-angle-right"></i></a>
@@ -349,16 +366,30 @@ https://templatemo.com/tm-586-scholar
                                         <span class="category">Pemungutan Suara</span>
                                     </li>
                                     <li>
-                                        <span>first Date:</span>
-                                        <h6>24 Feb 2036</h6>
+                                        <span>First Date:</span>
+                                        @if ($jadwalVotes)
+                                            <h6>{{ Carbon::parse($jadwalVotes->tanggal_awal_vote)->translatedFormat('l, d F Y') }}
+                                            </h6>
+                                        @else
+                                            <h6>Tanggal awal belum ditentukan</h6>
+                                        @endif
                                     </li>
                                     <li>
-                                        <span>last Date:</span>
-                                        <h6>24 Feb 2036</h6>
+                                        <span>Last Date:</span>
+                                        @if ($jadwalVotes)
+                                            <h6>{{ Carbon::parse($jadwalVotes->tanggal_akhir_vote)->translatedFormat('l, d F Y') }}
+                                            </h6>
+                                        @else
+                                            <h6>Tanggal akhir belum ditentukan</h6>
+                                        @endif
                                     </li>
                                     <li>
                                         <span>Place</span>
-                                        <h6>$320</h6>
+                                        @if ($jadwalVotes)
+                                            <h6>{{ $jadwalVotes->tempat_vote }}</h6>
+                                        @else
+                                            <h6>Tempat belum ditentukan</h6>
+                                        @endif
                                     </li>
                                 </ul>
                                 <a><i class="fa fa-angle-right"></i></a>
@@ -381,15 +412,29 @@ https://templatemo.com/tm-586-scholar
                                     </li>
                                     <li>
                                         <span>Date:</span>
-                                        <h6>12 Mar 2036</h6>
+                                        @if ($jadwalResultVote)
+                                            <h6>{{ Carbon::parse($jadwalResultVote->tanggal_result_vote)->translatedFormat('l, d F Y') }}
+                                            </h6>
+                                        @else
+                                            <h6>Tanggal belum ditentukan</h6>
+                                        @endif
                                     </li>
                                     <li>
                                         <span>Time</span>
-                                        <h6>48 Hours</h6>
+                                        @if ($jadwalResultVote)
+                                            <h6>{{ Carbon::parse($jadwalResultVote->jam_result_vote)->format('H:i') }}
+                                                - Selesai</h6>
+                                        @else
+                                            <h6>Jam belum ditentukan</h6>
+                                        @endif
                                     </li>
                                     <li>
                                         <span>Place</span>
-                                        <h6>$440</h6>
+                                        @if ($jadwalResultVote)
+                                            <h6>{{ $jadwalResultVote->tempat_result_vote }}</h6>
+                                        @else
+                                            <h6>Tempat belum ditentukan</h6>
+                                        @endif
                                     </li>
                                 </ul>
                                 <a href="#"><i class="fa fa-angle-right"></i></a>

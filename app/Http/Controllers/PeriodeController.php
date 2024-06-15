@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Periode;
+use App\Models\SettingVote;
 use Illuminate\Http\Request;
 
 class PeriodeController extends Controller

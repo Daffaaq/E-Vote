@@ -11,7 +11,9 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <a class="nav-link" href="index.html">
+                    
+                   <a class="nav-link {{ request()->routeIs('dashboard.superadmin') ? 'active' : '' }}"
+                        href="{{ route('dashboard.superadmin') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Dashboard
                     </a>
@@ -24,12 +26,13 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Periode
                     </a>
-                     <a class="nav-link {{ request()->routeIs('banner.index') ? 'active' : '' }}"
+                    <a class="nav-link {{ request()->routeIs('banner.index') ? 'active' : '' }}"
                         href="{{ route('banner.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Baner
                     </a>
-                    <a class="nav-link" href="charts.html">
+                    <a class="nav-link {{ request()->routeIs('jadwal.index') ? 'active' : '' }}"
+                        href="{{ route('jadwal.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Jadwal
                     </a>

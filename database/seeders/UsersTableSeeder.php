@@ -133,5 +133,10 @@ class UsersTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
         ]);
+        DB::table('setting_vote')->insert([
+            [
+                'set_vote' => true,
+            ]
+        ]);
     }
 }

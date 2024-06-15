@@ -115,25 +115,49 @@ class StudentsController extends Controller
             'status_students' => 'required|integer|in:1,2',
         ]);
 
-        // Perbarui data mahasiswa
+        // Temukan data mahasiswa berdasarkan ID
         $student = Students::findOrFail($id);
-        $student->update($request->all());
 
-        return redirect()->route('students.index')->with('success', 'Data mahasiswa berhasil diperbarui.');
+        // Temukan data pengguna terkait berdasarkan users_id dari mahasiswa
+        $user = User::findOrFail($student->users_id);
+
+        // Update data mahasiswa
+        $student->update([
+            'nama' => $request->nama,
+            'nis' => $request->nis,
+            'kelas' => $request->kelas,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'status_students' => $request->status_students,
+            'updated_at' => now(),
+        ]);
+
+        // Update data pengguna terkait
+        $user->update([
+            'username' => $request->nis,
+            'password' => Hash::make($request->nis), // Update the password
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('students.index')->with('success', 'Data mahasiswa dan pengguna berhasil diperbarui.');
     }
 
     public function destroy($id)
     {
-        // Hapus data mahasiswa
+        // Temukan data mahasiswa berdasarkan ID
         $student = Students::findOrFail($id);
+
+        // Temukan data pengguna terkait berdasarkan nis dari mahasiswa
+        $user = User::where('username', $student->nis)->first();
+
+        // Hapus data mahasiswa
         $student->delete();
 
         // Hapus juga user terkait jika ada
-        $user = User::where('username', $student->nis)->first();
         if ($user) {
             $user->delete();
         }
 
-        return redirect()->route('students.index')->with('success', 'Mahasiswa berhasil dihapus.');
+        return redirect()->route('students.index')->with('success', 'Mahasiswa dan pengguna berhasil dihapus.');
     }
+
 }

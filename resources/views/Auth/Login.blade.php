@@ -21,7 +21,7 @@
                 alt="">
         </div>
         <div class="text-center mt-4 name">
-            Twitter
+            Miftahul Huda
         </div>
         <form class="p-3 mt-3" method="POST" action="{{ route('loginProcess') }}">
             @csrf <!-- Tambahkan CSRF token -->

@@ -5,21 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JadwalVotes extends Model
+class jadwal_result_vote extends Model
 {
     use HasFactory;
-    protected $table = 'jadwal_votes';
 
+    protected $table = 'jadwal_result_votes';
     protected $fillable = [
         'periode_id',
-        'tanggal_awal_vote',
-        'tanggal_akhir_vote',
-        'tempat_vote',
+        'tanggal_result_vote',
+        'jam_result_vote',
+        'tempat_result_vote',
     ];
 
-    /**
-     * Get the periode associated with the jadwal vote.
-     */
     public function periode()
     {
         return $this->belongsTo(Periode::class);

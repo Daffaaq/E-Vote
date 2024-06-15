@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('slug');
+            $table->string('slug')->unique();;
             $table->longText('visi');
             $table->longText('misi');
             $table->longText('desc');

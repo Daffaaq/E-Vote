@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jadwal_votes', function (Blueprint $table) {
+        Schema::create('jadwal_orasis', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('periode_id');
             $table->foreign('periode_id')->references('id')->on('periode');
-            $table->date('tanggal_awal_vote'); // tanggal awal vote
-            $table->date('tanggal_akhir_vote'); // tanggal akhir vote
-            $table->string('tempat_vote'); // tempat vote
+            $table->date('tanggal_orasi_vote'); // tanggal orasi vote
+            $table->time('jam_orasi_mulai'); // jam orasi mulai
+            $table->string('tempat_orasi'); // tempat orasi
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jadwal_votes');
+        Schema::dropIfExists('jadwal_orasis');
     }
 };
