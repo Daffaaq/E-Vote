@@ -70,15 +70,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($banners as $periode)
+                            @forelse ($banners as $bn)
                                 <tr>
-                                    <td>{{ $periode->tittle }}</td>
-                                    <td>{{ $periode->desc }}</td>
+                                    <td>{{ $bn->tittle }}</td>
+                                    <td>{{ $bn->desc }}</td>
                                     <td>
-                                        <a href="{{ route('banner.edit', $periode) }}" class="btn btn-warning">Edit</a>
-                                        <button type="button" class="btn btn-danger delete-button"
-                                            data-id="{{ $periode->id }}" data-tittle="{{ $periode->tittle }}"
-                                            data-desc="{{ $periode->desc }}">Delete</button>
+                                        <a href="{{ route('banner.edit', $bn) }}" class="btn btn-warning">Edit</a>
+                                         <form action="{{ url('dashboardSuperadmin/Banner/destroy/' . $bn->id) }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty
@@ -106,51 +108,4 @@
             </div>
         </div>
     </footer>
-
-    <!-- Modal Konfirmasi Penghapusan -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Apakah Anda yakin ingin menghapus data berikut?</p>
-                    <p><strong>Judul :</strong> <span id="modalJudul"></span></p>
-                    <p><strong>Deskripsi:</strong> <span id="modalDeskripsi"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <form id="deleteForm" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const deleteButtons = document.querySelectorAll('.delete-button');
-
-            deleteButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const judul = this.getAttribute('data-tittle');
-                    const deskripsi = this.getAttribute('data-desc');
-
-                    document.getElementById('modalDeskripsi').textContent = deskripsi;
-                    document.getElementById('modalJudul').textContent = judul;
-                    document.getElementById('deleteForm').setAttribute('action',
-                        '{{ url('dashboardSuperadmin/Banner/destroy') }}/' + id);
-
-                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-                    deleteModal.show();
-                });
-            });
-        });
-    </script>
 @endsection

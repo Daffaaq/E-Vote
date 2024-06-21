@@ -91,10 +91,12 @@
                                     <td>
                                         <a href="{{ url('dashboardSuperadmin/Siswa/edit/' . $item->id) }}"
                                             class="btn btn-warning btn-sm">Edit</a>
-
-                                        <button type="button" class="btn btn-danger btn-sm delete-button"
-                                            data-id="{{ $item->id }}" data-nama="{{ $item->nama }}"
-                                            data-nis="{{ $item->nis }}" data-kelas="{{ $item->kelas }}">Hapus</button>
+                                        
+                                        <form action="{{ url('dashboardSuperadmin/Siswa/destroy/' . $item->id) }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
@@ -118,54 +120,4 @@
             </div>
         </div>
     </footer>
-
-    <!-- Modal Konfirmasi Penghapusan -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Apakah Anda yakin ingin menghapus data berikut?</p>
-                    <p><strong>Nama:</strong> <span id="modalNama"></span></p>
-                    <p><strong>Nis:</strong> <span id="modalNis"></span></p>
-                    <p><strong>Kelas:</strong> <span id="modalKelas"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <form id="deleteForm" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const deleteButtons = document.querySelectorAll('.delete-button');
-
-            deleteButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const nama = this.getAttribute('data-nama');
-                    const nis = this.getAttribute('data-nis');
-                    const kelas = this.getAttribute('data-kelas');
-
-                    document.getElementById('modalNis').textContent = nis;
-                    document.getElementById('modalNama').textContent = nama;
-                    document.getElementById('modalKelas').textContent = kelas;
-                    document.getElementById('deleteForm').setAttribute('action',
-                        '{{ url('dashboardSuperadmin/Siswa/destroy') }}/' + id);
-
-                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-                    deleteModal.show();
-                });
-            });
-        });
-    </script>
 @endsection

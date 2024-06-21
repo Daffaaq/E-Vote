@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
+            $table->string('nama_ketua');
+            $table->string('nama_wakil_ketua');
             $table->string('slug')->unique();;
             $table->longText('visi');
             $table->longText('misi');
-            $table->longText('desc');
+            $table->string('slogan');
             $table->string('foto')->nullable();
-            $table->string('Kelas');
-            $table->string('link')->nullable();
             $table->unsignedBigInteger('periode_id');
             $table->foreign('periode_id')->references('id')->on('periode');
             $table->timestamps();

@@ -68,9 +68,11 @@
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <a href="{{ route('jadwal-orasi.edit', $jo) }}"
                                             class="btn btn-warning btn-sm">Edit</a>
-                                        <button type="button" class="btn btn-danger btn-sm delete-button"
-                                            data-id="{{ $jo->id }}" data-title=" {{ Carbon::parse($jo->tanggal_orasi_vote)->isoFormat('dddd, D MMMM YYYY') }}"
-                                            data-desc="{{ Carbon::parse($jo->jam_orasi_mulai)->format('H:i') }} "data-parent-route="jadwalorasi">Delete</button>
+                                        <form action="{{ url('dashboardSuperadmin/Jadwal/destroy/orasi/' . $jo->id) }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -98,10 +100,11 @@
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <a href="{{ route('jadwal-votes.edit', $jv) }}"
                                             class="btn btn-warning btn-sm">Edit</a>
-                                        <button type="button" class="btn btn-danger btn-sm delete-button"
-                                            data-id="{{ $jv->id }}" data-title="{{ Carbon::parse($jv->tanggal_awal_vote)->isoFormat('dddd, D MMMM YYYY') }}"
-                                            data-desc="{{ Carbon::parse($jv->tanggal_akhir_vote)->isoFormat('dddd, D MMMM YYYY') }}"
-                                            data-parent-route="jadwalvotes">Delete</button>
+                                        <form action="{{ url('dashboardSuperadmin/Jadwal/destroy/votes/' . $jv->id) }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -129,9 +132,11 @@
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         <a href="{{ route('jadwal-result.edit', $jrv) }}"
                                             class="btn btn-warning btn-sm">Edit</a>
-                                        <button type="button" class="btn btn-danger btn-sm delete-button"
-                                            data-id="{{ $jrv->id }}" data-title="{{ Carbon::parse($jrv->tanggal_result_vote)->isoFormat('dddd, D MMMM YYYY') }}"
-                                            data-desc="{{ Carbon::parse($jrv->jam_result_vote)->format('H:i') }}"data-parent-route="jadwalresult">Delete</button>
+                                        <form action="{{ url('dashboardSuperadmin/Jadwal/destroy/result/' . $jrv->id) }}" method="POST" style="display:inline-block;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -156,62 +161,4 @@
             </div>
         </div>
     </footer>
-
-    <!-- Modal Konfirmasi Penghapusan -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Penghapusan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Apakah Anda yakin ingin menghapus data berikut?</p>
-                    <p><strong>Judul :</strong> <span id="modalJudul"></span></p>
-                    <p><strong>Deskripsi:</strong> <span id="modalDeskripsi"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <form id="deleteForm" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const deleteButtons = document.querySelectorAll('.delete-button');
-
-            deleteButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    const id = this.getAttribute('data-id');
-                    const title = this.getAttribute('data-title');
-                    const desc = this.getAttribute('data-desc');
-                    const parentRoute = this.getAttribute('data-parent-route');
-
-                    document.getElementById('modalJudul').textContent = title;
-                    document.getElementById('modalDeskripsi').textContent = desc;
-
-                    let url;
-                    if (parentRoute === 'jadwalorasi') {
-                        url = '{{ route('jadwal-orasi.destroy', ':id') }}';
-                    } else if (parentRoute === 'jadwalvotes') {
-                        url = '{{ route('jadwal-votes.destroy', ':id') }}';
-                    } else if (parentRoute === 'jadwalresult') {
-                        url = '{{ route('jadwal-result.destroy', ':id') }}';
-                    }
-
-                    url = url.replace(':id', id);
-
-                    document.getElementById('deleteForm').setAttribute('action', url);
-
-                    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-                    deleteModal.show();
-                });
-            });
-        });
-    </script>
 @endsection

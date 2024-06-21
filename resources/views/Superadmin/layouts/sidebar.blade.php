@@ -11,8 +11,8 @@
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    
-                   <a class="nav-link {{ request()->routeIs('dashboard.superadmin') ? 'active' : '' }}"
+
+                    <a class="nav-link {{ request()->routeIs('dashboard.superadmin') ? 'active' : '' }}"
                         href="{{ route('dashboard.superadmin') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Dashboard
@@ -41,7 +41,8 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Daftar Pemilih
                     </a>
-                    <a class="nav-link" href="tables.html">
+                    <a class="nav-link {{ request()->routeIs('Candidate.index') ? 'active' : '' }}"
+                        href="{{ route('Candidate.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                         Daftar Caketos
                     </a>

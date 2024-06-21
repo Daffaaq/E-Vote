@@ -26,36 +26,40 @@ class LoginController extends Controller
         return view('Auth.login');
     }
 
-    function login(Request $request)
+    public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required', // Mengganti 'username' dengan 'username' dan menambahkan validasi username
+            'username' => 'required',
             'password' => 'required'
         ], [
-            'username.required' => 'username wajib diisi', // Mengganti pesan validasi
+            'username.required' => 'Username wajib diisi',
             'password.required' => 'Password wajib diisi',
         ]);
 
-        $infologin = [
-            'username' => $request->username, // Menggunakan 'email' dari form input
-            'password' => $request->password,
-        ];
+        $credentials = $request->only('username', 'password');
 
-        if (Auth::attempt($infologin)) {
+        if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            $route = '';
+
             if ($user->role === 'admin') {
-                return redirect('dashboardAdmin');
+                $route = 'dashboardAdmin';
             } elseif ($user->role === 'superadmin') {
-                return redirect('dashboardSuperadmin');
+                $route = 'dashboard.superadmin';
             } elseif ($user->role === 'voter') {
-                return redirect('dashboardVoter');
+                $route = 'dashboardVoter';
             } else {
-                return redirect()->route('login')->withErrors('Role pengguna tidak valid')->withInput();
+                return redirect()->route('login')->with('error', 'Role pengguna tidak valid')->withInput();
             }
+
+            return redirect()->route($route)->with('success', 'Login berhasil!');
         } else {
-            return redirect()->route('login')->withErrors('Email dan password tidak sesuai')->withInput();
+            return redirect()->route('login')->with('error', 'Username dan password tidak sesuai')->withInput();
         }
     }
+
+
+
 
 
     function logout()

@@ -7,8 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
+    <link rel="shortcut icon"
+        href="https://arest.web.id/sites/default/files/styles/foto_company_singlepost/public/logo-smp-sains-miftahul-huda-nganjuk.jpg?itok=PFD1NgpJ"
+        type="image/x-icon">
 
-    <title>Scholar - Online School HTML5 Template</title>
+    <title>E-VOTE SMP SAINS MIFTAHUL HUDA</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ asset('LandingPage/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -75,6 +78,7 @@ https://templatemo.com/tm-586-scholar
                             <li class="scroll-to-section"><a href="#courses">Caketos</a></li>
                             <li class="scroll-to-section"><a href="#team">Team</a></li>
                             <li class="scroll-to-section"><a href="#contact">Advice</a></li>
+                            <li class="scroll-to-section"><a href="{{ route('login') }}">Login</a></li>
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>

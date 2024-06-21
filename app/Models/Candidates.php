@@ -12,14 +12,13 @@ class Candidates extends Model
     protected $table = 'candidates';
 
     protected $fillable = [
-        'nama',
+        'nama_ketua',
+        'nama_wakil_ketua',
         'slug',
         'visi',
         'misi',
-        'desc',
+        'slogan',
         'foto',
-        'prodi',
-        'link',
         'periode_id',
     ];
 

@@ -1,4 +1,4 @@
-@extends('Superadmin.layouts.main')
+@extends('Admin.layouts.main')
 @section('content')
     {{-- <div id="layoutSidenav_content">
     <main> --}}
