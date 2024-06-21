@@ -21,7 +21,7 @@ class DashboardController extends Controller
         
         $statusvote1 = SettingVote::value('set_vote');
         // dd($statusvote1);
-        return view('superadmin.Dashboard.index', compact('statusvote'));
+        return view('Admin.Dashboard.index', compact('statusvote'));
     }
 
     public function Settingvote(Request $request)

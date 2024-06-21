@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreign('jadwal_votes_id')->references('id')->on('jadwal_votes');
             $table->date('tanggal_vote');
             $table->time('jam_vote');
+            $table->integer('created_by')->nullable()->index();
             $table->timestamps();
         });
     }

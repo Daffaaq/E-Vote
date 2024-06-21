@@ -18,6 +18,7 @@ class Votes extends Model
         'jadwal_votes_id',
         'status_vote',
         'jam_vote',
+        'created_by',
     ];
 
     /**

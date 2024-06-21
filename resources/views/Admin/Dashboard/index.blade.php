@@ -1,25 +1,29 @@
 @extends('Admin.layouts.main')
 @section('content')
-    {{-- <div id="layoutSidenav_content">
-    <main> --}}
+    <style>
+        .form-check-input:disabled {
+            pointer-events: none;
+            opacity: 1;
+        }
+    </style>
     <div class="container-fluid px-4">
         <h1 class="mt-4">Dashboard</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Dashboard</li>
         </ol>
         <div class="d-flex align-items-center justify-content-between mb-4">
-            <div class="ms-auto"> <!-- Added ms-auto class here -->
+            <div class="ms-auto d-flex align-items-center">
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="set_vote" value="1"
-                        {{ $statusvote->first()->set_vote == 1 ? 'checked' : '' }}>
-                    <label class="form-check-label" for="flexSwitchCheckDefault">
-                        @if ($statusvote->first()->set_vote == 1)
-                            <span class="badge bg-success">Open Vote</span>
-                        @else
-                            <span class="badge bg-danger">Closed Vote</span>
-                        @endif
-                    </label>
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                        {{ $statusvote->first()->set_vote == 1 ? 'checked' : '' }} disabled>
                 </div>
+                <label class="form-check-label ms-0 mb-0" for="flexSwitchCheckDefault">
+                    @if ($statusvote->first()->set_vote == 1)
+                        <span class="badge bg-success">Open Vote</span>
+                    @else
+                        <span class="badge bg-danger">Closed Vote</span>
+                    @endif
+                </label>
             </div>
         </div>
         <div class="row">
@@ -95,34 +99,4 @@
             </div>
         </div>
     </footer>
-    {{-- </main>
-</div> --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#flexSwitchCheckDefault').on('change', function() {
-                let isChecked = $(this).is(':checked');
-                let setVote = isChecked ? 1 : 0;
-
-                $.ajax({
-                    url: '{{ route('dashboard.superadmin.setting-vote') }}',
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        set_vote: setVote
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            window.location.reload();
-                        } else {
-                            alert('Setting gagal.');
-                        }
-                    },
-                    error: function(response) {
-                        alert('Setting gagal.');
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

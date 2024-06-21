@@ -43,7 +43,7 @@ class LoginController extends Controller
             $route = '';
 
             if ($user->role === 'admin') {
-                $route = 'dashboardAdmin';
+                $route = 'dashboard.admin';
             } elseif ($user->role === 'superadmin') {
                 $route = 'dashboard.superadmin';
             } elseif ($user->role === 'voter') {
