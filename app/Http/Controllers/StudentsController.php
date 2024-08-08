@@ -68,6 +68,7 @@ class StudentsController extends Controller
         // Buat pengguna baru dengan username dan password sesuai NIS
         $user = new User([
             'username' => $request->nis,
+            'name' => $request->name,
             'password' => Hash::make($request->nis),
             'role' => 'voter', // Atur sesuai kebutuhan
             'created_at' => now(),
@@ -134,6 +135,7 @@ class StudentsController extends Controller
         // Update data pengguna terkait
         $user->update([
             'username' => $request->nis,
+            'name' => $request->name,
             'password' => Hash::make($request->nis), // Update the password
             'updated_at' => now(),
         ]);

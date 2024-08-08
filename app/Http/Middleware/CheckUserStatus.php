@@ -17,13 +17,16 @@ class CheckUserStatus
      * @param  string  $status
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request, Closure $next, string $status): Response
+    public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
 
-        if ($user && $user->role === 'voter' && $user->status !== 1) {
-            Auth::logout(); // Logout pengguna
-            return redirect()->route('login')->withErrors('Akun Anda tidak aktif. Harap hubungi administrator.');
+        if ($user && $user->role === 'voter') {
+            // Check if the user has a related student record
+            if ($user->student && $user->student->status_students !== 1) {
+                Auth::logout(); // Logout pengguna
+                return redirect()->route('login')->withErrors('Akun Anda tidak aktif. Harap hubungi administrator.');
+            }
         }
 
         return $next($request);

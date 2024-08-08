@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('banner', function (Blueprint $table) {
+        Schema::create('aspirasis', function (Blueprint $table) {
             $table->id();
-            $table->string('tittle');
-            $table->string('desc');
-            $table->string('image');
+            $table->uuid('uuid')->unique();
+            $table->string('nama');
+            $table->string('nis');
+            $table->string('kelas');
+            $table->longText('description_profiles');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('banner');
+        Schema::dropIfExists('aspirasis');
     }
 };

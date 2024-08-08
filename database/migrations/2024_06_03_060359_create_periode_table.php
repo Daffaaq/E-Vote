@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('periode', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('periode_nama');
             $table->string('periode_kepala_sekolah');
             $table->string('periode_no_kepala_sekolah');

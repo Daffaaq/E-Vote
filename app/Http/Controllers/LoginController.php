@@ -16,9 +16,9 @@ class LoginController extends Controller
         $periode_id = Periode::where('actif', 1)->value('id'); // Mengambil id dari periode yang aktif
 
         // Mengambil data dari masing-masing tabel berdasarkan periode_id
-        $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("id", "tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
-        $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("id", "tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
-        $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("id", "tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
+        $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
+        $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
+        $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
         return view('landingpage.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi'));
     }
     public function index()
@@ -47,7 +47,7 @@ class LoginController extends Controller
             } elseif ($user->role === 'superadmin') {
                 $route = 'dashboard.superadmin';
             } elseif ($user->role === 'voter') {
-                $route = 'dashboardVoter';
+                $route = 'dashboard.voter';
             } else {
                 return redirect()->route('login')->with('error', 'Role pengguna tidak valid')->withInput();
             }

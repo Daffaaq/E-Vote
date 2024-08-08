@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Candidates extends Model
 {
@@ -12,6 +13,8 @@ class Candidates extends Model
     protected $table = 'candidates';
 
     protected $fillable = [
+        'uuid',
+        'status',
         'nama_ketua',
         'nama_wakil_ketua',
         'slug',
@@ -25,6 +28,14 @@ class Candidates extends Model
     /**
      * Get the periode associated with the candidate.
      */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = Str::uuid();
+        });
+    }
     public function periode()
     {
         return $this->belongsTo(Periode::class);

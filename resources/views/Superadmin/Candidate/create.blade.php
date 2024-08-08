@@ -11,6 +11,21 @@
                             enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
+                                <label for="status" class="form-label">{{ __('Status') }}</label>
+                                <select id="status" name="status"
+                                    class="form-control @error('status') is-invalid @enderror" required>
+                                    <option value="" disabled>Pilih Status</option>
+                                    <option value="perseorangan" {{ old('status') === 'perseorangan' ? 'selected' : '' }}>
+                                        Perseorangan</option>
+                                    <option value="ganda" {{ old('status') === 'ganda' ? 'selected' : '' }}>Ganda</option>
+                                </select>
+                                @error('status')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
                                 <label for="nama_ketua" class="form-label">{{ __('Nama Ketua') }}</label>
                                 <input id="nama_ketua" type="text"
                                     class="form-control @error('nama_ketua') is-invalid @enderror" name="nama_ketua"
@@ -21,12 +36,12 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" id="wakil_ketua_container">
                                 <label for="nama_wakil_ketua" class="form-label">{{ __('Nama Wakil') }}</label>
                                 <input id="nama_wakil_ketua" type="text"
-                                    class="form-control @error('nama_wakil_ketua') is-invalid @enderror" name="nama_wakil_ketua"
-                                    value="{{ old('nama_wakil_ketua') }}" required autocomplete="nama_wakil_ketua"
-                                    autofocus>
+                                    class="form-control @error('nama_wakil_ketua') is-invalid @enderror"
+                                    name="nama_wakil_ketua" value="{{ old('nama_wakil_ketua') }}"
+                                    autocomplete="nama_wakil_ketua" autofocus>
                                 @error('nama')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -57,8 +72,7 @@
                                 <label for="slogan" class="form-label">{{ __('SLOGAN') }}</label>
                                 <input id="slogan" type="text"
                                     class="form-control @error('slogan') is-invalid @enderror" name="slogan"
-                                    value="{{ old('slogan') }}" required autocomplete="slogan"
-                                    autofocus>
+                                    value="{{ old('slogan') }}" required autocomplete="slogan" autofocus>
                                 @error('nama')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -106,6 +120,23 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusField = document.getElementById('status');
+            const wakilKetuaField = document.getElementById('wakil_ketua_container');
+
+            function toggleWakilKetua() {
+                if (statusField.value === 'perseorangan') {
+                    wakilKetuaField.style.display = 'none';
+                } else {
+                    wakilKetuaField.style.display = 'block';
+                }
+            }
+
+            statusField.addEventListener('change', toggleWakilKetua);
+
+            // Initialize visibility on page load
+            toggleWakilKetua();
+        });
         // Script untuk menampilkan preview gambar saat dipilih
         document.getElementById('foto').addEventListener('change', function(event) {
             var file = event.target.files[0];

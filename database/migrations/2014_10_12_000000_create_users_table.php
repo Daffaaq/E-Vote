@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
+            $table->string('name');
             $table->string('username');
             $table->string('foto_profile')->nullable();
             $table->enum('role', ['superadmin', 'admin', 'voter'])->default('voter');

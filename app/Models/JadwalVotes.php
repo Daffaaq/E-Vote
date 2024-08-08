@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class JadwalVotes extends Model
 {
@@ -11,6 +12,7 @@ class JadwalVotes extends Model
     protected $table = 'jadwal_votes';
 
     protected $fillable = [
+        'uuid',
         'periode_id',
         'tanggal_awal_vote',
         'tanggal_akhir_vote',
@@ -23,5 +25,13 @@ class JadwalVotes extends Model
     public function periode()
     {
         return $this->belongsTo(Periode::class);
+    }
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = Str::uuid();
+        });
     }
 }

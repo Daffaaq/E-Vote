@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('setting_vote', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->boolean('set_vote');
             $table->timestamps();
         });

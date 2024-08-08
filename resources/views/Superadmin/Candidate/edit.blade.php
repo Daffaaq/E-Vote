@@ -12,6 +12,26 @@
                             @csrf
                             @method('PUT')
                             <div class="mb-3">
+                                <label for="status" class="form-label">{{ __('Status') }}</label>
+                                <select id="status" name="status"
+                                    class="form-control @error('status') is-invalid @enderror" required readonly>
+                                    <option value="" disabled>Pilih Status</option>
+                                    <option value="perseorangan"
+                                        {{ old('status', $candidate->status) === 'perseorangan' ? 'selected' : '' }}>
+                                        Perseorangan
+                                    </option>
+                                    <option value="ganda"
+                                        {{ old('status', $candidate->status) === 'ganda' ? 'selected' : '' }}>
+                                        Ganda
+                                    </option>
+                                </select>
+                                @error('status')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
                                 <label for="nama_ketua" class="form-label">{{ __('Nama Ketua') }}</label>
                                 <input id="nama_ketua" type="text"
                                     class="form-control @error('nama_ketua') is-invalid @enderror" name="nama_ketua"
@@ -23,12 +43,12 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" id="wakil_ketua_container">
                                 <label for="nama_wakil_ketua" class="form-label">{{ __('Nama Wakil') }}</label>
                                 <input id="nama_wakil_ketua" type="text"
                                     class="form-control @error('nama_wakil_ketua') is-invalid @enderror"
                                     name="nama_wakil_ketua"
-                                    value="{{ old('nama_wakil_ketua', $candidate->nama_wakil_ketua) }}" required
+                                    value="{{ old('nama_wakil_ketua', $candidate->nama_wakil_ketua) }}"
                                     autocomplete="nama_wakil_ketua" autofocus>
                                 @error('nama_wakil_ketua')
                                     <span class="invalid-feedback" role="alert">
@@ -111,6 +131,24 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusSelect = document.getElementById('status');
+            const wakilKetuacontainer = document.getElementById('wakil_ketua_container');
+
+            function toggleWakilKetuacontainer() {
+                if (statusSelect.value === 'ganda') {
+                    wakilKetuacontainer.style.display = 'block';
+                } else {
+                    wakilKetuacontainer.style.display = 'none';
+                }
+            }
+
+            // Initialize visibility based on the current status
+            toggleWakilKetuacontainer();
+
+            // Add event listener for status change
+            statusSelect.addEventListener('change', toggleWakilKetuacontainer);
+        });
         // Script untuk menampilkan preview gambar saat dipilih
         document.getElementById('foto').addEventListener('change', function(event) {
             var file = event.target.files[0];

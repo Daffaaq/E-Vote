@@ -23,14 +23,25 @@
         }
 
         .navbar-light .navbar-brand,
-        .navbar-light .navbar-nav .nav-link {
+        .navbar-light {
             color: white;
         }
 
         .navbar-light .navbar-brand:hover,
-        .navbar-light .navbar-nav .nav-link:hover {
+        .navbar-light {
             color: #f8f9fa;
         }
+
+        .navbar-light .dropdown-toggle {
+            color: white !important;
+            text-decoration: none !important;
+        }
+
+        .navbar-light .dropdown-toggle:hover {
+            color: #f8f9fa !important;
+            text-decoration: none !important;
+        }
+
 
         .hero-section {
             background-image: url('{{ asset('Image-Assets/Home.png') }}');
@@ -351,42 +362,26 @@
 </head>
 
 <body>
-    <!-- Navbar dengan Navigasi -->
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="#">Sistem YYYY</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('home')">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('about')">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('schedule')">Schedule</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('caketos')">Caketos</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('advice')">Advice</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Login</a>
-                    </li>
-                </ul>
+            <div class="ml-auto dropdown">
+                <a href="#" class="d-flex align-items-center dropdown-toggle" style="text-decoration: none;"
+                    id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{ Auth::user()->name }}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+                    <a class="dropdown-item" href="#">Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
+                </div>
             </div>
+
         </div>
     </nav>
-
     <!-- Hero Section (Home) -->
     <div id="home" class="hero-section">
-        <h1>Selamat Datang di YYYY!</h1>
+        <h1>Selamat Datang {{ Auth::user()->name }} di YYYY!</h1>
         <p>Sistem ini digunakan untuk melakukan YYYY dengan mudah dan cepat.</p>
         <a href="javascript:void(0)" class="btn btn-success btn-lg" style="border-radius: 50px;"
             onclick="scrollToSection('caketos')">Mulai
@@ -506,7 +501,7 @@
                     </div>
                     <div class="card-body text-center">
                         <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
-                        <a href="#" class="btn btn-success disabled" style="border-radius: 50px;">Vote</a>
+                        <a href="#" class="btn btn-success" style="border-radius: 50px;">Vote</a>
                     </div>
                 </div>
             </div>
@@ -524,7 +519,7 @@
                     </div>
                     <div class="card-body text-center">
                         <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
-                        <a href="#" class="btn btn-success disabled" style="border-radius: 50px;">Vote</a>
+                        <a href="#" class="btn btn-success" style="border-radius: 50px;">Vote</a>
                     </div>
                 </div>
             </div>
@@ -533,104 +528,6 @@
         </div>
     </div>
 
-
-
-    <hr>
-
-    <!-- Advice Section -->
-    <div id="advice" class="container mb-4">
-        <h5 class="section-title">Kotak Saran</h5>
-        <div class="form-container">
-            <div class="image-container">
-                <img src="{{ asset('Image-Assets/Aspiration.png') }}" alt="Gambar Pendukung" />
-            </div>
-            <div class="modern-form">
-                <h5 class="section-title">Berikan Saran Anda</h5>
-                <form>
-                    <div class="form-group">
-                        <label for="name">Nama</label>
-                        <input type="text" class="form-control" id="name" placeholder="Masukkan Nama Anda"
-                            required />
-                    </div>
-                    <div class="form-group">
-                        <label for="class">Kelas</label>
-                        <input type="text" class="form-control" id="class" placeholder="Masukkan Kelas Anda"
-                            required />
-                    </div>
-                    <div class="form-group">
-                        <label for="    ">Saran</label>
-                        <textarea class="form-control" id="advice" rows="4" placeholder="Masukkan Saran Anda" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Kirim Saran</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-    <hr>
-    <div id="faq" class="container mb-4">
-        <h5 class="section-title">FAQ (Frequently Asked Questions)</h5>
-        <div class="accordion" id="faqAccordion">
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
-                <div class="card-header text-white" style="background-color: red;" id="faqHeadingOne">
-                    <h2 class="mb-0">
-                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100"
-                            type="button" style="text-decoration: none;" data-toggle="collapse"
-                            data-target="#faqCollapseOne" aria-expanded="true" aria-controls="faqCollapseOne">
-                            Bagaimana cara saya melakukan voting?
-                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseOne"></i>
-                        </a>
-                    </h2>
-                </div>
-                <div id="faqCollapseOne" class="collapse" aria-labelledby="faqHeadingOne"
-                    data-parent="#faqAccordion">
-                    <div class="card-body" style="border-radius: 50px;">
-                        Untuk melakukan voting, Anda perlu masuk ke akun Anda, pilih kandidat yang Anda dukung, dan klik
-                        tombol "Vote".
-                    </div>
-                </div>
-            </div>
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
-                <div class="card-header text-white" style="background-color: red;" id="faqHeadingTwo">
-                    <h2 class="mb-0">
-                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
-                            type="button" style="text-decoration: none;" data-toggle="collapse"
-                            data-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
-                            Apakah voting saya anonim?
-                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseTwo"></i>
-                        </a>
-                    </h2>
-                </div>
-                <div id="faqCollapseTwo" class="collapse" aria-labelledby="faqHeadingTwo"
-                    data-parent="#faqAccordion">
-                    <div class="card-body" style="border-radius: 50px;">
-                        Ya, voting Anda sepenuhnya anonim dan dijamin keamanannya.
-                    </div>
-                </div>
-            </div>
-            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
-                <div class="card-header text-white" style="background-color: red;" id="faqHeadingThree">
-                    <h2 class="mb-0">
-                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
-                            type="button" style="text-decoration: none;" data-toggle="collapse"
-                            data-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
-                            Kapan hasil voting akan diumumkan?
-                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseThree"></i>
-                        </a>
-                    </h2>
-                </div>
-                <div id="faqCollapseThree" class="collapse" aria-labelledby="faqHeadingThree"
-                    data-parent="#faqAccordion">
-                    <div class="card-body" style="border-radius: 50px;">
-                        Hasil voting akan diumumkan pada tanggal yang telah ditentukan setelah proses perhitungan suara
-                        selesai.
-                    </div>
-                </div>
-            </div>
-            <!-- Tambahkan FAQ lainnya di sini sesuai kebutuhan -->
-        </div>
-    </div>
     <!-- Footer -->
     <div class="mb-0">
         <footer class="bg-dark text-center text-white p-4" style="margin-bottom: 0">

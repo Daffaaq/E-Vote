@@ -43,16 +43,28 @@ class CandidateController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi umum
         $validatedData = $request->validate([
-            'nama_ketua' => 'required|string|max:255',
-            'nama_wakil_ketua' => 'required|string|max:255',
-            'slug' => 'nullable|string|unique:candidates,slug', // Set slug as nullable
+            'status' => 'required|in:perseorangan,ganda',
+            'nama_ketua' => 'nullable|string|max:255',
+            'nama_wakil_ketua' => 'nullable|string|max:255', // Ubah 'required' ke 'nullable'
+            'slug' => 'nullable|string|unique:candidates,slug',
             'visi' => 'required',
             'misi' => 'required',
             'slogan' => 'required',
             'foto' => 'nullable|image',
-            'periode_id' => 'nullable|exists:periode,id', // Set periode_id as nullable
+            'periode_id' => 'nullable|exists:periode,id',
         ]);
+
+        // Jika statusnya 'perseorangan', pastikan nama_wakil_ketua tidak diisi
+        if ($validatedData['status'] === 'perseorangan' && !empty($validatedData['nama_wakil_ketua'])) {
+            return redirect()->back()->withErrors(['nama_wakil_ketua' => 'Nama wakil ketua tidak diperlukan jika status adalah perseorangan.'])->withInput();
+        }
+
+        // Jika statusnya 'ganda', pastikan nama_wakil_ketua diisi
+        if ($validatedData['status'] === 'ganda' && empty($validatedData['nama_wakil_ketua'])) {
+            return redirect()->back()->withErrors(['nama_wakil_ketua' => 'Nama wakil ketua diperlukan jika status adalah ganda.'])->withInput();
+        }
 
         // Ambil periode_id dari Periode yang aktif
         $periode_id = Periode::where('actif', 1)->value('id');
@@ -60,7 +72,13 @@ class CandidateController extends Controller
 
         // Buat slug secara otomatis jika tidak disediakan
         if (empty($validatedData['slug'])) {
-            $baseSlug = Str::slug($validatedData['nama_ketua'] . '-' . $validatedData['nama_wakil_ketua'], '-');
+            // Membuat slug berdasarkan status
+            if ($validatedData['status'] === 'perseorangan') {
+                $baseSlug = Str::slug($validatedData['nama_ketua'], '-');
+            } else {
+                $baseSlug = Str::slug($validatedData['nama_ketua'] . '-' . $validatedData['nama_wakil_ketua'], '-');
+            }
+
             $slug = $baseSlug;
 
             // Tambahkan string acak untuk memastikan slug unik
@@ -79,6 +97,7 @@ class CandidateController extends Controller
 
         return redirect()->route('Candidate.index')->with('success', 'Candidate created successfully.');
     }
+
 
     public function show($slug)
     {
@@ -106,9 +125,11 @@ class CandidateController extends Controller
         // Merge periode_id into the request data for validation
         $request->merge(['periode_id' => $periode_id]);
 
+        // Validate the request
         $validatedData = $request->validate([
-            'nama_ketua' => 'required|string|max:255',
-            'nama_wakil_ketua' => 'required|string|max:255',
+            'status' => 'required|in:perseorangan,ganda',
+            'nama_ketua' => 'nullable|string|max:255',
+            'nama_wakil_ketua' => 'nullable|string|max:255', // Changed to 'nullable'
             'slug' => 'nullable|string|unique:candidates,slug,' . $candidate->id,
             'visi' => 'required',
             'misi' => 'required',
@@ -139,9 +160,12 @@ class CandidateController extends Controller
             if ($candidate->foto) {
                 Storage::disk('public')->delete($candidate->foto);
             }
+
+            // Store the new photo
             $validatedData['foto'] = $request->file('foto')->store('photos', 'public');
         }
 
+        // Update the candidate
         $candidate->update($validatedData);
 
         return redirect()->route('Candidate.index')->with('success', 'Candidate updated successfully.');

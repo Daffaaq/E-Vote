@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('jadwal_votes', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->unsignedBigInteger('periode_id');
             $table->foreign('periode_id')->references('id')->on('periode');
             $table->date('tanggal_awal_vote'); // tanggal awal vote

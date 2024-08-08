@@ -6,16 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class SettingVote extends Model
+class Aspirasi extends Model
 {
     use HasFactory;
-    protected $table = 'setting_vote';
+    protected $table = 'aspirasis';
 
+    // Jika field yang dapat diisi secara massal
     protected $fillable = [
         'uuid',
-        'set_vote',
+        'nama',
+        'nis',
+        'kelas',
+        'description_profiles',
     ];
-
     protected static function boot()
     {
         parent::boot();

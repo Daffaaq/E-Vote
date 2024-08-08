@@ -26,11 +26,6 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                         Periode
                     </a>
-                    <a class="nav-link {{ request()->routeIs('banner.index') ? 'active' : '' }}"
-                        href="{{ route('banner.index') }}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                        Baner
-                    </a>
                     <a class="nav-link {{ request()->routeIs('jadwal.index') ? 'active' : '' }}"
                         href="{{ route('jadwal.index') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>

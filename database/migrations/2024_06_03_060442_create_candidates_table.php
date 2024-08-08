@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
+            $table->enum('status', ['perseorangan', 'ganda'])->default('perseorangan');
             $table->string('nama_ketua');
-            $table->string('nama_wakil_ketua');
+            $table->string('nama_wakil_ketua')->nullable();
             $table->string('slug')->unique();;
             $table->longText('visi');
             $table->longText('misi');

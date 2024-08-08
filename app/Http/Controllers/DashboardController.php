@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\jadwal_orasi;
+use App\Models\jadwal_result_vote;
+use App\Models\JadwalVotes;
+use App\Models\Periode;
 use App\Models\SettingVote;
 use Illuminate\Http\Request;
 
@@ -10,7 +14,7 @@ class DashboardController extends Controller
     public function indexSuperadmin()
     {
         $statusvote = SettingVote::select("id", "set_vote")->get();
-        
+
         $statusvote1 = SettingVote::value('set_vote');
         // dd($statusvote1);
         return view('superadmin.Dashboard.index', compact('statusvote'));
@@ -18,10 +22,21 @@ class DashboardController extends Controller
     public function indexAdmin()
     {
         $statusvote = SettingVote::select("id", "set_vote")->get();
-        
+
         $statusvote1 = SettingVote::value('set_vote');
         // dd($statusvote1);
         return view('Admin.Dashboard.index', compact('statusvote'));
+    }
+    public function indexVoter()
+    {
+        $periode_id = Periode::where('actif', 1)->value('id'); // Mengambil id dari periode yang aktif
+
+        // Mengambil data dari masing-masing tabel berdasarkan periode_id
+        $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
+        $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
+        $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
+        // dd($statusvote1);
+        return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi'));
     }
 
     public function Settingvote(Request $request)

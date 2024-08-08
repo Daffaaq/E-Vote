@@ -30,6 +30,22 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="mb-3 row">
+                                <label for="name"
+                                    class="col-md-4 col-form-label text-md-right">{{ __('Nama Panggilan') }}</label>
+
+                                <div class="col-md-6">
+                                    <input id="name" type="text"
+                                        class="form-control @error('name') is-invalid @enderror" name="name"
+                                        value="{{ $student->user->name }}" required autofocus>
+
+                                    @error('nama')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
 
                             <div class="mb-3 row">
                                 <label for="nis"

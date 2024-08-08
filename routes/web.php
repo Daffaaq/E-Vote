@@ -52,14 +52,6 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::delete('/Periode/destroy/{id}', [PeriodeController::class, 'destroy'])->name('periode.destroy');
     });
     Route::prefix('/dashboardSuperadmin')->group(function () {
-        Route::get('/Banner', [BannerController::class, 'index'])->name('banner.index');
-        Route::get('/Banner/create', [BannerController::class, 'create'])->name('banner.create');
-        Route::post('/Banner/store', [BannerController::class, 'store'])->name('banner.store');
-        Route::get('/Banner/edit/{id}', [BannerController::class, 'edit'])->name('banner.edit');
-        Route::put('/Banner/update/{id}', [BannerController::class, 'update'])->name('banner.update');
-        Route::delete('/Banner/destroy/{id}', [BannerController::class, 'destroy'])->name('banner.destroy');
-    });
-    Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
         Route::get('/Jadwal/create', [JadwalController::class, 'create'])->name('jadwal.create');
         Route::post('/Jadwal/store', [JadwalController::class, 'store'])->name('jadwal.store');
@@ -85,13 +77,9 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
 Route::middleware(['auth', 'check.role:admin'])->group(function () {
     Route::get('/dashboardAdmin', [DashboardController::class, 'indexAdmin'])->name('dashboard.admin');
     Route::prefix('/dashboardAdmin')->group(function () {
-        Route::get('/Banner', [BannerController::class, 'index'])->name('banner-admin.index');
-        Route::get('/Banner/create', [BannerController::class, 'create'])->name('banner-admin.create');
-        Route::post('/Banner/store', [BannerController::class, 'store'])->name('banner-admin.store');
-        Route::get('/Banner/edit/{id}', [BannerController::class, 'edit'])->name('banner-admin.edit');
-        Route::put('/Banner/update/{id}', [BannerController::class, 'update'])->name('banner-admin.update');
-        Route::delete('/Banner/destroy/{id}', [BannerController::class, 'destroy'])->name('banner-admin.destroy');
+
     });
 });
-Route::middleware(['auth', 'checkVoterStatus', 'check.role:voter'])->group(function () {
+Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function () {
+    Route::get('/dashboardVoter', [DashboardController::class, 'indexVoter'])->name('dashboard.voter');
 });
