@@ -78,6 +78,7 @@
                                 <th>Nama Siswa</th>
                                 <th>NIS Siswa</th>
                                 <th>Kelas</th>
+                                <th>Status Pemilihan</th>
                                 <th>#</th>
                             </tr>
                         </thead>
@@ -89,13 +90,22 @@
                                     <td>{{ $item->nis }}</td>
                                     <td>{{ $item->kelas }}</td>
                                     <td>
+                                        @if ($item->StatusVote)
+                                            <span class="badge badge-success">Sudah Memilih</span>
+                                        @else
+                                            <span class="badge badge-danger">Belum Memilih</span>
+                                        @endif
+                                    </td>
+                                    <td>
                                         <a href="{{ url('dashboardSuperadmin/Siswa/edit/' . $item->id) }}"
                                             class="btn btn-warning btn-sm">Edit</a>
-                                        
-                                        <form action="{{ url('dashboardSuperadmin/Siswa/destroy/' . $item->id) }}" method="POST" style="display:inline-block;">
+
+                                        <form action="{{ url('dashboardSuperadmin/Siswa/destroy/' . $item->id) }}"
+                                            method="POST" style="display:inline-block;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
                                         </form>
                                     </td>
                                 </tr>

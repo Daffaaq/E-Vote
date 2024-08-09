@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->enum('status', ['perseorangan', 'ganda'])->default('perseorangan');
+            $table->tinyInteger('no_urut_kandidat');
             $table->string('nama_ketua');
             $table->string('nama_wakil_ketua')->nullable();
             $table->string('slug')->unique();;

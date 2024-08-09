@@ -29,6 +29,11 @@ class Students extends Model
         return $this->belongsTo(User::class, 'users_id');
     }
 
+    public function StatusVote()
+    {
+        return $this->hasOne(Votes::class, 'students_id');
+    }
+
     protected static function boot()
     {
         parent::boot();

@@ -571,7 +571,7 @@
     <hr>
     <div id="faq" class="container mb-4">
         <h5 class="section-title">FAQ (Frequently Asked Questions)</h5>
-        <div class="accordion" id="faqAccordion">
+        <div class="accordion" id="faqAccordion" style="max-height: 300px; overflow-y: auto;">
             <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
                 <div class="card-header text-white" style="background-color: red;" id="faqHeadingOne">
                     <h2 class="mb-0">
@@ -628,9 +628,144 @@
                     </div>
                 </div>
             </div>
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
+                <div class="card-header text-white" style="background-color: red;" id="faqHeadingFour">
+                    <h2 class="mb-0">
+                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
+                            type="button" style="text-decoration: none;" data-toggle="collapse"
+                            data-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
+                            Apakah saya dapat mengubah suara saya setelah voting?
+                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseFour"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div id="faqCollapseFour" class="collapse" aria-labelledby="faqHeadingFour"
+                    data-parent="#faqAccordion">
+                    <div class="card-body" style="border-radius: 50px;">
+                        Tidak, setelah Anda melakukan voting, suara Anda tidak dapat diubah.
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
+                <div class="card-header text-white" style="background-color: red;" id="faqHeadingFive">
+                    <h2 class="mb-0">
+                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
+                            type="button" style="text-decoration: none;" data-toggle="collapse"
+                            data-target="#faqCollapseFive" aria-expanded="false" aria-controls="faqCollapseFive">
+                            Apakah saya perlu mendaftar untuk voting?
+                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseFive"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div id="faqCollapseFive" class="collapse" aria-labelledby="faqHeadingFive"
+                    data-parent="#faqAccordion">
+                    <div class="card-body" style="border-radius: 50px;">
+                        Ya, Anda harus mendaftar dan memiliki akun untuk dapat melakukan voting.
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
+                <div class="card-header text-white" style="background-color: red;" id="faqHeadingSix">
+                    <h2 class="mb-0">
+                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
+                            type="button" style="text-decoration: none;" data-toggle="collapse"
+                            data-target="#faqCollapseSix" aria-expanded="false" aria-controls="faqCollapseSix">
+                            Bagaimana cara mengetahui kandidat mana yang saya pilih?
+                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseSix"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div id="faqCollapseSix" class="collapse" aria-labelledby="faqHeadingSix"
+                    data-parent="#faqAccordion">
+                    <div class="card-body" style="border-radius: 50px;">
+                        Setelah Anda memilih kandidat, pilihan Anda akan ditampilkan di halaman konfirmasi sebelum
+                        menyelesaikan voting.
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
+                <div class="card-header text-white" style="background-color: red;" id="faqHeadingSeven">
+                    <h2 class="mb-0">
+                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
+                            type="button" style="text-decoration: none;" data-toggle="collapse"
+                            data-target="#faqCollapseSeven" aria-expanded="false" aria-controls="faqCollapseSeven">
+                            Apa yang terjadi jika saya kehilangan koneksi internet saat voting?
+                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseSeven"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div id="faqCollapseSeven" class="collapse" aria-labelledby="faqHeadingSeven"
+                    data-parent="#faqAccordion">
+                    <div class="card-body" style="border-radius: 50px;">
+                        Jika Anda kehilangan koneksi internet, coba untuk menyambung kembali dan lanjutkan proses
+                        voting.
+                        Data Anda aman dan tidak akan hilang.
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
+                <div class="card-header text-white" style="background-color: red;" id="faqHeadingEight">
+                    <h2 class="mb-0">
+                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
+                            type="button" style="text-decoration: none;" data-toggle="collapse"
+                            data-target="#faqCollapseEight" aria-expanded="false" aria-controls="faqCollapseEight">
+                            Apakah saya dapat memeriksa status voting saya?
+                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseEight"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div id="faqCollapseEight" class="collapse" aria-labelledby="faqHeadingEight"
+                    data-parent="#faqAccordion">
+                    <div class="card-body" style="border-radius: 50px;">
+                        Ya, Anda dapat memeriksa status voting Anda dengan masuk ke akun Anda dan melihat riwayat
+                        voting.
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
+                <div class="card-header text-white" style="background-color: red;" id="faqHeadingNine">
+                    <h2 class="mb-0">
+                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
+                            type="button" style="text-decoration: none;" data-toggle="collapse"
+                            data-target="#faqCollapseNine" aria-expanded="false" aria-controls="faqCollapseNine">
+                            Dapatkah saya melakukan voting lebih dari satu kali?
+                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseNine"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div id="faqCollapseNine" class="collapse" aria-labelledby="faqHeadingNine"
+                    data-parent="#faqAccordion">
+                    <div class="card-body" style="border-radius: 50px;">
+                        Tidak, Anda hanya dapat melakukan voting satu kali per akun untuk menjaga integritas sistem
+                        voting.
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3 border-0 shadow-sm" style="border-radius: 50px;">
+                <div class="card-header text-white" style="background-color: red;" id="faqHeadingTen">
+                    <h2 class="mb-0">
+                        <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
+                            type="button" style="text-decoration: none;" data-toggle="collapse"
+                            data-target="#faqCollapseTen" aria-expanded="false" aria-controls="faqCollapseTen">
+                            Bagaimana saya tahu bahwa suara saya telah dihitung?
+                            <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseTen"></i>
+                        </a>
+                    </h2>
+                </div>
+                <div id="faqCollapseTen" class="collapse" aria-labelledby="faqHeadingTen"
+                    data-parent="#faqAccordion">
+                    <div class="card-body" style="border-radius: 50px;">
+                        Setelah Anda melakukan voting, Anda akan menerima notifikasi bahwa suara Anda telah berhasil
+                        dihitung.
+                    </div>
+                </div>
+            </div>
             <!-- Tambahkan FAQ lainnya di sini sesuai kebutuhan -->
         </div>
     </div>
+
+
+
     <!-- Footer -->
     <div class="mb-0">
         <footer class="bg-dark text-center text-white p-4" style="margin-bottom: 0">

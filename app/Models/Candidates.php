@@ -15,6 +15,7 @@ class Candidates extends Model
     protected $fillable = [
         'uuid',
         'status',
+        'no_urut_kandidat',
         'nama_ketua',
         'nama_wakil_ketua',
         'slug',

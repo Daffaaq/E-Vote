@@ -32,6 +32,17 @@
                                 @enderror
                             </div>
                             <div class="mb-3">
+                                <label for="no_urut_kandidat" class="form-label">{{ __('Nomer Urut Kandidat') }}</label>
+                                <input id="no_urut_kandidat" type="number" disabled
+                                    class="form-control @error('no_urut_kandidat') is-invalid @enderror" name="no_urut_kandidat"
+                                    value="{{ old('no_urut_kandidat') }}" required autocomplete="no_urut_kandidat" autofocus>
+                                @error('no_urut_kandidat')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                            <div class="mb-3">
                                 <label for="nama_ketua" class="form-label">{{ __('Nama Ketua') }}</label>
                                 <input id="nama_ketua" type="text"
                                     class="form-control @error('nama_ketua') is-invalid @enderror" name="nama_ketua"

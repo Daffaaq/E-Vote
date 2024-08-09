@@ -49,12 +49,27 @@ class CandidateController extends Controller
             'nama_ketua' => 'nullable|string|max:255',
             'nama_wakil_ketua' => 'nullable|string|max:255', // Ubah 'required' ke 'nullable'
             'slug' => 'nullable|string|unique:candidates,slug',
+            'no_urut_kandidat' => 'required|numeric',
             'visi' => 'required',
             'misi' => 'required',
             'slogan' => 'required',
             'foto' => 'nullable|image',
             'periode_id' => 'nullable|exists:periode,id',
         ]);
+
+        // Check for sequential and unique no_urut_kandidat
+        $lastNumber = Candidates::max('no_urut_kandidat');
+        $expectedNumber = $lastNumber + 1;
+
+        if ($validatedData['no_urut_kandidat'] != $expectedNumber) {
+            return redirect()->back()->withErrors([
+                'no_urut_kandidat' => "Nomor urut kandidat harus berurutan dan tidak boleh ada yang terlewat. Silakan masukkan nomor yang benar ($expectedNumber).",
+            ])->withInput();
+        }
+
+        if (Candidates::where('no_urut_kandidat', $validatedData['no_urut_kandidat'])->exists()) {
+            return redirect()->back()->withErrors(['no_urut_kandidat' => 'Nomor urut kandidat sudah ada.'])->withInput();
+        }
 
         // Jika statusnya 'perseorangan', pastikan nama_wakil_ketua tidak diisi
         if ($validatedData['status'] === 'perseorangan' && !empty($validatedData['nama_wakil_ketua'])) {
@@ -131,12 +146,29 @@ class CandidateController extends Controller
             'nama_ketua' => 'nullable|string|max:255',
             'nama_wakil_ketua' => 'nullable|string|max:255', // Changed to 'nullable'
             'slug' => 'nullable|string|unique:candidates,slug,' . $candidate->id,
+            'no_urut_kandidat' => 'required|numeric',
             'visi' => 'required',
             'misi' => 'required',
             'slogan' => 'required',
             'foto' => 'nullable|image',
             'periode_id' => 'required|exists:periode,id',
         ]);
+
+        // Check for unique and sequential no_urut_kandidat
+        if ($validatedData['no_urut_kandidat'] !== $candidate->no_urut_kandidat) {
+            $lastNumber = Candidates::max('no_urut_kandidat');
+            $expectedNumber = $lastNumber + 1;
+
+            if ($validatedData['no_urut_kandidat'] != $expectedNumber) {
+                return redirect()->back()->withErrors([
+                    'no_urut_kandidat' => "Nomor urut kandidat harus berurutan dan tidak boleh ada yang terlewat. Silakan masukkan nomor yang benar ($expectedNumber).",
+                ])->withInput();
+            }
+
+            if (Candidates::where('no_urut_kandidat', $validatedData['no_urut_kandidat'])->where('id', '!=', $candidate->id)->exists()) {
+                return redirect()->back()->withErrors(['no_urut_kandidat' => 'Nomor urut kandidat sudah ada.'])->withInput();
+            }
+        }
 
         // Check if the name has changed
         $namaDiubah = $candidate->nama_ketua !== $validatedData['nama_ketua'] || $candidate->nama_wakil_ketua !== $validatedData['nama_wakil_ketua'];

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Candidates;
 use App\Models\jadwal_orasi;
 use App\Models\jadwal_result_vote;
 use App\Models\JadwalVotes;
@@ -35,8 +36,9 @@ class DashboardController extends Controller
         $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
         $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
         $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
-        // dd($statusvote1);
-        return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi'));
+        $candidate = Candidates::where('periode_id', $periode_id)->select("no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
+        // dd($candidate);
+        return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate'));
     }
 
     public function Settingvote(Request $request)

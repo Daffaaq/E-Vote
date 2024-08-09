@@ -16,7 +16,7 @@ class StudentsController extends Controller
         $perPage = $request->input('perPage', 20);
 
         // Initialize the query
-        $query = Students::query();
+        $query = Students::with('StatusVote');
 
         // Apply the status filter if provided
         if ($request->has('status')) {
@@ -161,5 +161,4 @@ class StudentsController extends Controller
 
         return redirect()->route('students.index')->with('success', 'Mahasiswa dan pengguna berhasil dihapus.');
     }
-
 }
