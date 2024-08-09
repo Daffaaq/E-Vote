@@ -42,6 +42,7 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::get('/Siswa/edit/{id}', [StudentsController::class, 'edit']);
         Route::put('/Siswa/update/{id}', [StudentsController::class, 'update']);
         Route::delete('/Siswa/destroy/{id}', [StudentsController::class, 'destroy']);
+        Route::post('/Siswa/list', [StudentsController::class, 'list'])->name('siswa-list-superadmin');
     });
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Periode', [PeriodeController::class, 'index'])->name('periode.index');

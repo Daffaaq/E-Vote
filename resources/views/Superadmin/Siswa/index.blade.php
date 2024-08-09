@@ -1,6 +1,90 @@
-@extends('Superadmin.layouts.main')
+@extends('Superadmin.layouts.index')
+@section('breadcrumbs')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Daftar Pemilih</li>
+        </ol>
+    </nav>
+@endsection
 @section('content')
-    <div class="container-fluid px-4">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Daftar Pemilih</h6>
+        </div>
+        <div class="card-body">
+            <a href="{{ url('/dashboardSuperadmin/Siswa/create') }}" class="btn btn-primary">Tambah
+                Siswa</a>
+            {{-- <button id="createUserBtn" class="btn btn-success float-right mb-3">
+                <i class="fas fa-plus"></i> Create Users
+            </button> --}}
+            <div class="table-responsive">
+                <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Siswa</th>
+                            <th>NIS Siswa</th>
+                            <th>Kelas</th>
+                            <th>Status Pemilihan</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            var dataMaster = $('#usersTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '{{ route('siswa-list-superadmin') }}',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    }
+                },
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'nis',
+                        name: 'nis'
+                    },
+                    {
+                        data: 'kelas',
+                        name: 'kelas'
+                    },
+                    {
+                        data: 'status_vote',
+                        name: 'status_vote'
+                    },
+                    {
+                        data: 'uuid',
+                        name: 'uuid',
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
+                autoWidth: false,
+                drawCallback: function(settings) {
+                    $('a').tooltip();
+                }
+            });
+        });
+    </script>
+    {{-- <div class="container-fluid px-4">
         <h1 class="mt-4">Pemilih</h1>
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item active">Pemilih</li>
@@ -129,5 +213,5 @@
                 <div class="text-muted">Copyright &copy; Your Website 2024</div>
             </div>
         </div>
-    </footer>
+    </footer> --}}
 @endsection

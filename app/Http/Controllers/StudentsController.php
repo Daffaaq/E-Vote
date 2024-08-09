@@ -43,11 +43,27 @@ class StudentsController extends Controller
             ->withQueryString();
 
         // Return the view with the data
-        return view('Superadmin.Siswa.index', compact('data'));
+        return view('Superadmin.Siswa.index');
     }
 
-
-
+    public function list(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Students::with('StatusVote')->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students');
+            return DataTables::of($data)
+                ->addColumn('status_vote', function ($row) {
+                    if ($row->StatusVote) {
+                        return '<span class="badge bg-success">Sudah Memilih</span>';
+                    } else {
+                        return '<span class="badge bg-danger">Belum Memilih</span>';
+                    }
+                })
+                ->rawColumns(['status_vote'])
+                ->addIndexColumn()
+                ->make(true);
+        }
+        return response()->json(['message' => 'Method not allowed'], 405);
+    }
 
     public function create()
     {
