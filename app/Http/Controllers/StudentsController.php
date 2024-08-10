@@ -12,37 +12,6 @@ class StudentsController extends Controller
 {
     public function index(Request $request)
     {
-        // Set the number of items per page, default to 20 if not provided
-        $perPage = $request->input('perPage', 20);
-
-        // Initialize the query
-        $query = Students::with('StatusVote');
-
-        // Apply the status filter if provided
-        if ($request->has('status')) {
-            $status = $request->input('status');
-            if ($status == '1' || $status == '2') {
-                $query->where('status_students', $status);
-            }
-        }
-
-        // Apply the search filter if provided
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->where(function ($query) use ($search) {
-                $query->where('nama', 'LIKE', '%' . $search . '%')
-                    ->orWhere('nis', 'LIKE', '%' . $search . '%')
-                    ->orWhere('kelas', 'LIKE', '%' . $search . '%');
-            });
-        }
-
-        // Select the necessary fields and paginate the results
-        $data = $query->select(['id', 'nama', 'nis', 'kelas', 'status_students'])
-            ->orderBy('nama', 'ASC')
-            ->paginate($perPage)
-            ->withQueryString();
-
-        // Return the view with the data
         return view('Superadmin.Siswa.index');
     }
 

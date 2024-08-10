@@ -76,13 +76,14 @@
                                 <span>Dashboard</span>
                             </a>
                         </li>
-                        <li class="sidebar-item {{ request()->routeIs('periode.index') ? 'active' : '' }}">
+                        <li
+                            class="sidebar-item {{ request()->routeIs('periode.index', 'periode.create', 'periode.edit') ? 'active' : '' }}">
                             <a href="{{ route('periode.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Periode</span>
                             </a>
                         </li>
-                        <li class="sidebar-item {{ request()->routeIs('students.index') ? 'active' : '' }}">
+                        <li class="sidebar-item {{ request()->routeIs('students.index','students.create','students.edit') ? 'active' : '' }}">
                             <a href="{{ route('students.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Daftar Pemilih</span>

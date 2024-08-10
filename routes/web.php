@@ -37,20 +37,21 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
     Route::post('/dashboardSuperadmin/status', [DashboardController::class, 'Settingvote'])->name('dashboard.superadmin.setting-vote');
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Siswa', [StudentsController::class, 'index'])->name('students.index');
-        Route::get('/Siswa/create', [StudentsController::class, 'create']);
-        Route::post('/Siswa/store', [StudentsController::class, 'store']);
-        Route::get('/Siswa/edit/{uuid}', [StudentsController::class, 'edit']);
-        Route::put('/Siswa/update/{uuid}', [StudentsController::class, 'update']);
-        Route::delete('/Siswa/destroy/{uuid}', [StudentsController::class, 'destroy']);
+        Route::get('/Siswa/create', [StudentsController::class, 'create'])->name('students.create');
+        Route::post('/Siswa/store', [StudentsController::class, 'store'])->name('students.store');
+        Route::get('/Siswa/edit/{uuid}', [StudentsController::class, 'edit'])->name('students.edit');
+        Route::put('/Siswa/update/{uuid}', [StudentsController::class, 'update'])->name('students.update');
+        Route::delete('/Siswa/destroy/{uuid}', [StudentsController::class, 'destroy'])->name('students.destroy');
         Route::post('/Siswa/list', [StudentsController::class, 'list'])->name('siswa-list-superadmin');
     });
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Periode', [PeriodeController::class, 'index'])->name('periode.index');
         Route::get('/Periode/create', [PeriodeController::class, 'create'])->name('periode.create');
         Route::post('/Periode/store', [PeriodeController::class, 'store'])->name('periode.store');
-        Route::get('/Periode/edit/{id}', [PeriodeController::class, 'edit'])->name('periode.edit');
-        Route::put('/Periode/update/{id}', [PeriodeController::class, 'update'])->name('periode.update');
-        Route::delete('/Periode/destroy/{id}', [PeriodeController::class, 'destroy'])->name('periode.destroy');
+        Route::get('/Periode/edit/{uuid}', [PeriodeController::class, 'edit'])->name('periode.edit');
+        Route::put('/Periode/update/{uuid}', [PeriodeController::class, 'update'])->name('periode.update');
+        Route::delete('/Periode/destroy/{uuid}', [PeriodeController::class, 'destroy'])->name('periode.destroy');
+        Route::post('/Periode/list', [PeriodeController::class, 'list'])->name('periode-list-superadmin');
     });
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
