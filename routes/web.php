@@ -39,9 +39,9 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::get('/Siswa', [StudentsController::class, 'index'])->name('students.index');
         Route::get('/Siswa/create', [StudentsController::class, 'create']);
         Route::post('/Siswa/store', [StudentsController::class, 'store']);
-        Route::get('/Siswa/edit/{id}', [StudentsController::class, 'edit']);
-        Route::put('/Siswa/update/{id}', [StudentsController::class, 'update']);
-        Route::delete('/Siswa/destroy/{id}', [StudentsController::class, 'destroy']);
+        Route::get('/Siswa/edit/{uuid}', [StudentsController::class, 'edit']);
+        Route::put('/Siswa/update/{uuid}', [StudentsController::class, 'update']);
+        Route::delete('/Siswa/destroy/{uuid}', [StudentsController::class, 'destroy']);
         Route::post('/Siswa/list', [StudentsController::class, 'list'])->name('siswa-list-superadmin');
     });
     Route::prefix('/dashboardSuperadmin')->group(function () {
@@ -77,9 +77,7 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
 });
 Route::middleware(['auth', 'check.role:admin'])->group(function () {
     Route::get('/dashboardAdmin', [DashboardController::class, 'indexAdmin'])->name('dashboard.admin');
-    Route::prefix('/dashboardAdmin')->group(function () {
-
-    });
+    Route::prefix('/dashboardAdmin')->group(function () {});
 });
 Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function () {
     Route::get('/dashboardVoter', [DashboardController::class, 'indexVoter'])->name('dashboard.voter');

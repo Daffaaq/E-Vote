@@ -115,28 +115,28 @@ class StudentsController extends Controller
         return view('students.show', compact('student'));
     }
 
-    public function edit($id)
+    public function edit($uuid)
     {
-        $student = Students::findOrFail($id);
+        $student = Students::where('uuid', $uuid)->firstOrFail();
         return view('Superadmin.Siswa.edit', compact('student'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $uuid)
     {
         // Validasi data
         $request->validate([
             'nama' => 'required|string',
-            'nis' => 'required|string|unique:students,nis,' . $id,
+            'nis' => 'required|string|unique:students,nis,' . $uuid . ',uuid',
             'kelas' => 'required|string',
             'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
             'status_students' => 'required|integer|in:1,2',
         ]);
 
-        // Temukan data mahasiswa berdasarkan ID
-        $student = Students::findOrFail($id);
+        // Temukan data mahasiswa berdasarkan UUID
+        $student = Students::where('uuid', $uuid)->firstOrFail();
 
         // Temukan data pengguna terkait berdasarkan users_id dari mahasiswa
-        $user = User::findOrFail($student->users_id);
+        $user = User::where('id', $student->users_id)->firstOrFail();
 
         // Update data mahasiswa
         $student->update([
@@ -159,10 +159,10 @@ class StudentsController extends Controller
         return redirect()->route('students.index')->with('success', 'Data mahasiswa dan pengguna berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy($uuid)
     {
-        // Temukan data mahasiswa berdasarkan ID
-        $student = Students::findOrFail($id);
+        // Temukan data mahasiswa berdasarkan UUID
+        $student = Students::where('uuid', $uuid)->firstOrFail();
 
         // Temukan data pengguna terkait berdasarkan nis dari mahasiswa
         $user = User::where('username', $student->nis)->first();
@@ -175,6 +175,6 @@ class StudentsController extends Controller
             $user->delete();
         }
 
-        return redirect()->route('students.index')->with('success', 'Mahasiswa dan pengguna berhasil dihapus.');
+        return redirect()->back()->with('success', 'Mahasiswa dan pengguna berhasil dihapus.');
     }
 }
