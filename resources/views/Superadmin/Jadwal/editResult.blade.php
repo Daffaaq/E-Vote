@@ -1,4 +1,4 @@
-@extends('Superadmin.layouts.main')
+@extends('Superadmin.layouts.index')
 
 @section('content')
     <div class="container-fluid px-4" style="margin-top: 20px">
@@ -26,24 +26,19 @@
                     @endif
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('jadwal-result.update', $jadwalResultVote->id) }}">
+                        <form method="POST" action="{{ route('jadwal-result.update', $jadwalResultVote->uuid) }}">
                             @csrf
                             @method('PUT')
 
-                            <div class="mb-3 row">
+                            <div class="mb-3 row d-none">
                                 <label for="periode_id"
                                     class="col-md-4 col-form-label text-md-right">{{ __('Periode ID') }}</label>
                                 <div class="col-md-6">
-                                    <input id="periode_id" type="text"
-                                        class="form-control @error('periode_id') is-invalid @enderror" name="periode_id"
-                                        value="{{ old('periode_id', $jadwalResultVote->periode_id) }}" required autofocus>
-                                    @error('periode_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                    <input id="periode_id" type="hidden" name="periode_id"
+                                        value="{{ old('periode_id', $jadwalResultVote->periode_id) }}">
                                 </div>
                             </div>
+
 
                             <div class="mb-3 row">
                                 <label for="tanggal_result_vote"

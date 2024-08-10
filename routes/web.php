@@ -57,15 +57,17 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::get('/Jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
         Route::get('/Jadwal/create', [JadwalController::class, 'create'])->name('jadwal.create');
         Route::post('/Jadwal/store', [JadwalController::class, 'store'])->name('jadwal.store');
-        Route::get('/Jadwal/edit/orasi/{id}', [JadwalController::class, 'editOrasi'])->name('jadwal-orasi.edit');
-        Route::get('/Jadwal/edit/votes/{id}', [JadwalController::class, 'editVotes'])->name('jadwal-votes.edit');
-        Route::get('/Jadwal/edit/result/{id}', [JadwalController::class, 'editResult'])->name('jadwal-result.edit');
-        Route::put('/Jadwal/update/orasi/{id}', [JadwalController::class, 'updateOrasi'])->name('jadwal-orasi.update');
-        Route::put('/Jadwal/update/votes/{id}', [JadwalController::class, 'updateVote'])->name('jadwal-votes.update');
-        Route::put('/Jadwal/update/result/{id}', [JadwalController::class, 'updateResult'])->name('jadwal-result.update');
+        Route::get('/Jadwal/edit/orasi/{uuid}', [JadwalController::class, 'editOrasi'])->name('jadwal-orasi.edit');
+        Route::get('/Jadwal/edit/votes/{uuid}', [JadwalController::class, 'editVotes'])->name('jadwal-votes.edit');
+        Route::get('/Jadwal/edit/result/{uuid}', [JadwalController::class, 'editResult'])->name('jadwal-result.edit');
+        Route::put('/Jadwal/update/orasi/{uuid}', [JadwalController::class, 'updateOrasi'])->name('jadwal-orasi.update');
+        Route::put('/Jadwal/update/votes/{uuid}', [JadwalController::class, 'updateVote'])->name('jadwal-votes.update');
+        Route::put('/Jadwal/update/result/{uuid}', [JadwalController::class, 'updateResult'])->name('jadwal-result.update');
         Route::delete('/Jadwal/destroy/orasi/{id}', [JadwalController::class, 'destroyOrasi'])->name('jadwal-orasi.destroy');
         Route::delete('/Jadwal/destroy/votes/{id}', [JadwalController::class, 'destroyVotes'])->name('jadwal-votes.destroy');
         Route::delete('/Jadwal/destroy/result/{id}', [JadwalController::class, 'destroyResult'])->name('jadwal-result.destroy');
+        Route::delete('/jadwal/delete-all/{uuidOrasi}/{uuidVotes}/{uuidResult}', [JadwalController::class, 'destroyAll'])->name('jadwal.destroyAll');
+
     });
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Candidate', [CandidateController::class, 'index'])->name('Candidate.index');

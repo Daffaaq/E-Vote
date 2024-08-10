@@ -83,10 +83,24 @@
                                 <span>Periode</span>
                             </a>
                         </li>
-                        <li class="sidebar-item {{ request()->routeIs('students.index','students.create','students.edit') ? 'active' : '' }}">
+                        <li
+                            class="sidebar-item {{ request()->routeIs('students.index', 'students.create', 'students.edit') ? 'active' : '' }}">
                             <a href="{{ route('students.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Daftar Pemilih</span>
+                            </a>
+                        </li>
+                        <li
+                            class="sidebar-item {{ request()->routeIs('jadwal.index', 'jadwal.create', 'jadwal-orasi.edit', 'jadwal-votes.edit', 'jadwal-result.edit') ? 'active' : '' }}">
+                            <a href="{{ route('jadwal.index') }}" class="sidebar-link">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Jadwal</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item {{ request()->routeIs('logout') ? 'active' : '' }}">
+                            <a href="{{ route('logout') }}" class="sidebar-link">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Keluar</span>
                             </a>
                         </li>
 

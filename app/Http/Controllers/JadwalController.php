@@ -15,9 +15,9 @@ class JadwalController extends Controller
         $periode_id = Periode::where('actif', 1)->value('id'); // Mengambil id dari periode yang aktif
 
         // Mengambil data dari masing-masing tabel berdasarkan periode_id
-        $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("id", "tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->get();
-        $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("id", "tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->get();
-        $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("id", "tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->get();
+        $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("uuid", "tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->get();
+        $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("uuid", "tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->get();
+        $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("uuid", "tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->get();
 
         return view('Superadmin.jadwal.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi'));
     }
@@ -72,34 +72,35 @@ class JadwalController extends Controller
 
 
 
-    public function editOrasi($id)
+    public function editOrasi($uuid)
     {
         $periode_id = Periode::where('actif', 1)->value('id');
-        $jadwal_orasi = jadwal_orasi::where('id', $id)->where('periode_id', $periode_id)->firstOrFail();
+        $jadwal_orasi = jadwal_orasi::where('uuid', $uuid)->where('periode_id', $periode_id)->firstOrFail();
 
         // Pass the records to the view
         return view('Superadmin.jadwal.editOrasi', compact('jadwal_orasi'));
     }
-    public function editVotes($id)
+
+    public function editVotes($uuid)
     {
         $periode_id = Periode::where('actif', 1)->value('id');
-        // Retrieve the records associated with the given periode_id
-        $jadwalVotes = JadwalVotes::where('id', $id)->where('periode_id', $periode_id)->firstOrFail();
+        $jadwalVotes = JadwalVotes::where('uuid', $uuid)->where('periode_id', $periode_id)->firstOrFail();
 
         // Pass the records to the view
         return view('Superadmin.jadwal.editVotes', compact('jadwalVotes'));
     }
-    public function editResult($id)
+
+    public function editResult($uuid)
     {
         $periode_id = Periode::where('actif', 1)->value('id');
-        $jadwalResultVote = jadwal_result_vote::where('id', $id)->where('periode_id', $periode_id)->firstOrFail();
+        $jadwalResultVote = jadwal_result_vote::where('uuid', $uuid)->where('periode_id', $periode_id)->firstOrFail();
 
         // Pass the records to the view
         return view('Superadmin.jadwal.editResult', compact('jadwalResultVote'));
     }
 
 
-    public function updateOrasi(Request $request, $id)
+    public function updateOrasi(Request $request, $uuid)
     {
         // Validasi data
         $request->validate([
@@ -109,7 +110,7 @@ class JadwalController extends Controller
         ]);
         $periode_id = Periode::where('actif', 1)->value('id');
         // Temukan data yang sesuai berdasarkan periode_id
-        $jadwalOrasi = jadwal_orasi::where('id', $id)->where('periode_id', $periode_id)->firstOrFail();
+        $jadwalOrasi = jadwal_orasi::where('uuid', $uuid)->where('periode_id', $periode_id)->firstOrFail();
 
         // Update JadwalOrasi
         $jadwalOrasi->update([
@@ -121,7 +122,8 @@ class JadwalController extends Controller
 
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
     }
-    public function updateVote(Request $request, $id)
+
+    public function updateVote(Request $request, $uuid)
     {
         // Validasi data
         $request->validate([
@@ -131,7 +133,7 @@ class JadwalController extends Controller
         ]);
         $periode_id = Periode::where('actif', 1)->value('id');
         // Temukan data yang sesuai berdasarkan periode_id
-        $jadwalVotes = JadwalVotes::where('id', $id)->where('periode_id', $periode_id)->firstOrFail();
+        $jadwalVotes = JadwalVotes::where('uuid', $uuid)->where('periode_id', $periode_id)->firstOrFail();
 
         // Update JadwalVotes
         $jadwalVotes->update([
@@ -141,10 +143,10 @@ class JadwalController extends Controller
             'updated_at' => now(),
         ]);
 
-
         return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
     }
-    public function updateResult(Request $request, $id)
+
+    public function updateResult(Request $request, $uuid)
     {
         // Validasi data
         $request->validate([
@@ -154,7 +156,7 @@ class JadwalController extends Controller
         ]);
         $periode_id = Periode::where('actif', 1)->value('id');
         // Temukan data yang sesuai berdasarkan periode_id
-        $jadwalResultVote = jadwal_result_vote::where('id', $id)->where('periode_id', $periode_id)->firstOrFail();
+        $jadwalResultVote = jadwal_result_vote::where('uuid', $uuid)->where('periode_id', $periode_id)->firstOrFail();
 
         // Update JadwalResultVote
         $jadwalResultVote->update([
@@ -164,10 +166,9 @@ class JadwalController extends Controller
             'updated_at' => now(),
         ]);
 
-        // Update JadwalOrasi
-
         return redirect()->route('jadwal.index')->with('success', 'Jadwal Pembacaan Hasil berhasil diperbarui.');
     }
+
 
 
     public function show()
@@ -175,36 +176,61 @@ class JadwalController extends Controller
         return view('Superadmin.jadwal.show');
     }
 
-    public function destroyOrasi($id)
+    public function destroyOrasi($uuid)
     {
         $periode_id = Periode::where('actif', 1)->value('id');
 
         // Cari dan hapus data yang sesuai dengan id dan periode_id
 
-        $jadwalOrasi = jadwal_orasi::where('id', $id)->where('periode_id', $periode_id)->first();
+        $jadwalOrasi = jadwal_orasi::where('uuid', $uuid)->where('periode_id', $periode_id)->first();
         $jadwalOrasi->delete();
 
         return redirect()->route('jadwal.index')->with('success', 'Jadwal Orasi berhasil dihapus.');
     }
-    public function destroyVotes($id)
+    public function destroyVotes($uuid)
     {
         $periode_id = Periode::where('actif', 1)->value('id');
 
         // Cari dan hapus data yang sesuai dengan id dan periode_id
-        $jadwalVotes = JadwalVotes::where('id', $id)->where('periode_id', $periode_id)->first();
+        $jadwalVotes = JadwalVotes::where('uuid', $uuid)->where('periode_id', $periode_id)->first();
 
         $jadwalVotes->delete();
 
         return redirect()->route('jadwal.index')->with('success', 'Jadwal Votes berhasil dihapus.');
     }
-    public function destroyResult($id)
+    public function destroyResult($uuid)
     {
         $periode_id = Periode::where('actif', 1)->value('id');
 
         // Cari dan hapus data yang sesuai dengan id dan periode_id
-        $jadwalResultVote = jadwal_result_vote::where('id', $id)->where('periode_id', $periode_id)->first();
+        $jadwalResultVote = jadwal_result_vote::where('uuid', $uuid)->where('periode_id', $periode_id)->first();
         $jadwalResultVote->delete();
 
         return redirect()->route('jadwal.index')->with('success', 'jadwal Pembacaan hasil berhasil dihapus.');
+    }
+
+    public function destroyAll($uuidOrasi, $uuidVotes, $uuidResult)
+    {
+        $periode_id = Periode::where('actif', 1)->value('id');
+
+        // Hapus Jadwal Orasi
+        $jadwalOrasi = jadwal_orasi::where('uuid', $uuidOrasi)->where('periode_id', $periode_id)->first();
+        if ($jadwalOrasi) {
+            $jadwalOrasi->delete();
+        }
+
+        // Hapus Jadwal Votes
+        $jadwalVotes = JadwalVotes::where('uuid', $uuidVotes)->where('periode_id', $periode_id)->first();
+        if ($jadwalVotes) {
+            $jadwalVotes->delete();
+        }
+
+        // Hapus Jadwal Result Vote
+        $jadwalResultVote = jadwal_result_vote::where('uuid', $uuidResult)->where('periode_id', $periode_id)->first();
+        if ($jadwalResultVote) {
+            $jadwalResultVote->delete();
+        }
+
+        return redirect()->route('jadwal.index')->with('success', 'Semua jadwal terkait berhasil dihapus.');
     }
 }

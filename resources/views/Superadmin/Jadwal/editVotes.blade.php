@@ -1,4 +1,4 @@
-@extends('Superadmin.layouts.main')
+@extends('Superadmin.layouts.index')
 
 @section('content')
     <div class="container-fluid px-4" style="margin-top: 20px">
@@ -26,31 +26,25 @@
                     @endif
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('jadwal-votes.update', $jadwalVotes->id) }}">
+                        <form method="POST" action="{{ route('jadwal-votes.update', $jadwalVotes->uuid) }}">
                             @csrf
                             @method('PUT')
 
-                            <div class="mb-3 row">
+                            <div class="mb-3 row d-none">
                                 <label for="periode_id"
                                     class="col-md-4 col-form-label text-md-right">{{ __('Periode ID') }}</label>
                                 <div class="col-md-6">
-                                    <input id="periode_id" type="text"
-                                        class="form-control @error('periode_id') is-invalid @enderror" name="periode_id"
-                                        value="{{ old('periode_id', $jadwalVotes->periode_id) }}" required autofocus>
-                                    @error('periode_id')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                    <input id="periode_id" type="hidden" name="periode_id"
+                                        value="{{ old('periode_id', $jadwalVotes->periode_id) }}">
                                 </div>
                             </div>
-
                             <div class="mb-3 row">
                                 <label for="tanggal_awal_vote"
                                     class="col-md-4 col-form-label text-md-right">{{ __('Tanggal Awal Vote') }}</label>
                                 <div class="col-md-6">
                                     <input id="tanggal_awal_vote" type="date"
-                                        class="form-control @error('tanggal_awal_vote') is-invalid @enderror" name="tanggal_awal_vote"
+                                        class="form-control @error('tanggal_awal_vote') is-invalid @enderror"
+                                        name="tanggal_awal_vote"
                                         value="{{ old('tanggal_awal_vote', $jadwalVotes->tanggal_awal_vote) }}" required>
                                     @error('tanggal_awal_vote')
                                         <span class="invalid-feedback" role="alert">
@@ -65,7 +59,8 @@
                                     class="col-md-4 col-form-label text-md-right">{{ __('Tanggal Akhir Vote') }}</label>
                                 <div class="col-md-6">
                                     <input id="tanggal_akhir_vote" type="date"
-                                        class="form-control @error('tanggal_akhir_vote') is-invalid @enderror" name="tanggal_akhir_vote"
+                                        class="form-control @error('tanggal_akhir_vote') is-invalid @enderror"
+                                        name="tanggal_akhir_vote"
                                         value="{{ old('tanggal_akhir_vote', $jadwalVotes->tanggal_akhir_vote) }}" required>
                                     @error('tanggal_akhir_vote')
                                         <span class="invalid-feedback" role="alert">

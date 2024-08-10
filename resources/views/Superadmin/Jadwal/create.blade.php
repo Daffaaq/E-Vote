@@ -1,7 +1,7 @@
-@extends('Superadmin.layouts.main')
+@extends('Superadmin.layouts.index')
 
 @section('content')
-    <div class="container-fluid px-4" style="margin-top: 20px">
+    <div class="container-fluid px-4" style="margin-top: 5px">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -12,7 +12,7 @@
                             @csrf
                             {{-- Langkah 1: Isi Jadwal Orasi --}}
                             <div id="step-orasi">
-                                <h5><span class="badge badge-success">Langkah 1: Isi Jadwal Orasi</span></h5>
+                                <h9><span class="badge bg-success">Langkah 1: Isi Jadwal Orasi</span></h9>
                                 <div class="form-group">
                                     <label for="tanggal_orasi_vote">Tanggal Orasi Vote</label>
                                     <input id="tanggal_orasi_vote" type="date"
@@ -57,7 +57,7 @@
 
                             {{-- Langkah 2: Isi Jadwal Votes --}}
                             <div id="step-votes" style="display: none;">
-                                <h5><span class="badge badge-info">Langkah 2: Isi Jadwal Votes</span></h5>
+                                <h9><span class="badge bg-info">Langkah 2: Isi Jadwal Votes</span></h9>
                                 <div class="form-group">
                                     <label for="tanggal_awal_vote">Tanggal Awal Vote</label>
                                     <input id="tanggal_awal_vote" type="date"
@@ -104,7 +104,7 @@
 
                             {{-- Langkah 3: Isi Jadwal Result Vote --}}
                             <div id="step-result-vote" style="display: none;">
-                                <h5><span class="badge badge-warning">Langkah 3: Isi Jadwal Result Vote</span></h5>
+                                <h9><span class="badge bg-warning">Langkah 3: Isi Jadwal Result Vote</span></h9>
                                 <div class="form-group">
                                     <label for="tanggal_result_vote">Tanggal Result Vote</label>
                                     <input id="tanggal_result_vote" type="date"
@@ -151,59 +151,83 @@
 
                             {{-- Langkah Akhir: Verifikasi Jadwal --}}
                             <div id="step-akhir" style="display: none;">
-                                <span class="badge bg-success">Jadwal Orasi</span>
-                                <div class="form-group">
-                                    <label>Tanggal Orasi Vote</label>
-                                    <p id="verif_tanggal_orasi_vote"></p>
+                                <!-- Section Jadwal Orasi -->
+                                <div class="border rounded p-3 mb-4">
+                                    <div class="form-group d-flex align-items-center">
+                                        <span class="badge bg-success me-3">Jadwal Orasi</span>
+                                        <button type="button" onclick="editStep('step-orasi')"
+                                            class="btn btn-success btn-sm"><i class="bi bi-pencil"></i></button>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <label>Tanggal Orasi Vote</label>
+                                            <p id="verif_tanggal_orasi_vote"></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Jam Orasi Mulai</label>
+                                            <p id="verif_jam_orasi_mulai"></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Tempat Orasi</label>
+                                            <p id="verif_tempat_orasi"></p>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Jam Orasi Mulai</label>
-                                    <p id="verif_jam_orasi_mulai"></p>
+                                <!-- Section Jadwal Votes -->
+                                <div class="border rounded p-3 mb-4">
+                                    <div class="form-group d-flex align-items-center">
+                                        <span class="badge bg-info me-3">Jadwal Votes</span>
+                                        <button type="button" onclick="editStep('step-votes')"
+                                            class="btn btn-info btn-sm"><i class="bi bi-pencil"></i></button>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <label>Tanggal Awal Vote</label>
+                                            <p id="verif_tanggal_awal_vote"></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Tanggal Akhir Vote</label>
+                                            <p id="verif_tanggal_akhir_vote"></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Tempat Vote</label>
+                                            <p id="verif_tempat_vote"></p>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Tempat Orasi</label>
-                                    <p id="verif_tempat_orasi"></p>
+                                <!-- Section Jadwal Result Vote -->
+                                <div class="border rounded p-3 mb-4">
+                                    <div class="form-group d-flex align-items-center">
+                                        <span class="badge bg-danger me-3">Jadwal Result Vote</span>
+                                        <button type="button" onclick="editStep('step-result-vote')"
+                                            class="btn btn-danger btn-sm"><i class="bi bi-pencil"></i></button>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-4">
+                                            <label>Tanggal Result Vote</label>
+                                            <p id="verif_tanggal_result_vote"></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Jam Result Vote</label>
+                                            <p id="verif_jam_result_vote"></p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label>Tempat Result Vote</label>
+                                            <p id="verif_tempat_result_vote"></p>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <span class="badge bg-info">Jadwal Votes</span>
-                                <div class="form-group">
-                                    <label>Tanggal Awal Vote</label>
-                                    <p id="verif_tanggal_awal_vote"></p>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Tanggal Akhir Vote</label>
-                                    <p id="verif_tanggal_akhir_vote"></p>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Tempat Vote</label>
-                                    <p id="verif_tempat_vote"></p>
-                                </div>
-                                <span class="badge bg-danger">Jadwal Result Vote</span>
-                                <div class="form-group">
-                                    <label>Tanggal Result Vote</label>
-                                    <p id="verif_tanggal_result_vote"></p>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Jam Result Vote</label>
-                                    <p id="verif_jam_result_vote"></p>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Tempat Result Vote</label>
-                                    <p id="verif_tempat_result_vote"></p>
-                                </div>
-
-                                <div class="form-group">
+                                <!-- Submit Button -->
+                                <div class="form-group mt-4">
                                     <button type="button" onclick="prevStep('step-result-vote')"
-                                        class="btn btn-secondary mr-2">Sebelumnya</button>
+                                        class="btn btn-secondary me-2">Sebelumnya</button>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
+
                         </form>
                     </div>
                 </div>
@@ -277,6 +301,25 @@
                 document.getElementById('step-akhir').style.display = 'none';
             }
         }
+
+        function editStep(step) {
+            document.getElementById(step).style.display = 'block';
+
+            // Sembunyikan step-akhir saat user mengedit salah satu langkah
+            document.getElementById('step-akhir').style.display = 'none';
+
+            // Sembunyikan step lainnya
+            if (step !== 'step-orasi') {
+                document.getElementById('step-orasi').style.display = 'none';
+            }
+            if (step !== 'step-votes') {
+                document.getElementById('step-votes').style.display = 'none';
+            }
+            if (step !== 'step-result-vote') {
+                document.getElementById('step-result-vote').style.display = 'none';
+            }
+        }
+
 
         // Load saved data on page load
         window.onload = function() {
