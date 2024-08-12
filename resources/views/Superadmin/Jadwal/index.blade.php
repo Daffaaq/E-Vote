@@ -1,5 +1,11 @@
 @extends('Superadmin.layouts.index')
-
+@section('breadcrumbs')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">Daftar Jadwal</li>
+        </ol>
+    </nav>
+@endsection
 @section('content')
     @php
         use Carbon\Carbon;
@@ -51,6 +57,21 @@
         }
     </style>
     <div class="container-fluid px-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Daftar Jadwal</h6>
+        </div>
+        @if (session('error'))
+            <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="alert alert-light-success alert-dismissible fade show" style="height: 50px" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="card mb-4">
             <div class="card-body">
                 <div class="row mb-3">
@@ -101,7 +122,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
+                                                    onclick="return confirm('Apakah anda yakin ingin mengahapus?');">Hapus</button>
                                             </form>
                                         </div>
                                     </div>
@@ -139,7 +160,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
+                                                    onclick="return confirm('Apakah anda yakin ingin mengahapus?');">Hapus</button>
                                             </form>
                                         </div>
                                     </div>
@@ -178,7 +199,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Are you sure you want to delete this item?');">Hapus</button>
+                                                    onclick="return confirm('Apakah anda yakin ingin mengahapus?');">Hapus</button>
                                             </form>
                                         </div>
                                     </div>

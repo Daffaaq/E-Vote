@@ -27,6 +27,9 @@
         @endif
 
         <div class="card-body">
+            {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">
+                Launch modal
+            </button> --}}
             <div class="d-flex justify-content-end mb-3">
                 <a href="{{ url('/dashboardSuperadmin/Periode/create') }}" class="btn btn-primary"
                     style="margin-right: 5px;">Tambah Periode</a>
@@ -50,6 +53,27 @@
         </div>
     </div>
 
+    {{-- <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                    <button type="button" id="closeModalHeader" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus Periode ini?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closeModalFooter" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger">Hapus</button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
         aria-hidden="true">
@@ -57,15 +81,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" id="closeModalHeader" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     Apakah Anda yakin ingin menghapus Periode ini?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="button" id="closeModalFooter" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Batal</button>
                     <form id="deleteForm" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
@@ -75,7 +99,6 @@
             </div>
         </div>
     </div>
-
     <script>
         $(document).ready(function() {
             var dataMaster = $('#periodeTable').DataTable({
@@ -118,13 +141,13 @@
                         searchable: false,
                         render: function(data) {
                             return `
-                                <a href="/dashboardSuperadmin/Periode/edit/${data}" class="btn icon btn-sm btn-warning">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
-                                <button class="btn icon btn-sm btn-danger" onclick="confirmDelete('${data}')">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            `;
+                        <a href="/dashboardSuperadmin/Periode/edit/${data}" class="btn icon btn-sm btn-warning">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <button class="btn icon btn-sm btn-danger" onclick="confirmDelete('${data}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    `;
                         }
                     }
                 ],
@@ -133,7 +156,17 @@
                     $('a').tooltip();
                 }
             });
+
+            console.log("DataTable loaded");
+
+            $('#closeModalHeader, #closeModalFooter').on('click', function() {
+                console.log('close');
+                $('#deleteConfirmationModal').modal('hide');
+            });
+
+            console.log("data masuk");
         });
+
 
         function confirmDelete(uuid) {
             $('#deleteForm').attr('action', `/dashboardSuperadmin/Periode/destroy/${uuid}`);

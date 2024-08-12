@@ -18,7 +18,7 @@
         }
 
         .navbar-light {
-            background-color: #28a745 !important;
+            background-color: #273a6b !important;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
@@ -110,7 +110,7 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #00ff2a;
+            background: #273a6b;
             border: 2px solid #fff;
             z-index: 1;
             /* Ensure it is above the horizontal line */
@@ -133,7 +133,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #00ff2a;
+            background-color: #273a6b;
             color: white;
             border: none;
             border-radius: 50%;
@@ -265,9 +265,9 @@
         }
 
         hr {
-            border: 1px solid #00ff2a;
+            border: 1px solid #273a6b;
             height: 1px;
-            background: #00ff2a;
+            background: #273a6b;
             margin: 40px 0;
         }
 
@@ -285,7 +285,7 @@
         }
 
         .footer-icons a:hover {
-            color: #00ff2a;
+            color: #273a6b;
         }
 
         .social-btn {
@@ -344,7 +344,7 @@
             font-size: 2rem;
             margin-bottom: 20px;
             font-weight: bold;
-            color: #00ff2a;
+            color: #273a6b;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
@@ -398,7 +398,7 @@
     <!-- About Section -->
     <div id="about" class="container mb-4 mt-4">
         <div class="about-section">
-            <h5 class="section-title" style="color: #00ff2a;">Informasi Sistem</h5>
+            <h5 class="section-title" style="color: #273a6b;">Informasi Sistem</h5>
             <p class="card-text text-center">Sistem ini memungkinkan Anda untuk memilih kandidat favorit Anda dengan
                 cara yang mudah dan aman.</p>
         </div>
@@ -486,51 +486,126 @@
     <div id="caketos" class="container mb-4">
         <h5 class="section-title">Kandidate Ketua Osis</h5>
         <div class="row">
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card" style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px">
-                    <div class="d-flex justify-content-center align-items-center flex-wrap" style="height: 100%">
-                        <div class="text-center mt-2" style="margin: 0 10px">
-                            <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Kandidat"
-                                style="width: 100px; height: 100px" />
-                            <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Candra Waskito Utomo</h5>
-                            <span class="badge badge-success">Ketua</span>
-                            <p class="card-text">Kelas: XII IPA 1</p>
-                        </div>
-                        <div class="text-center mt-2" style="margin: 0 10px">
-                            <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Kandidat"
-                                style="width: 100px; height: 100px" />
-                            <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Dwi Fatah Rahayu</h5>
-                            <span class="badge badge-info mt-2">Wakil</span>
-                            <p class="card-text">Kelas: XII IPA 1</p>
+            @forelse ($candidate as $item)
+                @if ($item->status == 'ganda')
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card"
+                            style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px; position: relative;">
+                            <div
+                                style="position: absolute; top: 10px; right: 5px; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px;">
+                                1
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center flex-wrap"
+                                style="height: 100%">
+                                <div class="text-center mt-2" style="margin: 0 10px">
+                                    <img src="{{ Storage::url($item->foto) }}" class="card-img-top"
+                                        alt="Foto Kandidat" style="width: 100px; height: 100px" />
+                                    <h5 class="card-title mt-2 mb-0" style="font-size: 15px">{{ $item->nama_ketua }}
+                                    </h5>
+                                    <span class="badge badge-success">Ketua</span>
+                                    <p class="card-text">{{ $item->slogan }}</p>
+                                </div>
+                                <div class="text-center mt-2" style="margin: 0 10px">
+                                    <img src="{{ Storage::url($item->foto) }}" class="card-img-top"
+                                        alt="Foto Kandidat" style="width: 100px; height: 100px" />
+                                    <h5 class="card-title mt-2 mb-0" style="font-size: 15px">
+                                        {{ $item->nama_wakil_ketua }}/h5>
+                                        <span class="badge badge-info mt-2">Wakil</span>
+                                        <p class="card-text">{{ $item->slogan }}</p>
+                                </div>
+                            </div>
+                            <div class="card-body text-center">
+                                <a href="{{ route('detail.candidate.landing-page', $item->slug) }}"
+                                    class="btn btn-primary" style="border-radius: 50px;">Detail</a>
+                                <a href="#" class="btn btn-success disabled"
+                                    style="border-radius: 50px;">Vote</a>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body text-center">
-                        <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
-                        <a href="#" class="btn btn-success disabled" style="border-radius: 50px;">Vote</a>
+                @elseif ($item->status == 'perseorangan')
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card"
+                            style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px; position: relative;">
+                            <div
+                                style="position: absolute; top: 10px; left: 10px; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px;">
+                                {{ $item->no_urut_kandidat }}
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center flex-column"
+                                style="height: 100%">
+                                <img src="{{ Storage::url($item->foto) }}" class="card-img-top mt-2"
+                                    alt="Foto Kandidat" style="width: 150px; height: 150px; margin: auto" />
+                                <div class="card-body text-center mb-0">
+                                    <h5 class="card-title mb-0" style="font-size: 15px">{{ $item->nama_ketua }}</h5>
+                                    <span class="badge badge-success">Ketua</span>
+                                    <p class="card-text">{{ $item->slogan }}</p>
+                                </div>
+                            </div>
+                            <div class="card-body text-center">
+                                <a href="{{ route('detail.candidate.landing-page', $item->slug) }}"
+                                    class="btn btn-primary" style="border-radius: 50px;">Detail</a>
+                                <a href="#" class="btn btn-success disabled"
+                                    style="border-radius: 50px;">Vote</a>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @empty
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card"
+                        style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px; position: relative;">
+                        <div
+                            style="position: absolute; top: 10px; right: 5px; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px;">
+                            1
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center flex-wrap" style="height: 100%">
+                            <div class="text-center mt-2" style="margin: 0 10px">
+                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Kandidat"
+                                    style="width: 100px; height: 100px" />
+                                <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Candra Waskito Utomo</h5>
+                                <span class="badge badge-success">Ketua</span>
+                                <p class="card-text">Kelas: XII IPA 1</p>
+                            </div>
+                            <div class="text-center mt-2" style="margin: 0 10px">
+                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Kandidat"
+                                    style="width: 100px; height: 100px" />
+                                <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Dwi Fatah Rahayu</h5>
+                                <span class="badge badge-info mt-2">Wakil</span>
+                                <p class="card-text">Kelas: XII IPA 1</p>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
+                            <a href="#" class="btn btn-success" style="border-radius: 50px;">Vote</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card" style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px">
-                    <div class="d-flex justify-content-center align-items-center flex-column" style="height: 100%">
-                        <img src="https://via.placeholder.com/150" class="card-img-top mt-2" alt="Foto Kandidat"
-                            style="width: 100px; height: 100px; margin: auto" />
-                        <div class="card-body text-center mb-0">
-                            <h5 class="card-title mb-0" style="font-size: 15px">Nama Kandidat</h5>
-                            <span class="badge badge-success">Ketua</span>
-                            <p class="card-text">Kelas: XII IPA 1</p>
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card"
+                        style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px; position: relative;">
+                        <div
+                            style="position: absolute; top: 10px; left: 10px; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px;">
+                            1
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center flex-column"
+                            style="height: 100%">
+                            <img src="https://via.placeholder.com/150" class="card-img-top mt-2" alt="Foto Kandidat"
+                                style="width: 150px; height: 150px; margin: auto" />
+                            <div class="card-body text-center mb-0">
+                                <h5 class="card-title mb-0" style="font-size: 15px">Richard</h5>
+                                <span class="badge badge-success">Ketua</span>
+                                <p class="card-text">Kelas: XII IPA 1</p>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
+                            <a href="#" class="btn btn-success" style="border-radius: 50px;">Vote</a>
                         </div>
                     </div>
-                    <div class="card-body text-center">
-                        <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
-                        <a href="#" class="btn btn-success disabled" style="border-radius: 50px;">Vote</a>
-                    </div>
                 </div>
-            </div>
+            @endforelse
 
-            <!-- Repeat other candidates -->
         </div>
+        <!-- Repeat other candidates -->
     </div>
 
 

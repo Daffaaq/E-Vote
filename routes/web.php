@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', [LoginController::class, 'indexlandingpage'])->name('landing-page');
+    Route::prefix('/')->group(function () {
+        Route::get('/Detail/{slug}', [LoginController::class, 'detaiCandidate'])->name('detail.candidate.landing-page');
+    });
     Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::post('/loginProcess', [LoginController::class, 'login'])->name('loginProcess');
 });
@@ -63,19 +66,19 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::put('/Jadwal/update/orasi/{uuid}', [JadwalController::class, 'updateOrasi'])->name('jadwal-orasi.update');
         Route::put('/Jadwal/update/votes/{uuid}', [JadwalController::class, 'updateVote'])->name('jadwal-votes.update');
         Route::put('/Jadwal/update/result/{uuid}', [JadwalController::class, 'updateResult'])->name('jadwal-result.update');
-        Route::delete('/Jadwal/destroy/orasi/{id}', [JadwalController::class, 'destroyOrasi'])->name('jadwal-orasi.destroy');
-        Route::delete('/Jadwal/destroy/votes/{id}', [JadwalController::class, 'destroyVotes'])->name('jadwal-votes.destroy');
-        Route::delete('/Jadwal/destroy/result/{id}', [JadwalController::class, 'destroyResult'])->name('jadwal-result.destroy');
+        Route::delete('/Jadwal/destroy/orasi/{uuid}', [JadwalController::class, 'destroyOrasi'])->name('jadwal-orasi.destroy');
+        Route::delete('/Jadwal/destroy/votes/{uuid}', [JadwalController::class, 'destroyVotes'])->name('jadwal-votes.destroy');
+        Route::delete('/Jadwal/destroy/result/{uuid}', [JadwalController::class, 'destroyResult'])->name('jadwal-result.destroy');
         Route::delete('/jadwal/delete-all/{uuidOrasi}/{uuidVotes}/{uuidResult}', [JadwalController::class, 'destroyAll'])->name('jadwal.destroyAll');
-
     });
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Candidate', [CandidateController::class, 'index'])->name('Candidate.index');
         Route::get('/Candidate/create', [CandidateController::class, 'create'])->name('Candidate.create');
         Route::post('/Candidate/store', [CandidateController::class, 'store'])->name('Candidate.store');
-        Route::get('/Candidate/edit/{slug}', [CandidateController::class, 'edit'])->name('Candidate.edit');
-        Route::put('/Candidate/update/{slug}', [CandidateController::class, 'update'])->name('Candidate.update');
-        Route::delete('/Candidate/destroy/{slug}', [CandidateController::class, 'destroy'])->name('Candidate.destroy');
+        Route::get('/Candidate/edit/{uuic}', [CandidateController::class, 'edit'])->name('Candidate.edit');
+        Route::put('/Candidate/update/{uuic}', [CandidateController::class, 'update'])->name('Candidate.update');
+        Route::delete('/Candidate/destroy/{uuic}', [CandidateController::class, 'destroy'])->name('Candidate.destroy');
+        Route::post('/Candidate/list', [CandidateController::class, 'list'])->name('candidate-list-superadmin');
     });
 });
 Route::middleware(['auth', 'check.role:admin'])->group(function () {
@@ -84,4 +87,7 @@ Route::middleware(['auth', 'check.role:admin'])->group(function () {
 });
 Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function () {
     Route::get('/dashboardVoter', [DashboardController::class, 'indexVoter'])->name('dashboard.voter');
+    Route::prefix('/dashboardVoter')->group(function () {
+        Route::get('/Detail/{slug}', [DashboardController::class, 'detaiCandidate'])->name('detail.candidate.voter');
+    });
 });

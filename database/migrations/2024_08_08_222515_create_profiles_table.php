@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
+            $table->string('name_events');
             $table->string('nickname_profiles');
             $table->string('name_profiles');
             $table->string('address_profiles');

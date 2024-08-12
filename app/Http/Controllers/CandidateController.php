@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Candidates;
 use App\Models\Periode;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -12,33 +13,43 @@ class CandidateController extends Controller
 {
     public function index(Request $request)
     {
-        $perPage = $request->input('perPage', 20);
-
-        // Initialize the query
-        $query = Candidates::query();
-
-        // Apply the search filter if provided
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->where(function ($query) use ($search) {
-                $query->where('nama_ketua', 'LIKE', '%' . $search . '%')
-                    ->orWhere('nama_wakil_ketua', 'LIKE', '%' . $search . '%');
-            });
-        }
-
-        // Fetch candidates with selected columns
-        $candidates = $query->select(['id', 'nama_ketua', 'nama_wakil_ketua', 'foto', 'slug'])
-            ->orderBy('nama_ketua', 'ASC')
-            ->paginate($perPage)
-            ->withQueryString();
+        $periode_id = Periode::where('actif', 1)->value('id');
+        $candidates = Candidates::where('periode_id', $periode_id)->select("status")->first();
 
         return view('Superadmin.Candidate.index', compact('candidates'));
     }
 
+    public function list(Request $request)
+    {
+        if ($request->ajax()) {
+            $periode_id = Periode::where('actif', 1)->value('id');
+            if (!$periode_id) {
+                return response()->json(['message' => 'No active periode found.'], 404);
+            }
+
+            // Dapatkan satu kandidat untuk memeriksa statusnya
+            $candidate = Candidates::where('periode_id', $periode_id)->select('status')->first();
+
+            // Mulai membangun query dasar
+            $data = Candidates::where('periode_id', $periode_id)
+                ->select('id', 'uuid', 'nama_ketua', 'slogan');
+
+            // Jika status adalah 'ganda', tambahkan kolom 'nama_wakil_ketua'
+            if ($candidate && $candidate->status == 'ganda') {
+                $data->addSelect('nama_wakil_ketua');
+            }
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->make(true);
+        }
+
+        return response()->json(['message' => 'Method not allowed'], 405);
+    }
+
     public function create()
     {
-        $periodes = Periode::all();
-        return view('Superadmin.Candidate.create', compact('periodes'));
+        return view('Superadmin.Candidate.create');
     }
 
     public function store(Request $request)
@@ -114,22 +125,23 @@ class CandidateController extends Controller
     }
 
 
-    public function show($slug)
+    public function show($uuid)
     {
-        $candidate = Candidates::where('slug', $slug)->firstOrFail();
+        $candidate = Candidates::where('uuid', $uuid)->firstOrFail();
         return view('Superadmin.Candidate.show', compact('candidate'));
     }
 
-    public function edit($slug)
+    public function edit($uuid)
     {
-        $candidate = Candidates::where('slug', $slug)->firstOrFail();
+        $candidate = Candidates::where('uuid', $uuid)->firstOrFail();
         $periodes = Periode::all();
         return view('Superadmin.Candidate.edit', compact('candidate', 'periodes'));
     }
 
-    public function update(Request $request, $slug)
+
+    public function update(Request $request, $uuid)
     {
-        $candidate = Candidates::where('slug', $slug)->firstOrFail();
+        $candidate = Candidates::where('uuid', $uuid)->firstOrFail();
 
         // Retrieve the active periode_id before validation
         $periode_id = Periode::where('actif', 1)->value('id');
@@ -144,47 +156,13 @@ class CandidateController extends Controller
         $validatedData = $request->validate([
             'status' => 'required|in:perseorangan,ganda',
             'nama_ketua' => 'nullable|string|max:255',
-            'nama_wakil_ketua' => 'nullable|string|max:255', // Changed to 'nullable'
-            'slug' => 'nullable|string|unique:candidates,slug,' . $candidate->id,
-            'no_urut_kandidat' => 'required|numeric',
+            'nama_wakil_ketua' => 'nullable|string|max:255',
             'visi' => 'required',
             'misi' => 'required',
             'slogan' => 'required',
             'foto' => 'nullable|image',
             'periode_id' => 'required|exists:periode,id',
         ]);
-
-        // Check for unique and sequential no_urut_kandidat
-        if ($validatedData['no_urut_kandidat'] !== $candidate->no_urut_kandidat) {
-            $lastNumber = Candidates::max('no_urut_kandidat');
-            $expectedNumber = $lastNumber + 1;
-
-            if ($validatedData['no_urut_kandidat'] != $expectedNumber) {
-                return redirect()->back()->withErrors([
-                    'no_urut_kandidat' => "Nomor urut kandidat harus berurutan dan tidak boleh ada yang terlewat. Silakan masukkan nomor yang benar ($expectedNumber).",
-                ])->withInput();
-            }
-
-            if (Candidates::where('no_urut_kandidat', $validatedData['no_urut_kandidat'])->where('id', '!=', $candidate->id)->exists()) {
-                return redirect()->back()->withErrors(['no_urut_kandidat' => 'Nomor urut kandidat sudah ada.'])->withInput();
-            }
-        }
-
-        // Check if the name has changed
-        $namaDiubah = $candidate->nama_ketua !== $validatedData['nama_ketua'] || $candidate->nama_wakil_ketua !== $validatedData['nama_wakil_ketua'];
-
-        // Generate slug if not provided or if name has changed
-        if (empty($validatedData['slug']) || $namaDiubah) {
-            $baseSlug = Str::slug($validatedData['nama_ketua'] . '-' . $validatedData['nama_wakil_ketua'], '-');
-            $newSlug = $baseSlug;
-
-            // Ensure the slug is unique
-            while (Candidates::where('slug', $newSlug)->where('id', '!=', $candidate->id)->exists()) {
-                $newSlug = $baseSlug . '-' . Str::random(6);
-            }
-
-            $validatedData['slug'] = $newSlug;
-        }
 
         // Handle the photo upload
         if ($request->hasFile('foto')) {
@@ -203,9 +181,10 @@ class CandidateController extends Controller
         return redirect()->route('Candidate.index')->with('success', 'Candidate updated successfully.');
     }
 
-    public function destroy($slug)
+
+    public function destroy($uuid)
     {
-        $candidate = Candidates::where('slug', $slug)->firstOrFail();
+        $candidate = Candidates::where('uuid', $uuid)->firstOrFail();
 
         if ($candidate->foto) {
             Storage::disk('public')->delete($candidate->foto);
@@ -213,6 +192,6 @@ class CandidateController extends Controller
 
         $candidate->delete();
 
-        return redirect()->route('Candidate.index')->with('success', 'Candidate deleted successfully.');
+        return redirect()->back()->with('success', 'Candidate deleted successfully.');
     }
 }

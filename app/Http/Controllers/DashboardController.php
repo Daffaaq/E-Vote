@@ -41,6 +41,43 @@ class DashboardController extends Controller
         return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate'));
     }
 
+    public function detaiCandidate($slug)
+    {
+        // Ambil data kandidat berdasarkan slug
+        $candidate = Candidates::where('slug', $slug)->first();
+
+        // Memproses konten HTML dari misi kandidat
+        $htmlContent = $candidate->misi;
+        $dom = new \DOMDocument();
+        libxml_use_internal_errors(true); // Mengabaikan kesalahan untuk HTML yang tidak valid
+        $dom->loadHTML($htmlContent, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        libxml_clear_errors(); // Membersihkan kesalahan setelah parsing
+
+        $items = [];
+
+        // Tag yang ingin diproses secara dinamis
+        $tags = ['li', 'p', 'div'];
+
+        // Loop melalui setiap tag dan kumpulkan elemen-elemen yang ditemukan
+        foreach ($tags as $tag) {
+            $elements = $dom->getElementsByTagName($tag);
+            foreach ($elements as $element) {
+                // Pastikan hanya menyimpan elemen jika belum ada di array untuk mencegah duplikasi
+                $items[] = [
+                    'tag' => $tag,
+                    'content' => trim($element->textContent),
+                ];
+            }
+        }
+
+        // Menghapus elemen duplikat berdasarkan content
+        $uniqueItems = array_unique($items, SORT_REGULAR);
+
+        // Mengirimkan data kandidat dan items ke view
+        return view('Siswa.detail', compact('candidate', 'uniqueItems'));
+    }
+
+
     public function Settingvote(Request $request)
     {
         // Ambil nilai baru dari request

@@ -532,7 +532,8 @@
                                 </div>
                             </div>
                             <div class="card-body text-center">
-                                <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
+                                <a href="{{ route('detail.candidate.voter', $item->slug) }}" class="btn btn-primary"
+                                    style="border-radius: 50px;">Detail</a>
                                 <a href="#" class="btn btn-success" style="border-radius: 50px;">Vote</a>
                             </div>
                         </div>

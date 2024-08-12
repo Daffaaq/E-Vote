@@ -8,12 +8,15 @@
 
     <link rel="shortcut icon" href="{{ asset('assets/compiled/svg/favicon.svg') }}" type="image/x-icon" />
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap4.min.css">
     <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
     <link href="{{ asset('assets/compiled/css/app.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/compiled/css/app-dark.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/compiled/css/iconly.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('assets/extensions/summernote/summernote-lite.css') }}">
+    <link rel="stylesheet" href="{{ asset('/assets/compiled/css/form-editor-summernote.css') }}">
 </head>
 
 <body>
@@ -95,6 +98,12 @@
                             <a href="{{ route('jadwal.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Jadwal</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item {{ request()->routeIs('Candidate.index') ? 'active' : '' }}">
+                            <a href="{{ route('Candidate.index') }}" class="sidebar-link">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Kandidat</span>
                             </a>
                         </li>
                         <li class="sidebar-item {{ request()->routeIs('logout') ? 'active' : '' }}">
@@ -590,6 +599,8 @@
     <script src="{{ asset('assets/compiled/js/app.js') }}"></script>
     <script src="{{ asset('assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/static/js/pages/dashboard.js') }}"></script>
+    <script src="{{ asset('assets/extensions/summernote/summernote-lite.min.js') }}"></script>
+    <script src="{{ asset('assets/static/js/pages/summernote.js') }}"></script>
 </body>
 
 </html>

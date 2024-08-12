@@ -24,6 +24,15 @@ class JadwalController extends Controller
 
     public function create()
     {
+        $periode_id = Periode::where('actif', 1)->value('id');
+        
+        // pengecekan apakah masing masing model sudah ada datanya
+        $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->first();
+        $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->first();
+        $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->first();
+        if ($jadwalOrasi && $jadwalVotes && $jadwalResultVote) {
+            return redirect()->route('jadwal.index')->with('error', 'Jadwal sudah ada.');
+        }
         return view('Superadmin.jadwal.create');
     }
 
