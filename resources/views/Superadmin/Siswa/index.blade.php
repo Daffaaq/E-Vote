@@ -13,6 +13,18 @@
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Daftar Pemilih</h6>
         </div>
+        @if (session('error'))
+            <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="alert alert-light-success alert-dismissible fade show" style="height: 50px" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="card-body">
             <div class="d-flex justify-content-end mb-3">
                 <a href="{{ url('/dashboardSuperadmin/Siswa/create') }}" class="btn btn-primary"

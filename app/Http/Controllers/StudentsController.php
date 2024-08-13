@@ -2,23 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\StudentService;
 use Illuminate\Http\Request;
-use App\Models\Students;
+use App\Http\Requests\StoreStudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class StudentsController extends Controller
 {
-    public function index(Request $request)
+    protected $studentService;
+
+    public function __construct(StudentService $studentService)
     {
-        return view('Superadmin.Siswa.index');
+        $this->studentService = $studentService;
+    }
+
+    public function index()
+    {
+        $login = Auth::user();
+
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.Siswa.index');
+        } elseif ($login->role == 'admin') {
+            return view('Superadmin.Siswa.index1'); // belum fix view
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $data = Students::with('StatusVote')->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students');
+            $data = $this->studentService->getStudentsWithStatusVote();
             return DataTables::of($data)
                 ->addColumn('status_vote', function ($row) {
                     if ($row->StatusVote) {
@@ -36,114 +52,77 @@ class StudentsController extends Controller
 
     public function create()
     {
-        return view('Superadmin.Siswa.create');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.Siswa.create');
+        } elseif ($login->role == 'admin') {
+            return view('Superadmin.Siswa.create1'); // belum fix view
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
-    public function store(Request $request)
+    public function store(StoreStudentRequest $request)
     {
-        // Validasi data
-        $request->validate([
-            'nama' => 'required|string',
-            'nis' => 'required|string|unique:students',
-            'kelas' => 'required|string',
-            'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
-            'status_students' => 'required|integer|in:1,2',
-        ]);
+        $result = $this->studentService->createStudentAndUser($request);
+        // dd($result);  // Ensure this line is reached
 
-        // Buat pengguna baru dengan username dan password sesuai NIS
-        $user = new User([
-            'username' => $request->nis,
-            'name' => $request->name,
-            'password' => Hash::make($request->nis),
-            'role' => 'voter', // Atur sesuai kebutuhan
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        $user->save();
-
-        // Simpan data mahasiswa baru
-        $student = new Students([
-            'nama' => $request->nama,
-            'nis' => $request->nis,
-            'kelas' => $request->kelas,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'users_id' => $user->id, // menyimpan id pengguna yang baru dibuat
-            'status_students' => $request->status_students,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        $student->save();
-
-        return redirect()->route('students.index')->with('success', 'Mahasiswa berhasil ditambahkan.');
+        if (isset($result['error'])) {
+            return redirect()->back()->with('error', $result['error']);
+        }
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('students.index')->with('success', 'Mahasiswa berhasil ditambahkan.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('students.index1')->with('success', 'Mahasiswa berhasil ditambahkan.'); // belum fix view
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
 
     public function show($id)
     {
-        $student = Students::findOrFail($id);
+        $student = $this->studentService->findStudentByUUID($id);
         return view('students.show', compact('student'));
     }
 
     public function edit($uuid)
     {
-        $student = Students::where('uuid', $uuid)->firstOrFail();
+        $student = $this->studentService->findStudentByUUID($uuid);
+        if (!$student) {
+            abort(404);
+        }
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.Siswa.edit', compact('student'));
+        } elseif ($login->role == 'admin') {
+            return view('Superadmin.Siswa.edit1', compact('student')); // belum fix view
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
         return view('Superadmin.Siswa.edit', compact('student'));
     }
 
-    public function update(Request $request, $uuid)
+    public function update(UpdateStudentRequest $request, $uuid)
     {
-        // Validasi data
-        $request->validate([
-            'nama' => 'required|string',
-            'nis' => 'required|string|unique:students,nis,' . $uuid . ',uuid',
-            'kelas' => 'required|string',
-            'jenis_kelamin' => 'required|string|in:Laki-laki,Perempuan',
-            'status_students' => 'required|integer|in:1,2',
-        ]);
-
-        // Temukan data mahasiswa berdasarkan UUID
-        $student = Students::where('uuid', $uuid)->firstOrFail();
-
-        // Temukan data pengguna terkait berdasarkan users_id dari mahasiswa
-        $user = User::where('id', $student->users_id)->firstOrFail();
-
-        // Update data mahasiswa
-        $student->update([
-            'nama' => $request->nama,
-            'nis' => $request->nis,
-            'kelas' => $request->kelas,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'status_students' => $request->status_students,
-            'updated_at' => now(),
-        ]);
-
-        // Update data pengguna terkait
-        $user->update([
-            'username' => $request->nis,
-            'name' => $request->name,
-            'password' => Hash::make($request->nis), // Update the password
-            'updated_at' => now(),
-        ]);
-
-        return redirect()->route('students.index')->with('success', 'Data mahasiswa dan pengguna berhasil diperbarui.');
+        $result = $this->studentService->updateStudentAndUser($request, $uuid);
+        if (isset($result['error'])) {
+            return redirect()->back()->with('error', $result['error']);
+        }
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('students.index')->with('success', 'Data mahasiswa dan pengguna berhasil diperbarui.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('students.index1')->with('success', 'Data mahasiswa dan pengguna berhasil diperbarui.'); // belum fix view
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function destroy($uuid)
     {
-        // Temukan data mahasiswa berdasarkan UUID
-        $student = Students::where('uuid', $uuid)->firstOrFail();
-
-        // Temukan data pengguna terkait berdasarkan nis dari mahasiswa
-        $user = User::where('username', $student->nis)->first();
-
-        // Hapus data mahasiswa
-        $student->delete();
-
-        // Hapus juga user terkait jika ada
-        if ($user) {
-            $user->delete();
-        }
-
+        $this->studentService->deleteStudentAndUser($uuid);
         return redirect()->back()->with('success', 'Mahasiswa dan pengguna berhasil dihapus.');
     }
 }

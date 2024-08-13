@@ -1,4 +1,15 @@
 @extends('Superadmin.layouts.index')
+<style>
+    .alert {
+        position: relative;
+    }
+
+    .btn-close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+</style>
 @section('breadcrumbs')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -16,7 +27,8 @@
                         <h4 class="card-title">Tambah Periode</h4>
                     </div>
                     @if (session('error'))
-                        <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px" role="alert">
+                        <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px"
+                            role="alert">
                             {{ session('error') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -37,7 +49,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group row align-items-center">
                                         <label class="col-lg-3 col-form-label" for="periode_kepala_sekolah">Nama Kepala
-                                            Institusi/Sekolah</label>
+                                            Institusi / Sekolah</label>
                                         <div class="col-lg-9">
                                             <input type="text" id="periode_kepala_sekolah" class="form-control"
                                                 name="periode_kepala_sekolah" placeholder="David Oroza">
@@ -47,7 +59,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group row align-items-center">
                                         <label class="col-lg-3 col-form-label" for="periode_no_kepala_sekolah">No Kepala
-                                            Institusi/Sekolah</label>
+                                            Institusi / Sekolah</label>
                                         <div class="col-lg-9">
                                             <input type="text" id="periode_no_kepala_sekolah" class="form-control"
                                                 name="periode_no_kepala_sekolah" placeholder="70003331">
@@ -86,5 +98,15 @@
                 </div>
             </div>
         </div>
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
     </section>
 @endsection

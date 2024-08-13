@@ -3,12 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Periode;
-use App\Models\SettingVote;
+use App\Services\PeriodeService;
+use App\Http\Requests\StorePeriodeRequest;
+use App\Http\Requests\UpdatePeriodeRequest;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Http\Request;
 
 class PeriodeController extends Controller
 {
+    protected $periodeService;
+
+    public function __construct(PeriodeService $periodeService)
+    {
+        $this->periodeService = $periodeService;
+    }
+
     public function index(Request $request)
     {
         return view('Superadmin.Periode.index');
@@ -17,7 +26,7 @@ class PeriodeController extends Controller
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $data = Periode::select('id', 'uuid', 'periode_nama', 'periode_kepala_sekolah', 'periode_no_kepala_sekolah', 'actif');
+            $data = $this->periodeService->getAllPeriode();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->make(true);
@@ -30,80 +39,42 @@ class PeriodeController extends Controller
         return view('Superadmin.Periode.create');
     }
 
-    public function store(Request $request)
+    public function store(StorePeriodeRequest $request)
     {
-        $request->validate([
-            'periode_nama' => [
-                'required',
-                'regex:/^\d{4}-\d{4}$/',
-                function ($attribute, $value, $fail) {
-                    [$startYear, $endYear] = explode('-', $value);
-                    if ((int)$startYear >= (int)$endYear) {
-                        $fail('Tahun pertama harus lebih kecil dari tahun kedua.');
-                    }
-                },
-            ],
-            'periode_kepala_sekolah' => 'required',
-            'periode_no_kepala_sekolah' => 'required',
-            'actif' => 'required|integer|in:1,2',
-        ]);
-        // cek apakah ada nama periode yang sama
-        if (Periode::where('periode_nama', $request->periode_nama)->exists()) {
-            return redirect()->back()->with('error', 'Periode sudah ada.');
-        }
-        // Cek apakah ada periode dengan actif = 1
-        $actifPeriode = Periode::where('actif', 1)->exists();
+        $result = $this->periodeService->createPeriode($request);
 
-        if ($actifPeriode && $request->actif == 1) {
-            return redirect()->back()->with('error', 'Terdapat periode yang masih aktif, mohon diganti statusnya tidak aktif.');
+        if (isset($result['error'])) {
+            return redirect()->back()->with('error', $result['error']);
         }
 
-        Periode::create($request->all());
-
-        return redirect()->route('periode.index')->with('success', 'Periode created successfully.');
+        return redirect()->route('periode.index')->with('success', 'Periode berhasil dibuat.');
     }
-
 
     public function edit($uuid)
     {
-        $periode = Periode::where('uuid', $uuid)->firstOrFail();
-        if(!$periode){
-            return redirect()->route('periode.index')->with('error', 'Periode not found.');
-        }
+        $periode = $this->periodeService->findByUUID($uuid);
         return view('Superadmin.Periode.edit', compact('periode'));
     }
 
-    public function update(Request $request, $uuid)
+    public function update(UpdatePeriodeRequest $request, $uuid)
     {
-        $request->validate([
-            'periode_nama' => 'required',
-            'periode_kepala_sekolah' => 'required',
-            'periode_no_kepala_sekolah' => 'required',
-            'actif' => 'required|integer|in:1,2',
-        ]);
-        $periode = Periode::where('uuid', $uuid)->firstOrFail();
-        if (!$periode) {
-            return redirect()->route('periode.index')->with('error', 'Periode not found.');
-        }
-        // Cek apakah ada periode dengan actif = 1
-        $actifPeriode = Periode::where('actif', 1)->exists();
+        $result = $this->periodeService->updatePeriode($request, $uuid);
 
-        if ($actifPeriode && $request->actif == 1) {
-            // Jika ada, lakukan sesuatu, contohnya:
-            return redirect()->back()->with('error', 'Terdapat periode yang masih aktif.');
+        if (isset($result['error'])) {
+            return redirect()->back()->with('error', $result['error']);
         }
-        $periode->update($request->all());
 
-        return redirect()->route('periode.index')->with('success', 'Periode updated successfully.');
+        return redirect()->route('periode.index')->with('success', 'Periode berhasil di perbaharui.');
     }
 
     public function destroy($uuid)
     {
-        $periode = Periode::where('uuid', $uuid)->firstOrFail();
-        if (!$periode) {
-            return redirect()->route('periode.index')->with('error', 'Periode not found.');
+        $result = $this->periodeService->deletePeriode($uuid);
+
+        if (isset($result['error'])) {
+            return redirect()->back()->with('error', $result['error']);
         }
-        $periode->delete();
-        return redirect()->back()->with('success', 'Periode deleted successfully.');
+
+        return redirect()->back()->with('success', 'Periode berhasil dihapus.');
     }
 }

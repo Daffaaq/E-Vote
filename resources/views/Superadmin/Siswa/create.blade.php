@@ -1,4 +1,16 @@
 @extends('Superadmin.layouts.index')
+<style>
+    .alert {
+        position: relative;
+    }
+
+    .btn-close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+</style>
+
 @section('breadcrumbs')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -16,6 +28,13 @@
                         <h4 class="card-title">Tambah Pemilih</h4>
                     </div>
 
+                    @if (session('error'))
+                        <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px"
+                            role="alert">
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
                     <div class="card-body">
                         <form method="POST" action="{{ url('/dashboardSuperadmin/Siswa/store') }}">
                             @csrf
@@ -102,5 +121,15 @@
                 </div>
             </div>
         </div>
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
     </section>
 @endsection

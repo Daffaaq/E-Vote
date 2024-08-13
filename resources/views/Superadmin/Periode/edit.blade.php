@@ -1,4 +1,15 @@
 @extends('Superadmin.layouts.index')
+<style>
+    .alert {
+        position: relative;
+    }
+
+    .btn-close {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+</style>
 @section('breadcrumbs')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -16,7 +27,8 @@
                         <h4 class="card-title">Tambah Pemilih</h4>
                     </div>
                     @if (session('error'))
-                        <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px" role="alert">
+                        <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px"
+                            role="alert">
                             {{ session('error') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
@@ -38,7 +50,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group row align-items-center">
                                         <label class="col-lg-3 col-form-label" for="periode_kepala_sekolah">Nama Kepala
-                                            Institusi/Sekolah</label>
+                                            Institusi / Sekolah</label>
                                         <div class="col-lg-9">
                                             <input type="text" id="periode_kepala_sekolah" class="form-control"
                                                 value="{{ $periode->periode_kepala_sekolah }}" name="periode_kepala_sekolah"
@@ -49,7 +61,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group row align-items-center">
                                         <label class="col-lg-3 col-form-label" for="periode_no_kepala_sekolah">No Kepala
-                                            Institusi/Sekolah</label>
+                                            Institusi / Sekolah</label>
                                         <div class="col-lg-9">
                                             <input type="text" id="periode_no_kepala_sekolah" class="form-control"
                                                 value="{{ $periode->periode_no_kepala_sekolah }}"
@@ -87,109 +99,15 @@
                 </div>
             </div>
         </div>
-    </section>
-    {{-- <div class="container-fluid px-4" style="margin-top: 20px">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Update Data Mahasiswa') }}</div>
-
-                    <div class="card-body">
-                        <form method="POST" action="{{ url('/dashboardSuperadmin/Periode/update/' . $periode->id) }}">
-                            @csrf
-                            @method('PUT')
-
-                            <!-- Isi formulir dengan data mahasiswa yang ada -->
-                            <div class="mb-3 row">
-                                <label for="nama"
-                                    class="col-md-4 col-form-label text-md-right">{{ __('Nama') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="nama" type="text"
-                                        class="form-control @error('periode_nama') is-invalid @enderror" name="periode_nama"
-                                        value="{{ $periode->periode_nama }}" required autofocus>
-
-                                    @error('nama')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="mb-3 row">
-                                <label for="periode_kepala_sekolah"
-                                    class="col-md-4 col-form-label text-md-right">{{ __('Kepala Sekolah') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="periode_kepala_sekolah" type="text"
-                                        class="form-control @error('periode_kepala_sekolah') is-invalid @enderror"
-                                        name="periode_kepala_sekolah" value="{{ $periode->periode_kepala_sekolah }}"
-                                        required autofocus>
-
-                                    @error('periode_kepala_sekolah')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="mb-3 row">
-                                <label for="periode_no_kepala_sekolah"
-                                    class="col-md-4 col-form-label text-md-right">{{ __('No. Kepala Sekolah') }}</label>
-
-                                <div class="col-md-6">
-                                    <input id="periode_no_kepala_sekolah" type="text"
-                                        class="form-control @error('periode_no_kepala_sekolah') is-invalid @enderror"
-                                        name="periode_no_kepala_sekolah"
-                                        value="{{ $periode->periode_no_kepala_sekolah }}" required autofocus>
-
-                                    @error('periode_no_kepala_sekolah')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <!-- Tambahkan elemen formulir lainnya seperti di halaman create -->
-
-                            <div class="mb-3 row">
-                                <label for="actif"
-                                    class="col-md-4 col-form-label text-md-right">{{ __('Status Aktif') }}</label>
-
-                                <div class="col-md-6">
-                                    <select id="actif" class="form-select @error('actif') is-invalid @enderror"
-                                        name="actif" required>
-                                        <option value="">Pilih Status Aktif</option>
-                                        <option value="1" {{ $periode->actif == '1' ? 'selected' : '' }}>
-                                            Aktif</option>
-                                        <option value="2" {{ $periode->actif == '2' ? 'selected' : '' }}>
-                                            Non-Aktif</option>
-                                    </select>
-
-                                    @error('actif')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="mb-3 row">
-                                <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        {{ __('Update') }}
-                                    </button>
-                                    <a href="{{ route('periode.index') }}" class="btn btn-secondary">
-                                        {{ __('Batal') }}
-                                    </a>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        </div>
-    </div> --}}
+        @endif
+    </section>
 @endsection
