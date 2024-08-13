@@ -45,7 +45,7 @@
                                     <input id="tanggal_awal_vote" type="date"
                                         class="form-control @error('tanggal_awal_vote') is-invalid @enderror"
                                         name="tanggal_awal_vote"
-                                        value="{{ old('tanggal_awal_vote', $jadwalVotes->tanggal_awal_vote) }}" required>
+                                        value="{{ old('tanggal_awal_vote', $jadwalVotes->tanggal_awal_vote) }}">
                                     @error('tanggal_awal_vote')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -61,7 +61,7 @@
                                     <input id="tanggal_akhir_vote" type="date"
                                         class="form-control @error('tanggal_akhir_vote') is-invalid @enderror"
                                         name="tanggal_akhir_vote"
-                                        value="{{ old('tanggal_akhir_vote', $jadwalVotes->tanggal_akhir_vote) }}" required>
+                                        value="{{ old('tanggal_akhir_vote', $jadwalVotes->tanggal_akhir_vote) }}">
                                     @error('tanggal_akhir_vote')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -76,7 +76,7 @@
                                 <div class="col-md-6">
                                     <input id="tempat_vote" type="text"
                                         class="form-control @error('tempat_vote') is-invalid @enderror" name="tempat_vote"
-                                        value="{{ old('tempat_vote', $jadwalVotes->tempat_vote) }}" required>
+                                        value="{{ old('tempat_vote', $jadwalVotes->tempat_vote) }}">
                                     @error('tempat_vote')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

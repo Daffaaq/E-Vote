@@ -79,22 +79,22 @@
                         <a href="{{ route('jadwal.create') }}" class="btn btn-primary">Tambah Jadwal</a>
                     </div>
                 </div>
-                @if ($jadwalOrasi->isNotEmpty() && $jadwalVotes->isNotEmpty() && $jadwalResultVote->isNotEmpty())
+                @if ($jadwalOrasi->isNotEmpty() || $jadwalVotes->isNotEmpty() || $jadwalResultVote->isNotEmpty())
                     <div class="row mb-3">
                         <div class="col-md-12 text-end">
-                            <form
-                                action="{{ route('jadwal.destroyAll', [
-                                    'uuidOrasi' => $jadwalOrasi->first()->uuid,
-                                    'uuidVotes' => $jadwalVotes->first()->uuid,
-                                    'uuidResult' => $jadwalResultVote->first()->uuid,
-                                ]) }}"
-                                method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus semua jadwal ini?');">Hapus
-                                    Semua Jadwal</button>
-                            </form>
+                            <div class="row mb-3">
+                                @if ($jadwalOrasi->isNotEmpty() && $jadwalVotes->isNotEmpty() && $jadwalResultVote->isNotEmpty())
+                                    <div class="col-md-12 text-end">
+                                        <form action="{{ $routeUrl }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                onclick="return confirm('Apakah Anda yakin ingin menghapus semua jadwal ini?');">Hapus
+                                                Semua Jadwal</button>
+                                        </form>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center">

@@ -48,7 +48,7 @@
                                         class="form-control @error('tanggal_result_vote') is-invalid @enderror"
                                         name="tanggal_result_vote"
                                         value="{{ old('tanggal_result_vote', $jadwalResultVote->tanggal_result_vote) }}"
-                                        required>
+                                        >
                                     @error('tanggal_result_vote')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -64,7 +64,7 @@
                                     <input id="jam_result_vote" type="time"
                                         class="form-control @error('jam_result_vote') is-invalid @enderror"
                                         name="jam_result_vote"
-                                        value="{{ old('jam_result_vote', $jadwalResultVote->jam_result_vote) }}" required>
+                                        value="{{ old('jam_result_vote', $jadwalResultVote->jam_result_vote) }}" >
                                     @error('jam_result_vote')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -81,7 +81,7 @@
                                         class="form-control @error('tempat_result_vote') is-invalid @enderror"
                                         name="tempat_result_vote"
                                         value="{{ old('tempat_result_vote', $jadwalResultVote->tempat_result_vote) }}"
-                                        required>
+                                        >
                                     @error('tempat_result_vote')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

@@ -19,7 +19,7 @@
                                         class="form-control @error('tanggal_orasi_vote') is-invalid @enderror"
                                         name="tanggal_orasi_vote" value="{{ old('tanggal_orasi_vote') }}" required>
                                     @error('tanggal_orasi_vote')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert" style="display:block;">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -31,7 +31,7 @@
                                         class="form-control @error('jam_orasi_mulai') is-invalid @enderror"
                                         name="jam_orasi_mulai" value="{{ old('jam_orasi_mulai') }}" required>
                                     @error('jam_orasi_mulai')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert" style="display:block;">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -43,7 +43,7 @@
                                         class="form-control @error('tempat_orasi') is-invalid @enderror" name="tempat_orasi"
                                         value="{{ old('tempat_orasi') }}" required>
                                     @error('tempat_orasi')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert" style="display:block;">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -55,7 +55,7 @@
                                 </div>
                             </div>
 
-                            {{-- Langkah 2: Isi Jadwal Votes --}}
+                            <!-- Langkah 2: Isi Jadwal Votes -->
                             <div id="step-votes" style="display: none;">
                                 <h9><span class="badge bg-info">Langkah 2: Isi Jadwal Votes</span></h9>
                                 <div class="form-group">
@@ -64,7 +64,7 @@
                                         class="form-control @error('tanggal_awal_vote') is-invalid @enderror"
                                         name="tanggal_awal_vote" value="{{ old('tanggal_awal_vote') }}" required>
                                     @error('tanggal_awal_vote')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert" style="display:block;">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -76,7 +76,7 @@
                                         class="form-control @error('tanggal_akhir_vote') is-invalid @enderror"
                                         name="tanggal_akhir_vote" value="{{ old('tanggal_akhir_vote') }}" required>
                                     @error('tanggal_akhir_vote')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert" style="display:block;">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -88,7 +88,7 @@
                                         class="form-control @error('tempat_vote') is-invalid @enderror" name="tempat_vote"
                                         value="{{ old('tempat_vote') }}" required>
                                     @error('tempat_vote')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert" style="display:block;">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -102,7 +102,7 @@
                                 </div>
                             </div>
 
-                            {{-- Langkah 3: Isi Jadwal Result Vote --}}
+                            <!-- Langkah 3: Isi Jadwal Result Vote -->
                             <div id="step-result-vote" style="display: none;">
                                 <h9><span class="badge bg-warning">Langkah 3: Isi Jadwal Result Vote</span></h9>
                                 <div class="form-group">
@@ -111,7 +111,7 @@
                                         class="form-control @error('tanggal_result_vote') is-invalid @enderror"
                                         name="tanggal_result_vote" value="{{ old('tanggal_result_vote') }}" required>
                                     @error('tanggal_result_vote')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert" style="display:block;">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -123,7 +123,7 @@
                                         class="form-control @error('jam_result_vote') is-invalid @enderror"
                                         name="jam_result_vote" value="{{ old('jam_result_vote') }}" required>
                                     @error('jam_result_vote')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert" style="display:block;">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -135,7 +135,7 @@
                                         class="form-control @error('tempat_result_vote') is-invalid @enderror"
                                         name="tempat_result_vote" value="{{ old('tempat_result_vote') }}" required>
                                     @error('tempat_result_vote')
-                                        <span class="invalid-feedback" role="alert">
+                                        <span class="invalid-feedback" role="alert" style="display:block;">
                                             <strong>{{ $message }}</strong>
                                         </span>
                                     @enderror
@@ -148,6 +148,7 @@
                                         class="btn btn-primary">Selanjutnya</button>
                                 </div>
                             </div>
+
 
                             {{-- Langkah Akhir: Verifikasi Jadwal --}}
                             <div id="step-akhir" style="display: none;">
@@ -227,7 +228,6 @@
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
-
                         </form>
                     </div>
                 </div>
@@ -237,6 +237,36 @@
 
     <script>
         function saveAndNext(nextStep) {
+            let currentStep = '';
+            let hasError = false; // Inisialisasi variabel hasError
+
+            if (nextStep === 'step-votes') {
+                currentStep = 'step-orasi';
+            } else if (nextStep === 'step-result-vote') {
+                currentStep = 'step-votes';
+            } else if (nextStep === 'step-akhir') {
+                currentStep = 'step-result-vote';
+            }
+
+            // Periksa semua input pada langkah saat ini
+            document.getElementById(currentStep).querySelectorAll('.form-control').forEach(function(el) {
+                if (el.value.trim() === '') { // Jika input kosong
+                    el.classList.add('is-invalid'); // Tambahkan class untuk menampilkan error
+                    hasError = true;
+                } else {
+                    el.classList.remove('is-invalid'); // Hapus class jika input sudah diisi
+                }
+            });
+
+            // Jika ada error, hentikan perpindahan ke langkah berikutnya
+            if (hasError) {
+                document.getElementById(currentStep).querySelectorAll('.invalid-feedback').forEach(function(el) {
+                    el.style.display = 'block'; // Tampilkan error
+                });
+                return; // Hentikan fungsi jika ada error
+            }
+
+            // Save data to sessionStorage and move to the next step
             if (nextStep === 'step-votes') {
                 sessionStorage.setItem('tanggal_orasi_vote', document.getElementById('tanggal_orasi_vote').value);
                 sessionStorage.setItem('jam_orasi_mulai', document.getElementById('jam_orasi_mulai').value);
@@ -267,22 +297,19 @@
                     'tempat_result_vote');
             }
 
+            // Show the next step and hide the current step
             document.getElementById(nextStep).style.display = 'block';
-
-            // Hide the current step
-            if (nextStep !== 'step-orasi') {
-                document.getElementById('step-orasi').style.display = 'none';
-            }
-            if (nextStep !== 'step-votes') {
-                document.getElementById('step-votes').style.display = 'none';
-            }
-            if (nextStep !== 'step-result-vote') {
-                document.getElementById('step-result-vote').style.display = 'none';
-            }
-            if (nextStep !== 'step-akhir') {
-                document.getElementById('step-akhir').style.display = 'none';
-            }
+            document.getElementById(currentStep).style.display = 'none';
         }
+
+        // Hapus class is-invalid saat pengguna memperbaiki input
+        document.querySelectorAll('.form-control').forEach(function(el) {
+            el.addEventListener('input', function() {
+                if (el.value.trim() !== '') {
+                    el.classList.remove('is-invalid');
+                }
+            });
+        });
 
         function prevStep(prevStep) {
             document.getElementById(prevStep).style.display = 'block';
