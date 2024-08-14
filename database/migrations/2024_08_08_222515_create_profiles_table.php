@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('instagram_url')->nullable();
             $table->string('linkedin_url')->nullable();
             $table->string('line_url')->nullable();
+            $table->string('threads_url')->nullable();
             $table->string('tiktok_url')->nullable();
             $table->string('youtube_url')->nullable();
             $table->timestamps();

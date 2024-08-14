@@ -1,5 +1,12 @@
 @extends('Superadmin.layouts.index')
-
+@section('breadcrumbs')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('Candidate.index') }}">Daftar Kandidat</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Daftar Kandidat</li>
+        </ol>
+    </nav>
+@endsection
 @section('content')
     <section id="horizontal-input">
         <div class="row">
@@ -9,7 +16,8 @@
                         <h4 class="card-title">Tambah Candidate</h4>
                     </div>
                     @if (session('error'))
-                        <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px" role="alert">
+                        <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px"
+                            role="alert">
                             {{ session('error') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PeriodeController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
 use Illuminate\Support\Facades\Route;
 
@@ -79,6 +80,16 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::put('/Candidate/update/{uuic}', [CandidateController::class, 'update'])->name('Candidate.update');
         Route::delete('/Candidate/destroy/{uuic}', [CandidateController::class, 'destroy'])->name('Candidate.destroy');
         Route::post('/Candidate/list', [CandidateController::class, 'list'])->name('candidate-list-superadmin');
+    });
+    Route::prefix('/dashboardSuperadmin')->group(function () {
+        Route::get('profiles', [ProfileController::class, 'index'])->name('profiles.index');
+        Route::get('profiles/{uuid}', [ProfileController::class, 'show'])->name('profiles.show');
+        Route::get('profiles/edit-logo/{uuid}', [ProfileController::class, 'editLogo'])->name('profiles.edit-logo');
+        Route::put('profiles/update-logo/{uuid}', [ProfileController::class, 'updateLogo'])->name('profiles.update-logo');
+        Route::get('profiles/edit-personal/{uuid}', [ProfileController::class, 'editPersonal'])->name('profiles.edit-personal');
+        Route::put('profiles/update-personal/{uuid}', [ProfileController::class, 'updatePersonal'])->name('profiles.update-personal');
+        Route::get('profiles/edit-sosial-media/{uuid}', [ProfileController::class, 'editSocialMedia'])->name('profiles.edit-sosial-media');
+        Route::put('profiles/update-sosial-media/{uuid}', [ProfileController::class, 'updateSocialMedia'])->name('profiles.update-sosial-media');
     });
 });
 Route::middleware(['auth', 'check.role:admin'])->group(function () {

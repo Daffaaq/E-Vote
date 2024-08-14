@@ -165,6 +165,7 @@ class UsersTableSeeder extends Seeder
                 'line_url' => 'https://line.me/ti/p/',
                 'tiktok_url' => 'https://tiktok.com/',
                 'youtube_url' => 'https://youtube.com/c/',
+                'threads_url' => 'https://www.threads.net/',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

@@ -1,5 +1,12 @@
 @extends('Superadmin.layouts.index')
-
+@section('breadcrumbs')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('jadwal.index') }}">Daftar Jadwal</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tambah Daftar Jadwal</li>
+        </ol>
+    </nav>
+@endsection
 @section('content')
     <div class="container-fluid px-4" style="margin-top: 5px">
         <div class="row justify-content-center">
@@ -104,9 +111,9 @@
 
                             <!-- Langkah 3: Isi Jadwal Result Vote -->
                             <div id="step-result-vote" style="display: none;">
-                                <h9><span class="badge bg-warning">Langkah 3: Isi Jadwal Result Vote</span></h9>
+                                <h9><span class="badge bg-warning">Langkah 3: Isi Jadwal Pembacaan Hasil</span></h9>
                                 <div class="form-group">
-                                    <label for="tanggal_result_vote">Tanggal Result Vote</label>
+                                    <label for="tanggal_result_vote">Tanggal Pembacaan Hasil</label>
                                     <input id="tanggal_result_vote" type="date"
                                         class="form-control @error('tanggal_result_vote') is-invalid @enderror"
                                         name="tanggal_result_vote" value="{{ old('tanggal_result_vote') }}" required>
@@ -118,7 +125,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="jam_result_vote">Jam Result Vote</label>
+                                    <label for="jam_result_vote">Jam Pembacaan Hasil</label>
                                     <input id="jam_result_vote" type="time"
                                         class="form-control @error('jam_result_vote') is-invalid @enderror"
                                         name="jam_result_vote" value="{{ old('jam_result_vote') }}" required>
@@ -130,7 +137,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="tempat_result_vote">Tempat Result Vote</label>
+                                    <label for="tempat_result_vote">Tempat Pembacaan Hasil</label>
                                     <input id="tempat_result_vote" type="text"
                                         class="form-control @error('tempat_result_vote') is-invalid @enderror"
                                         name="tempat_result_vote" value="{{ old('tempat_result_vote') }}" required>
@@ -201,21 +208,21 @@
                                 <!-- Section Jadwal Result Vote -->
                                 <div class="border rounded p-3 mb-4">
                                     <div class="form-group d-flex align-items-center">
-                                        <span class="badge bg-danger me-3">Jadwal Result Vote</span>
+                                        <span class="badge bg-danger me-3">Jadwal Pembacaan Hasil</span>
                                         <button type="button" onclick="editStep('step-result-vote')"
                                             class="btn btn-danger btn-sm"><i class="bi bi-pencil"></i></button>
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col-md-4">
-                                            <label>Tanggal Result Vote</label>
+                                            <label>Tanggal Pembacaan Hasil</label>
                                             <p id="verif_tanggal_result_vote"></p>
                                         </div>
                                         <div class="col-md-4">
-                                            <label>Jam Result Vote</label>
+                                            <label>Jam Pembacaan Hasil</label>
                                             <p id="verif_jam_result_vote"></p>
                                         </div>
                                         <div class="col-md-4">
-                                            <label>Tempat Result Vote</label>
+                                            <label>Tempat Pembacaan Hasil</label>
                                             <p id="verif_tempat_result_vote"></p>
                                         </div>
                                     </div>

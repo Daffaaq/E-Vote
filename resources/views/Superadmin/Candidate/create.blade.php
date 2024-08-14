@@ -1,5 +1,12 @@
 @extends('Superadmin.layouts.index')
-
+@section('breadcrumbs')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('Candidate.index') }}">Daftar Kandidat</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tambah Daftar Kandidat</li>
+        </ol>
+    </nav>
+@endsection
 @section('content')
     <section id="horizontal-input">
         <div class="row">
@@ -119,12 +126,12 @@
                             </div>
 
                             <div class="col-md-12">
-                                <div class="form-group row align-items-center"">
+                                <div class="form-group row align-items-center">
                                     <label for="slogan" class="col-lg-3 col-form-label">{{ __('Slogan') }}</label>
                                     <input id="slogan" type="text"
                                         class="form-control @error('slogan') is-invalid @enderror" name="slogan"
                                         value="{{ old('slogan') }}" required autocomplete="slogan" autofocus>
-                                    @error('nama')
+                                    @error('slogan')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -166,8 +173,8 @@
                                     class="btn btn-primary rounded-pill me-1 mb-1">
                                     {{ __('Batal') }}
                                 </a>
-                                <button type="button" class="btn btn-info rounded-pill me-1 mb-1"
-                                    id="reviewBtn">Review</button>
+                                <button type="button" class="btn btn-info rounded-pill me-1 mb-1" id="reviewBtn"
+                                    style="display: none;">Review</button>
                                 <button type="submit" class="btn btn-success rounded-pill me-1 mb-1">Tambah</button>
                                 <button type="reset" class="btn btn-warning rounded-pill me-1 mb-1">Reset</button>
                             </div>
@@ -199,6 +206,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             const statusField = document.getElementById('status');
             const wakilKetuaField = document.getElementById('wakil_ketua_container');
+            const reviewBtn = document.getElementById('reviewBtn');
+            const hapusPreviewBtn = document.getElementById('hapusPreviewBtn');
 
             function toggleWakilKetua() {
                 if (statusField.value === 'perseorangan') {
@@ -212,8 +221,13 @@
 
             // Initialize visibility on page load
             toggleWakilKetua();
+
+            // Hide review button if no image is selected initially
+            if (document.getElementById('imagePreview').innerHTML.trim() === '') {
+                reviewBtn.style.display = 'none';
+            }
         });
-        // Script untuk menampilkan preview gambar saat dipilih
+
         // Script untuk menampilkan preview gambar saat dipilih
         document.getElementById('foto').addEventListener('change', function(event) {
             var file = event.target.files[0];
@@ -228,16 +242,17 @@
                 previewContainer.innerHTML = '';
                 previewContainer.appendChild(img);
 
-                // Tampilkan tombol Hapus
+                // Tampilkan tombol Hapus dan Review
                 document.getElementById('hapusPreviewBtn').classList.remove('d-none');
+                document.getElementById('reviewBtn').style.display = 'inline-block';
             };
             reader.readAsDataURL(file);
         });
 
         // Script untuk menampilkan foto di modal saat tombol Review diklik
-        reviewBtn.addEventListener('click', function() {
+        document.getElementById('reviewBtn').addEventListener('click', function() {
             const previewContainer = document.getElementById('imagePreview').innerHTML;
-            reviewFoto.innerHTML = previewContainer;
+            document.getElementById('reviewFoto').innerHTML = previewContainer;
             $('#reviewModal').modal('show');
         });
 
@@ -250,10 +265,12 @@
             var fotoInput = document.getElementById('foto');
             fotoInput.value = '';
 
-            // Sembunyikan tombol Hapus
+            // Sembunyikan tombol Hapus dan Review
             document.getElementById('hapusPreviewBtn').classList.add('d-none');
+            document.getElementById('reviewBtn').style.display = 'none';
         });
     </script>
+
     <script>
         $(document).ready(function() {
             $('#visi').summernote({

@@ -1,5 +1,12 @@
 @extends('Superadmin.layouts.index')
-
+@section('breadcrumbs')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('jadwal.index') }}">Daftar Jadwal</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Daftar Jadwal Orasi</li>
+        </ol>
+    </nav>
+@endsection
 @section('content')
     <div class="container-fluid px-4" style="margin-top: 20px">
         <div class="row justify-content-center">

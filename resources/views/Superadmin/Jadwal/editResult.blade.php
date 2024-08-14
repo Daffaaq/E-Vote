@@ -1,11 +1,18 @@
 @extends('Superadmin.layouts.index')
-
+@section('breadcrumbs')
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('jadwal.index') }}">Daftar Jadwal</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Edit Daftar Jadwal Pembacaan Hasil</li>
+        </ol>
+    </nav>
+@endsection
 @section('content')
     <div class="container-fluid px-4" style="margin-top: 20px">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Edit Jadwal Result Vote') }}</div>
+                    <div class="card-header">{{ __('Edit Jadwal Pembacaan Hasil') }}</div>
                     @if (session('error'))
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             {{ session('error') }}
@@ -47,8 +54,7 @@
                                     <input id="tanggal_result_vote" type="date"
                                         class="form-control @error('tanggal_result_vote') is-invalid @enderror"
                                         name="tanggal_result_vote"
-                                        value="{{ old('tanggal_result_vote', $jadwalResultVote->tanggal_result_vote) }}"
-                                        >
+                                        value="{{ old('tanggal_result_vote', $jadwalResultVote->tanggal_result_vote) }}">
                                     @error('tanggal_result_vote')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -64,7 +70,7 @@
                                     <input id="jam_result_vote" type="time"
                                         class="form-control @error('jam_result_vote') is-invalid @enderror"
                                         name="jam_result_vote"
-                                        value="{{ old('jam_result_vote', $jadwalResultVote->jam_result_vote) }}" >
+                                        value="{{ old('jam_result_vote', $jadwalResultVote->jam_result_vote) }}">
                                     @error('jam_result_vote')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -80,8 +86,7 @@
                                     <input id="tempat_result_vote" type="text"
                                         class="form-control @error('tempat_result_vote') is-invalid @enderror"
                                         name="tempat_result_vote"
-                                        value="{{ old('tempat_result_vote', $jadwalResultVote->tempat_result_vote) }}"
-                                        >
+                                        value="{{ old('tempat_result_vote', $jadwalResultVote->tempat_result_vote) }}">
                                     @error('tempat_result_vote')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
