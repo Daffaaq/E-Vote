@@ -31,18 +31,24 @@ class ProfileController extends Controller
     public function editLogo($uuid)
     {
         $profile = $this->profileService->getProfileByUuid($uuid);
-        return view('profiles.edit', compact('profile'));
+        return view('Superadmin.Profiles.edit-logo', compact('profile'));
     }
 
     public function updateLogo(UpdateProfileLogoRequest $request, $uuid)
     {
-        $profile = $this->profileService->updateProfile($uuid, $request->validated());
-        return redirect()->route('profiles.index')->with('success', 'Profile updated successfully.');
+        $data = $request->validated();
+
+        if ($request->hasFile('logo_profiles')) {
+            $data['logo_profiles'] = $request->file('logo_profiles')->store('logos', 'public');
+        }
+
+        $profile = $this->profileService->updateProfile($uuid, $data);
+        return redirect()->route('profiles.index')->with('success', 'Logo updated successfully.');
     }
     public function editPersonal($uuid)
     {
         $profile = $this->profileService->getProfileByUuid($uuid);
-        return view('profiles.edit', compact('profile'));
+        return view('Superadmin.Profiles.edit-personal', compact('profile'));
     }
 
     public function updatePersonal(UpdateProfilePersonalRequest $request, $uuid)

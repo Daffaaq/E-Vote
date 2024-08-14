@@ -22,7 +22,7 @@ class UpdateProfileLogoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'logo_profiles' => 'nullable|string',
+            'logo_profiles' => 'nullable|file|mimes:png,jpg,jpeg|max:2048',
         ];
     }
 }

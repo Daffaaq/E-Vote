@@ -22,7 +22,8 @@ class LoginController extends Controller
         $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
         $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
         $candidate = Candidates::where('periode_id', $periode_id)->select("no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
-        return view('landingpage.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate'));
+        $profile = profile::first();
+        return view('landingpage.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'profile'));
     }
 
     public function detaiCandidate($slug)

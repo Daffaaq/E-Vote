@@ -79,7 +79,8 @@
                                 <span>Dashboard</span>
                             </a>
                         </li>
-                        <li class="sidebar-item {{ request()->routeIs('profiles.index') ? 'active' : '' }}">
+                        <li
+                            class="sidebar-item {{ request()->routeIs('profiles.index', 'profiles.edit-logo', 'profiles.edit-personal', 'profiles.edit-sosial-media') ? 'active' : '' }}">
                             <a href="{{ route('profiles.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Profile</span>

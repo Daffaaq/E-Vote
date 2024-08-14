@@ -14,14 +14,14 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-body d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <img src="{{ asset('images/default-avatar.png') }}" alt="Profile Avatar" class="rounded-circle"
+                        <img src="{{ Storage::url($profile->logo_profiles) }}" alt="Profile Avatar" class="rounded-circle"
                             style="width: 80px; height: 80px; object-fit: cover;">
                         <div class="ms-3">
                             <h4 class="mb-0">{{ $profile->name_profiles ?? '' }}</h4>
                             <p class="text-muted">{{ $profile->address_profiles ?? '' }}</p>
                         </div>
                     </div>
-                    <a href="{{ 'profiles.edit-logo', $profile->uuid }}" class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ route('profiles.edit-logo', $profile->uuid) }}" class="btn btn-outline-secondary btn-sm">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                 </div>
@@ -31,31 +31,30 @@
             <div class="card mb-4 shadow-sm">
                 <div class="card-header d-flex justify-content-between align-items-center bg-white">
                     <h5 class="mb-0">Personal Information</h5>
-                    <a href="{{ route('profiles.edit-personal', $profile->uuid) }}"
-                        class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ route('profiles.edit-personal', $profile->uuid) }}" class="btn btn-outline-secondary btn-sm">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted">First Name</label>
+                            <label class="form-label text-muted">Nama Profil</label>
                             <p class="form-control-plaintext">{{ $profile->name_profiles ?? '' }}</p>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted">Last Name</label>
+                            <label class="form-label text-muted">Singkatan Nama Profil</label>
                             <p class="form-control-plaintext">{{ $profile->nickname_profiles ?? '' }}</p>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted">Email Address</label>
+                            <label class="form-label text-muted">Email Profil</label>
                             <p class="form-control-plaintext">{{ $profile->email_profiles ?? '' }}</p>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label text-muted">Phone</label>
+                            <label class="form-label text-muted">No Telephone Profil</label>
                             <p class="form-control-plaintext">{{ $profile->phone_profiles ?? '' }}</p>
                         </div>
                         <div class="col-md-12 mb-3 text-center">
-                            <label class="form-label text-muted">Description</label>
+                            <label class="form-label text-muted">Deskripsi Profil</label>
                             <p class="form-control-plaintext">{{ $profile->description_profiles ?? '' }}</p>
                         </div>
                     </div>

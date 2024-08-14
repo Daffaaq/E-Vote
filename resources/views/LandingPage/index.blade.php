@@ -354,7 +354,7 @@
     <!-- Navbar dengan Navigasi -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="#">Sistem YYYY</a>
+            <a class="navbar-brand" href="#">{{ $profile->name_events }}</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -386,8 +386,8 @@
 
     <!-- Hero Section (Home) -->
     <div id="home" class="hero-section">
-        <h1>Selamat Datang di YYYY!</h1>
-        <p>Sistem ini digunakan untuk melakukan YYYY dengan mudah dan cepat.</p>
+        <h1>Selamat Datang di {{ $profile->name_events }} {{ $profile->nickname_profiles }}!</h1>
+        <p>Sistem ini digunakan untuk melakukan {{ $profile->name_events }} dengan mudah dan cepat.</p>
         <a href="javascript:void(0)" class="btn btn-success btn-lg" style="border-radius: 50px;"
             onclick="scrollToSection('caketos')">Mulai
             Sekarang</a>
