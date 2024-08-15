@@ -6,19 +6,28 @@ use App\Models\Candidates;
 use App\Models\jadwal_orasi;
 use App\Models\jadwal_result_vote;
 use App\Models\JadwalVotes;
+use App\Models\Votes;
 use App\Models\Periode;
 use App\Models\SettingVote;
+use App\Models\Students;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function indexSuperadmin()
     {
+        $periode_id = Periode::where('actif', 1)->value('id');
         $statusvote = SettingVote::select("id", "set_vote")->get();
 
         $statusvote1 = SettingVote::value('set_vote');
+
+        $datavoter = Votes::with('student')->where('periode_id', $periode_id)->count();
+        $datastudent = Students::count();
+        // dd($datastudent);
+        // dd($datavoter);
         // dd($statusvote1);
-        return view('superadmin.Dashboard.index', compact('statusvote'));
+        return view('superadmin.Dashboard.index', compact('statusvote','datavoter','datastudent'));
     }
     public function indexAdmin()
     {
@@ -30,15 +39,20 @@ class DashboardController extends Controller
     }
     public function indexVoter()
     {
+        $user = Auth::user();
         $periode_id = Periode::where('actif', 1)->value('id'); // Mengambil id dari periode yang aktif
 
         // Mengambil data dari masing-masing tabel berdasarkan periode_id
         $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
         $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
         $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
-        $candidate = Candidates::where('periode_id', $periode_id)->select("no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
+        $candidate = Candidates::where('periode_id', $periode_id)->select("id", "no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
+        $statusSetVote = SettingVote::first();
+        $cekstatusvote = Votes::where('created_by', $user->id)->first();
+
+        // dd($statusSetVote);
         // dd($candidate);
-        return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate'));
+        return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'statusSetVote', 'cekstatusvote'));
     }
 
     public function detaiCandidate($slug)
@@ -73,8 +87,10 @@ class DashboardController extends Controller
         // Menghapus elemen duplikat berdasarkan content
         $uniqueItems = array_unique($items, SORT_REGULAR);
 
+        $statusSetVote = SettingVote::first();
+
         // Mengirimkan data kandidat dan items ke view
-        return view('Siswa.detail', compact('candidate', 'uniqueItems'));
+        return view('Siswa.detail', compact('candidate', 'uniqueItems', 'statusSetVote'));
     }
 
 

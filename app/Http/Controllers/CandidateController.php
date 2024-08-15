@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidates;
+use App\Http\Requests\StoreCandidateRequest;
+use App\Services\CandidateService;
+use App\Http\Requests\UpdateCandidateRequest;
 use App\Models\Periode;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
@@ -52,76 +55,14 @@ class CandidateController extends Controller
         return view('Superadmin.Candidate.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreCandidateRequest $request, CandidateService $candidateService)
     {
-        // Validasi umum
-        $validatedData = $request->validate([
-            'status' => 'required|in:perseorangan,ganda',
-            'nama_ketua' => 'nullable|string|max:255',
-            'nama_wakil_ketua' => 'nullable|string|max:255', // Ubah 'required' ke 'nullable'
-            'slug' => 'nullable|string|unique:candidates,slug',
-            'no_urut_kandidat' => 'required|numeric',
-            'visi' => 'required',
-            'misi' => 'required',
-            'slogan' => 'required',
-            'foto' => 'nullable|image',
-            'periode_id' => 'nullable|exists:periode,id',
-        ]);
-
-        // Check for sequential and unique no_urut_kandidat
-        $lastNumber = Candidates::max('no_urut_kandidat');
-        $expectedNumber = $lastNumber + 1;
-
-        if ($validatedData['no_urut_kandidat'] != $expectedNumber) {
-            return redirect()->back()->withErrors([
-                'no_urut_kandidat' => "Nomor urut kandidat harus berurutan dan tidak boleh ada yang terlewat. Silakan masukkan nomor yang benar ($expectedNumber).",
-            ])->withInput();
+        try {
+            $candidateService->createCandidate($request->validated());
+            return redirect()->route('Candidate.index')->with('success', 'Candidate created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
-
-        if (Candidates::where('no_urut_kandidat', $validatedData['no_urut_kandidat'])->exists()) {
-            return redirect()->back()->withErrors(['no_urut_kandidat' => 'Nomor urut kandidat sudah ada.'])->withInput();
-        }
-
-        // Jika statusnya 'perseorangan', pastikan nama_wakil_ketua tidak diisi
-        if ($validatedData['status'] === 'perseorangan' && !empty($validatedData['nama_wakil_ketua'])) {
-            return redirect()->back()->withErrors(['nama_wakil_ketua' => 'Nama wakil ketua tidak diperlukan jika status adalah perseorangan.'])->withInput();
-        }
-
-        // Jika statusnya 'ganda', pastikan nama_wakil_ketua diisi
-        if ($validatedData['status'] === 'ganda' && empty($validatedData['nama_wakil_ketua'])) {
-            return redirect()->back()->withErrors(['nama_wakil_ketua' => 'Nama wakil ketua diperlukan jika status adalah ganda.'])->withInput();
-        }
-
-        // Ambil periode_id dari Periode yang aktif
-        $periode_id = Periode::where('actif', 1)->value('id');
-        $validatedData['periode_id'] = $periode_id;
-
-        // Buat slug secara otomatis jika tidak disediakan
-        if (empty($validatedData['slug'])) {
-            // Membuat slug berdasarkan status
-            if ($validatedData['status'] === 'perseorangan') {
-                $baseSlug = Str::slug($validatedData['nama_ketua'], '-');
-            } else {
-                $baseSlug = Str::slug($validatedData['nama_ketua'] . '-' . $validatedData['nama_wakil_ketua'], '-');
-            }
-
-            $slug = $baseSlug;
-
-            // Tambahkan string acak untuk memastikan slug unik
-            while (Candidates::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . Str::random(6);
-            }
-
-            $validatedData['slug'] = $slug;
-        }
-
-        if ($request->hasFile('foto')) {
-            $validatedData['foto'] = $request->file('foto')->store('photos', 'public');
-        }
-
-        Candidates::create($validatedData);
-
-        return redirect()->route('Candidate.index')->with('success', 'Candidate created successfully.');
     }
 
 
@@ -139,46 +80,15 @@ class CandidateController extends Controller
     }
 
 
-    public function update(Request $request, $uuid)
+    public function update(UpdateCandidateRequest $request, $uuid, CandidateService $candidateService)
     {
-        $candidate = Candidates::where('uuid', $uuid)->firstOrFail();
-
-        // Retrieve the active periode_id before validation
-        $periode_id = Periode::where('actif', 1)->value('id');
-        if (!$periode_id) {
-            return redirect()->back()->withErrors(['periode_id' => 'No active periode found.'])->withInput();
+        try {
+            $candidateService->updateCandidate($uuid, $request->validated());
+            // dd($candidateService);
+            return redirect()->route('Candidate.index')->with('success', 'Candidate updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
-
-        // Merge periode_id into the request data for validation
-        $request->merge(['periode_id' => $periode_id]);
-
-        // Validate the request
-        $validatedData = $request->validate([
-            'status' => 'required|in:perseorangan,ganda',
-            'nama_ketua' => 'nullable|string|max:255',
-            'nama_wakil_ketua' => 'nullable|string|max:255',
-            'visi' => 'required',
-            'misi' => 'required',
-            'slogan' => 'required',
-            'foto' => 'nullable|image',
-            'periode_id' => 'required|exists:periode,id',
-        ]);
-
-        // Handle the photo upload
-        if ($request->hasFile('foto')) {
-            // Delete the old photo if it exists
-            if ($candidate->foto) {
-                Storage::disk('public')->delete($candidate->foto);
-            }
-
-            // Store the new photo
-            $validatedData['foto'] = $request->file('foto')->store('photos', 'public');
-        }
-
-        // Update the candidate
-        $candidate->update($validatedData);
-
-        return redirect()->route('Candidate.index')->with('success', 'Candidate updated successfully.');
     }
 
 

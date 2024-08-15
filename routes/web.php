@@ -8,6 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\VotingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -100,5 +101,8 @@ Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function (
     Route::get('/dashboardVoter', [DashboardController::class, 'indexVoter'])->name('dashboard.voter');
     Route::prefix('/dashboardVoter')->group(function () {
         Route::get('/Detail/{slug}', [DashboardController::class, 'detaiCandidate'])->name('detail.candidate.voter');
+    });
+    Route::prefix('/dashboardVoter')->group(function () {
+        Route::post('/vote', [VotingController::class, 'vote'])->name('vote.cast');
     });
 });

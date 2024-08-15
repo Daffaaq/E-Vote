@@ -209,7 +209,11 @@
 
             <div class="back-button">
                 <a href="{{ route('dashboard.voter') }}" class="btn btn-primary">Kembali</a>
-                <a href="#" class="btn btn-success">Vote</a>
+                @if ($statusSetVote && $statusSetVote->set_vote == 1)
+                    <a href="#" class="btn btn-success">Vote</a>
+                @else
+                    <a href="#" class="btn btn-success disabled">Vote</a>
+                @endif
             </div>
         </div>
     </div>

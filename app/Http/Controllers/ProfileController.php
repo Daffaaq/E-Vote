@@ -59,7 +59,7 @@ class ProfileController extends Controller
     public function editSocialMedia($uuid)
     {
         $profile = $this->profileService->getProfileByUuid($uuid);
-        return view('profiles.edit', compact('profile'));
+        return view('Superadmin.Profiles.edit-sosmed', compact('profile'));
     }
 
     public function updateSocialMedia(UpdateProfileSocialMediaRequest $request, $uuid)

@@ -18,11 +18,15 @@ class Votes extends Model
         'students_id',
         'candidate_id',
         'jadwal_votes_id',
-        'status_vote',
+        'tanggal_vote',
         'jam_vote',
         'created_by',
     ];
 
+    protected $dates = [
+        'tanggal_vote',
+        'jam_vote',
+    ];
     /**
      * Get the periode associated with the vote.
      */

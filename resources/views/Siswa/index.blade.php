@@ -534,7 +534,23 @@
                             <div class="card-body text-center">
                                 <a href="{{ route('detail.candidate.voter', $item->slug) }}" class="btn btn-primary"
                                     style="border-radius: 50px;">Detail</a>
-                                <a href="#" class="btn btn-success" style="border-radius: 50px;">Vote</a>
+                                @if ($cekstatusvote)
+                                    <a class="btn btn-success" style="border-radius: 50px;">Sudah Memilih</a>
+                                @else
+                                    @if ($statusSetVote && $statusSetVote->set_vote == 1)
+                                        <form action="{{ route('vote.cast') }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            <input type="hidden" name="candidate_id" value="{{ $item->id }}">
+                                            <button type="submit" class="btn btn-success"
+                                                style="border-radius: 50px;">Vote</button>
+                                        </form>
+                                    @else
+                                        <a href="#" class="btn btn-success disabled"
+                                            style="border-radius: 50px;">Vote</a>
+                                    @endif
+                                @endif
+
                             </div>
                         </div>
                     </div>
