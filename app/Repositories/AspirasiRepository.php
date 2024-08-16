@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Aspirasi;
+use App\Models\Students;
 
 class AspirasiRepository
 {
@@ -16,6 +17,11 @@ class AspirasiRepository
     public function getAllAspirasi()
     {
         return Aspirasi::select('id', 'uuid', 'nama', 'nis', 'kelas', 'description_profiles')->get();
+    }
+
+    public function findByNis(string $nis)
+    {
+        return Students::where('nis', $nis)->first();
     }
 
     public function store(array $data)

@@ -945,6 +945,7 @@
                         // Tampilkan SweetAlert dengan pesan kesalahan jika ada kesalahan dalam permintaan
                         showSweetAlert('Oops!', data.message || 'Terjadi kesalahan saat Mengajukan Pengaduan.',
                             'error');
+                        form.reset();
 
                     }
                 })

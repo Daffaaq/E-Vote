@@ -18,9 +18,15 @@ class AspirasiService
         // to get all students
         return $this->repository->getAllAspirasi();
     }
+    
 
     public function storeAspirasi(array $data)
     {
+        $student = $this->repository->findByNis($data['nis']);
+
+        if (!$student) {
+            throw new \Exception('NIS yang Anda masukkan salah dan tidak terdaftar pada sistem!');
+        }
         return $this->repository->store($data);
     }
 

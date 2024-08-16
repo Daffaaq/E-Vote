@@ -50,13 +50,15 @@ class AspirasiController extends Controller
     {
         $data = $request->validated();
 
-        $ceknis = Students::where('nis', $data['nis'])->first();
-        if (!$ceknis) {
-            return Response::json(['error' => true, 'message' => 'NIS yang anda masukkan salah dan tidak terdaftar pada sistem!']);
+        try {
+            $this->aspirasiService->storeAspirasi($data);
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => true,
+                'message' => $e->getMessage()
+            ]);
         }
-
-        $aspirasi = $this->aspirasiService->storeAspirasi($data);
-        return Response::json(['success' => true]);
     }
 
     public function show($uuid)
