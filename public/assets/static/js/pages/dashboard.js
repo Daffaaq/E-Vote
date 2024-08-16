@@ -58,6 +58,76 @@ let optionsVisitorsProfile = {
   },
 }
 
+let warna = [
+  "#435ebe", // Warna untuk kandidat pertama
+  "#55c6e8", // Warna untuk kandidat kedua
+  "#F44336", // Merah
+  "#E91E63", // Merah Muda
+  "#9C27B0", // Ungu
+  "#673AB7", // Ungu Tua
+  "#3F51B5", // Biru Indigo
+  "#2196F3", // Biru Muda
+  "#03A9F4", // Biru Langit
+  "#00BCD4", // Biru Cyan
+  "#009688", // Hijau Tosca
+  "#4CAF50", // Hijau
+  "#8BC34A", // Hijau Muda
+  "#CDDC39", // Kuning
+  "#FFEB3B", // Kuning Muda
+  "#FFC107", // Jingga
+  "#FF9800", // Oranye
+  "#FF5722", // Merah Oranye
+  "#795548", // Coklat
+  "#9E9E9E", // Abu-abu
+  "#607D8B", // Abu-abu Biru
+  "#000000", // Hitam
+  "#FFFFFF", // Putih
+  // Tambahkan lebih banyak warna jika diperlukan
+];
+
+// Pastikan jumlah warna sama dengan jumlah kandidat
+if (warna.length < datanjumlahvote.length) {
+  // Jika tidak cukup warna, tambahkan warna default atau loop kembali
+  let defaultColor = "#cccccc"; // Warna default jika kurang
+  while (warna.length < datanjumlahvote.length) {
+    warna.push(defaultColor);
+  }
+}
+let optionsCandidate = {
+  series: datanjumlahvote,
+  labels: datanamacandidate,
+  colors: ["#435ebe", "#55c6e8"],
+  chart: {
+    type: "donut",
+    width: "100%",
+    height: "350px",
+  },
+  legend: {
+    position: "bottom",
+  },
+  plotOptions: {
+    pie: {
+      donut: {
+        size: "30%",
+      },
+      dataLabels: {
+        formatter: function (t) {
+          return t.toFixed(1) + "%"
+        },
+        style: {
+          colors: ["#fff"]
+        },
+        background: {
+          enabled: !1
+        },
+        dropShadow: {
+          enabled: !0
+        }
+      },
+    },
+  },
+}
+
 var optionsEurope = {
   series: [
     {
@@ -138,6 +208,10 @@ var chartVisitorsProfile = new ApexCharts(
   document.getElementById("chart-visitors-profile"),
   optionsVisitorsProfile
 )
+var chartcandidate = new ApexCharts(
+  document.getElementById("chart-candidate"),
+  optionsCandidate
+)
 var chartEurope = new ApexCharts(
   document.querySelector("#chart-europe"),
   optionsEurope
@@ -156,3 +230,4 @@ chartAmerica.render()
 chartEurope.render()
 chartProfileVisit.render()
 chartVisitorsProfile.render()
+chartcandidate.render()

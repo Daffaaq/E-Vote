@@ -1,4 +1,5 @@
 @extends('Superadmin.layouts.index')
+
 @section('content')
     <div class="page-heading">
         <div class="page-title" style="display: flex; align-items: center; justify-content: space-between;">
@@ -118,15 +119,45 @@
                             <div class="card-body">
                                 <div id="chart-visitors-profile"></div>
                             </div>
-                            {{-- <div class="card-header">
-            <h4>Profile Visit</h4>
-        </div>
-        <div class="card-body">
-            <div id="chart-profile-visit"></div>
-        </div> --}}
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" style="width: 625px">
+                            <div class="card-header" style="text-align: center;">
+                                <h4>Perbandingan Kandidat</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="chart-candidate"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card" style="width: 625px">
+                            <div class="card-header" style="text-align: center;">
+                                <h4>Perbandingan Kandidat</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="candidateChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- <div class="row">
+                    <div class="col-12">
+                        <div class="card" style="width: 625px">
+                            <div class="card-header" style="text-align: center;">
+                                <h4>Perbandingan Kandidat</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="candidateChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
             </div>
             <div class="col-12 col-lg-3">
                 {{-- <div class="card">
@@ -158,11 +189,194 @@
             </div>
         </div>
     </div>
+
+    <style>
+        .apexcharts-legend-marker {
+            border-radius: 50% !important;
+            width: 12px !important;
+            height: 12px !important;
+            margin-right: 8px !important;
+        }
+
+        .apexcharts-legend-marker[rel="0"] {
+            border-radius: 0px !important;
+        }
+
+        /* Mengatur ulang legend untuk memastikan tidak ada kotak yang terlihat */
+        .apexcharts-legend {
+            display: flex !important;
+            justify-content: center !important;
+            /* Legend di tengah */
+            align-items: center !important;
+            flex-wrap: wrap !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        /* Menghilangkan kotak yang mungkin muncul akibat elemen lainnya */
+        .apexcharts-legend-series {
+            padding: 0 !important;
+            margin: 0 !important;
+            background: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Jika ada padding atau margin yang menambah kotak, hilangkan */
+        .apexcharts-legend-marker {
+            padding: 0 !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+        }
+
+        .apexcharts-legend-text {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .apexcharts-legend-text {
+            padding-left: 15px;
+            margin-left: -15px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
     <script>
         var totalstudent = {!! json_encode($datastudent) !!};
         var totalvoter = {!! json_encode($datavoter) !!};
+        var datanamacandidate = {!! json_encode($candidateNames) !!};
+        var datanjumlahvote = {!! json_encode($candidateVotes) !!};
         // console.log(totalstudent);
     </script>
+    <script>
+        // Warna untuk setiap bagian chart
+        let colors = ["#435ebe", "#55c6e8", "#ff6384"];
+
+        // Membuat donut chart menggunakan ApexCharts
+        var options = {
+            series: datanjumlahvote,
+            labels: datanamacandidate,
+            colors: colors,
+            chart: {
+                type: 'donut',
+                width: '100%',
+                height: '350px',
+            },
+            legend: {
+                position: 'bottom',
+                itemMargin: {
+                    horizontal: 10, // Jarak antar item legend
+                    vertical: 5 // Jarak vertikal antar item legend
+                }
+            },
+            plotOptions: {
+                pie: {
+                    customScale: 1,
+                    offsetX: 0,
+                    offsetY: 0,
+                    startAngle: 0,
+                    endAngle: 360,
+                    expandOnClick: !0,
+                    dataLabels: {
+                        offset: 0,
+                        minAngleToShowLabel: 10
+                    },
+                    donut: {
+                        size: "35%",
+                        background: "transparent",
+                        labels: {
+                            show: !1,
+                            name: {
+                                show: !0,
+                                fontSize: "16px",
+                                fontFamily: void 0,
+                                fontWeight: 600,
+                                color: void 0,
+                                offsetY: -10,
+                                formatter: function(t) {
+                                    return t
+                                }
+                            },
+                            // value: {
+                            //     show: !0,
+                            //     fontSize: "20px",
+                            //     fontFamily: void 0,
+                            //     fontWeight: 400,
+                            //     color: void 0,
+                            //     offsetY: 10,
+                            //     formatter: function(t) {
+                            //         return t
+                            //     }
+                            // },
+                            total: {
+                                show: !1,
+                                showAlways: !1,
+                                label: "Total",
+                                fontSize: "16px",
+                                fontWeight: 400,
+                                fontFamily: void 0,
+                                color: void 0,
+                                formatter: function(t) {
+                                    return t.globals.seriesTotals.reduce((function(t, e) {
+                                        return t + e
+                                    }), 0)
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function(val, opts) {
+                    return opts.w.globals.series[opts.seriesIndex]; // Menampilkan jumlah suara, bukan persentase
+                },
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                }
+            }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#candidateChart"), options);
+        chart.render();
+    </script>
+    {{-- <script>
+        // Data kandidat (misalnya dari PHP atau sumber lain)
+        let candidateNames = ['John Doe', 'Jane Smith', 'Mark Lee']; // Nama kandidat
+        let candidateVotes = [15, 20, 10]; // Jumlah suara
+
+        // Warna yang sesuai dengan jumlah kandidat
+        let colors = [
+            "#435ebe", // Warna untuk kandidat pertama
+            "#55c6e8", // Warna untuk kandidat kedua
+            "#ff6384", // Warna untuk kandidat ketiga
+            // Tambahkan lebih banyak warna jika diperlukan
+        ];
+
+        // Membuat donut chart menggunakan Chart.js
+        var ctx = document.getElementById('candidateChart').getContext('2d');
+        var candidateChart = new Chart(ctx, {
+            type: 'doughnut', // 'doughnut' untuk donut chart
+            data: {
+                labels: candidateNames,
+                datasets: [{
+                    data: candidateVotes,
+                    backgroundColor: colors, // Warna untuk setiap bagian
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'bottom', // Letak legenda di bawah chart
+                },
+                cutoutPercentage: 50, // Ukuran lubang di tengah (30% - 50% biasa digunakan untuk donut chart)
+            }
+        });
+    </script> --}}
     <script>
         $(document).ready(function() {
             let switchElement = $('#flexSwitchCheckDefault');

@@ -40,96 +40,146 @@ class UsersTableSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // Tambahkan pengguna dengan role voter
-        $voterId1 = DB::table('users')->insertGetId([
-            'uuid' => Str::uuid(),
-            'name' => 'Faza',
-            'username' => '11223344',
-            'foto_profile' => null,
-            'role' => 'voter',
-            'password' => Hash::make('voterpassword1'), // Ganti dengan password yang lebih aman
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        $voterId2 = DB::table('users')->insertGetId([
-            'uuid' => Str::uuid(),
-            'name' => 'Sindiana',
-            'username' => '44332211',
-            'foto_profile' => null,
-            'role' => 'voter',
-            'password' => Hash::make('voterpassword2'), // Ganti dengan password yang lebih aman
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        $voterId3 = DB::table('users')->insertGetId([
-            'uuid' => Str::uuid(),
-            'name' => 'Nayla',
-            'username' => '44332219',
-            'foto_profile' => null,
-            'role' => 'voter',
-            'password' => Hash::make('voterpassword2'), // Ganti dengan password yang lebih aman
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-        $voterId4 = DB::table('users')->insertGetId([
-            'uuid' => Str::uuid(),
-            'name' => 'Syamsul',
-            'username' => '44332218',
-            'foto_profile' => null,
-            'role' => 'voter',
-            'password' => Hash::make('voterpassword2'), // Ganti dengan password yang lebih aman
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
         // Tambahkan data siswa yang terhubung dengan pengguna voter
-        DB::table('students')->insert([
+        // Array data pengguna voter
+        $voters = [
             [
-                'uuid' => Str::uuid(),
-                'nama' => 'Faza Rahardian',
+                'name' => 'Faza',
+                'username' => '11223344',
+                'password' => 'voterpassword1',
+                'student_name' => 'Faza Rahardian',
                 'nis' => '11223344',
                 'kelas' => 'VII A',
                 'jenis_kelamin' => 'Laki-laki',
-                'status_students' => 1,
-                'users_id' => $voterId1,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
-                'uuid' => Str::uuid(),
-                'nama' => 'Sindiana Karim',
+                'name' => 'Sindiana',
+                'username' => '44332211',
+                'password' => 'voterpassword2',
+                'student_name' => 'Sindiana Karim',
                 'nis' => '44332211',
                 'kelas' => 'VII B',
                 'jenis_kelamin' => 'Perempuan',
-                'status_students' => 1,
-                'users_id' => $voterId2,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
-                'uuid' => Str::uuid(),
-                'nama' => 'Queen Nayla',
+                'name' => 'Nayla',
+                'username' => '44332219',
+                'password' => 'voterpassword3',
+                'student_name' => 'Queen Nayla',
                 'nis' => '44332219',
                 'kelas' => 'VII C',
                 'jenis_kelamin' => 'Perempuan',
-                'status_students' => 1,
-                'users_id' => $voterId3,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
-                'uuid' => Str::uuid(),
-                'nama' => 'Muhammad Syamsul Arifin',
+                'name' => 'Syamsul',
+                'username' => '44332218',
+                'password' => 'voterpassword4',
+                'student_name' => 'Muhammad Syamsul Arifin',
                 'nis' => '44332218',
                 'kelas' => 'VII D',
                 'jenis_kelamin' => 'Laki-laki',
-                'status_students' => 1,
-                'users_id' => $voterId4,
+            ],
+            // Tambahkan data tambahan di sini
+            [
+                'name' => 'Dani',
+                'username' => '55443322',
+                'password' => 'voterpassword5',
+                'student_name' => 'Dani Santoso',
+                'nis' => '55443322',
+                'kelas' => 'VII E',
+                'jenis_kelamin' => 'Laki-laki',
+            ],
+            [
+                'name' => 'Rahma',
+                'username' => '66554433',
+                'password' => 'voterpassword6',
+                'student_name' => 'Rahma Aulia',
+                'nis' => '66554433',
+                'kelas' => 'VII F',
+                'jenis_kelamin' => 'Perempuan',
+            ],
+            [
+                'name' => 'Nahla',
+                'username' => '66554433',
+                'password' => 'voterpassword6',
+                'student_name' => 'Nahla Aulia',
+                'nis' => '66554433',
+                'kelas' => 'VII F',
+                'jenis_kelamin' => 'Perempuan',
+            ],
+            [
+                'name' => 'Nadiya',
+                'username' => '66554433',
+                'password' => 'voterpassword6',
+                'student_name' => 'Nadiya Aulia',
+                'nis' => '66554433',
+                'kelas' => 'VII F',
+                'jenis_kelamin' => 'Perempuan',
+            ],
+            [
+                'name' => 'Balqis',
+                'username' => '66554433',
+                'password' => 'voterpassword6',
+                'student_name' => 'Balqis Aulia',
+                'nis' => '66554433',
+                'kelas' => 'VII F',
+                'jenis_kelamin' => 'Perempuan',
+            ],
+            [
+                'name' => 'Siti',
+                'username' => '66554433',
+                'password' => 'voterpassword6',
+                'student_name' => 'Siti Aulia',
+                'nis' => '66554433',
+                'kelas' => 'VII F',
+                'jenis_kelamin' => 'Perempuan',
+            ],
+            [
+                'name' => 'Dini',
+                'username' => '66554433',
+                'password' => 'voterpassword6',
+                'student_name' => 'Dini Aulia',
+                'nis' => '66554433',
+                'kelas' => 'VII F',
+                'jenis_kelamin' => 'Perempuan',
+            ],
+            [
+                'name' => 'Rayza',
+                'username' => '66554433',
+                'password' => 'voterpassword6',
+                'student_name' => 'Rayza Aulia',
+                'nis' => '66554433',
+                'kelas' => 'VII F',
+                'jenis_kelamin' => 'Perempuan',
+            ],
+            // Tambahkan lebih banyak data lagi sesuai kebutuhan
+        ];
+
+        foreach ($voters as $voter) {
+            $voterId = DB::table('users')->insertGetId([
+                'uuid' => Str::uuid(),
+                'name' => $voter['name'],
+                'username' => $voter['username'],
+                'foto_profile' => null,
+                'role' => 'voter',
+                'password' => Hash::make($voter['password']), // Ganti dengan password yang lebih aman
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],
-        ]);
+            ]);
+
+            DB::table('students')->insert([
+                'uuid' => Str::uuid(),
+                'nama' => $voter['student_name'],
+                'nis' => $voter['nis'],
+                'kelas' => $voter['kelas'],
+                'jenis_kelamin' => $voter['jenis_kelamin'],
+                'status_students' => 1,
+                'users_id' => $voterId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
 
         // Tambahkan periode
         $periodeActiveId = DB::table('periode')->insertGetId([

@@ -83,9 +83,10 @@ class StudentService
         ];
 
         // check if user username already exists
-        $user = $this->studentRepository->findUserByUsername($userData['username']);
-        if ($user) {
-            return ['error' => 'Username sudah terdaftar'];
+        $user = $this->studentRepository->findUserById($student->users_id);
+        // dd($user);
+        if (!$user) {
+            return ['error' => 'siswa tidak ditemukan'];
         }
 
         return $this->studentRepository->updateUser($user, $userData);

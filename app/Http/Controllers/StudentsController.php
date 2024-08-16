@@ -107,6 +107,7 @@ class StudentsController extends Controller
     public function update(UpdateStudentRequest $request, $uuid)
     {
         $result = $this->studentService->updateStudentAndUser($request, $uuid);
+        // dd($result);
         if (isset($result['error'])) {
             return redirect()->back()->with('error', $result['error']);
         }

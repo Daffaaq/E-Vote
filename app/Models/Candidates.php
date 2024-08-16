@@ -41,4 +41,9 @@ class Candidates extends Model
     {
         return $this->belongsTo(Periode::class);
     }
+
+    public function votes()
+    {
+        return $this->hasMany(Votes::class, 'candidate_id');
+    }
 }

@@ -481,8 +481,85 @@
     <div id="caketos" class="container mb-4">
         <h5 class="section-title">Kandidate Ketua Osis</h5>
         <div class="row">
-            @forelse ($candidate as $item)
-                @if ($item->status == 'ganda')
+            @if ($jadwalVotes)
+                @forelse ($candidate as $item)
+                    @if ($item->status == 'ganda')
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card"
+                                style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px; position: relative;">
+                                <div
+                                    style="position: absolute; top: 10px; right: 5px; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px;">
+                                    1
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center flex-wrap"
+                                    style="height: 100%">
+                                    <div class="text-center mt-2" style="margin: 0 10px">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top"
+                                            alt="Foto Kandidat" style="width: 100px; height: 100px" />
+                                        <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Candra Waskito Utomo
+                                        </h5>
+                                        <span class="badge badge-success">Ketua</span>
+                                        <p class="card-text">Kelas: XII IPA 1</p>
+                                    </div>
+                                    <div class="text-center mt-2" style="margin: 0 10px">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top"
+                                            alt="Foto Kandidat" style="width: 100px; height: 100px" />
+                                        <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Dwi Fatah Rahayu</h5>
+                                        <span class="badge badge-info mt-2">Wakil</span>
+                                        <p class="card-text">Kelas: XII IPA 1</p>
+                                    </div>
+                                </div>
+                                <div class="card-body text-center">
+                                    <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
+                                    <a href="#" class="btn btn-success" style="border-radius: 50px;">Vote</a>
+                                </div>
+                            </div>
+                        </div>
+                    @elseif ($item->status == 'perseorangan')
+                        <div class="col-md-6 col-lg-4 mb-4">
+                            <div class="card"
+                                style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px; position: relative;">
+                                <div
+                                    style="position: absolute; top: 10px; left: 10px; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px;">
+                                    {{ $item->no_urut_kandidat }}
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center flex-column"
+                                    style="height: 100%">
+                                    <img src="{{ Storage::url($item->foto) }}" class="card-img-top mt-2"
+                                        alt="Foto Kandidat" style="width: 150px; height: 150px; margin: auto" />
+                                    <div class="card-body text-center mb-0">
+                                        <h5 class="card-title mb-0" style="font-size: 15px">{{ $item->nama_ketua }}
+                                        </h5>
+                                        <span class="badge badge-success">Ketua</span>
+                                        <p class="card-text">{{ $item->slogan }}</p>
+                                    </div>
+                                </div>
+                                <div class="card-body text-center">
+                                    <a href="{{ route('detail.candidate.voter', $item->slug) }}"
+                                        class="btn btn-primary" style="border-radius: 50px;">Detail</a>
+                                    @if ($cekstatusvote)
+                                        <a class="btn btn-success" style="border-radius: 50px;">Sudah Memilih</a>
+                                    @else
+                                        @if ($statusSetVote && $statusSetVote->set_vote == 1)
+                                            <form action="{{ route('vote.cast') }}" method="POST"
+                                                style="display:inline;">
+                                                @csrf
+                                                <input type="hidden" name="candidate_id"
+                                                    value="{{ $item->id }}">
+                                                <button type="submit" class="btn btn-success"
+                                                    style="border-radius: 50px;">Vote</button>
+                                            </form>
+                                        @else
+                                            <a href="#" class="btn btn-success disabled"
+                                                style="border-radius: 50px;">Vote</a>
+                                        @endif
+                                    @endif
+
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @empty
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card"
                             style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px; position: relative;">
@@ -493,8 +570,8 @@
                             <div class="d-flex justify-content-center align-items-center flex-wrap"
                                 style="height: 100%">
                                 <div class="text-center mt-2" style="margin: 0 10px">
-                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Kandidat"
-                                        style="width: 100px; height: 100px" />
+                                    <img src="https://via.placeholder.com/150" class="card-img-top"
+                                        alt="Foto Kandidat" style="width: 100px; height: 100px" />
                                     <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Candra Waskito Utomo</h5>
                                     <span class="badge badge-success">Ketua</span>
                                     <p class="card-text">Kelas: XII IPA 1</p>
@@ -513,80 +590,9 @@
                             </div>
                         </div>
                     </div>
-                @elseif ($item->status == 'perseorangan')
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card"
-                            style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px; position: relative;">
-                            <div
-                                style="position: absolute; top: 10px; left: 10px; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px;">
-                                {{ $item->no_urut_kandidat }}
-                            </div>
-                            <div class="d-flex justify-content-center align-items-center flex-column"
-                                style="height: 100%">
-                                <img src="{{ Storage::url($item->foto) }}" class="card-img-top mt-2"
-                                    alt="Foto Kandidat" style="width: 150px; height: 150px; margin: auto" />
-                                <div class="card-body text-center mb-0">
-                                    <h5 class="card-title mb-0" style="font-size: 15px">{{ $item->nama_ketua }}</h5>
-                                    <span class="badge badge-success">Ketua</span>
-                                    <p class="card-text">{{ $item->slogan }}</p>
-                                </div>
-                            </div>
-                            <div class="card-body text-center">
-                                <a href="{{ route('detail.candidate.voter', $item->slug) }}" class="btn btn-primary"
-                                    style="border-radius: 50px;">Detail</a>
-                                @if ($cekstatusvote)
-                                    <a class="btn btn-success" style="border-radius: 50px;">Sudah Memilih</a>
-                                @else
-                                    @if ($statusSetVote && $statusSetVote->set_vote == 1)
-                                        <form action="{{ route('vote.cast') }}" method="POST"
-                                            style="display:inline;">
-                                            @csrf
-                                            <input type="hidden" name="candidate_id" value="{{ $item->id }}">
-                                            <button type="submit" class="btn btn-success"
-                                                style="border-radius: 50px;">Vote</button>
-                                        </form>
-                                    @else
-                                        <a href="#" class="btn btn-success disabled"
-                                            style="border-radius: 50px;">Vote</a>
-                                    @endif
-                                @endif
-
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            @empty
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card"
-                        style="box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); min-height: 300px; position: relative;">
-                        <div
-                            style="position: absolute; top: 10px; right: 5px; background-color: #007bff; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px;">
-                            1
-                        </div>
-                        <div class="d-flex justify-content-center align-items-center flex-wrap" style="height: 100%">
-                            <div class="text-center mt-2" style="margin: 0 10px">
-                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Kandidat"
-                                    style="width: 100px; height: 100px" />
-                                <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Candra Waskito Utomo</h5>
-                                <span class="badge badge-success">Ketua</span>
-                                <p class="card-text">Kelas: XII IPA 1</p>
-                            </div>
-                            <div class="text-center mt-2" style="margin: 0 10px">
-                                <img src="https://via.placeholder.com/150" class="card-img-top" alt="Foto Kandidat"
-                                    style="width: 100px; height: 100px" />
-                                <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Dwi Fatah Rahayu</h5>
-                                <span class="badge badge-info mt-2">Wakil</span>
-                                <p class="card-text">Kelas: XII IPA 1</p>
-                            </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
-                            <a href="#" class="btn btn-success" style="border-radius: 50px;">Vote</a>
-                        </div>
-                    </div>
-                </div>
-            @endforelse
-
+                @endforelse
+            
+            @endif
         </div>
         <!-- Repeat other candidates -->
     </div>

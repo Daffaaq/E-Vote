@@ -38,7 +38,7 @@ class StudentRepository
 
     public function findUserByUsername($username)
     {
-        return User::where('username', $username)->first();
+        return User::where('id', $username)->first();
     }
 
     public function existsByUsername($username)

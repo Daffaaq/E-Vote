@@ -9,6 +9,7 @@ use App\Http\Controllers\PeriodeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\VotingController;
+use App\Http\Controllers\AspirasiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,9 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/', [LoginController::class, 'indexlandingpage'])->name('landing-page');
     Route::prefix('/')->group(function () {
         Route::get('/Detail/{slug}', [LoginController::class, 'detaiCandidate'])->name('detail.candidate.landing-page');
+    });
+    Route::prefix('/')->group(function () {
+        Route::post('/aspiration', [AspirasiController::class, 'store'])->name('aspiration.store');
     });
     Route::get('/login', [LoginController::class, 'index'])->name('login');
     Route::post('/loginProcess', [LoginController::class, 'login'])->name('loginProcess');
@@ -91,6 +95,12 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::put('profiles/update-personal/{uuid}', [ProfileController::class, 'updatePersonal'])->name('profiles.update-personal');
         Route::get('profiles/edit-sosial-media/{uuid}', [ProfileController::class, 'editSocialMedia'])->name('profiles.edit-sosial-media');
         Route::put('profiles/update-sosial-media/{uuid}', [ProfileController::class, 'updateSocialMedia'])->name('profiles.update-sosial-media');
+    });
+    Route::prefix('/dashboardSuperadmin')->group(function () {
+        Route::get('/aspiration', [AspirasiController::class, 'index'])->name('aspiration.index');
+        Route::get('/aspiration/{uuid}', [AspirasiController::class, 'show'])->name('aspiration.show');
+        Route::post('/aspiration/list', [AspirasiController::class, 'list'])->name('aspiration.list');
+        Route::delete('/aspiration/{uuid}', [AspirasiController::class, 'destroy'])->name('aspiration.destroy');
     });
 });
 Route::middleware(['auth', 'check.role:admin'])->group(function () {

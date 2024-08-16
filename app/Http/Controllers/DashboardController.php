@@ -24,10 +24,38 @@ class DashboardController extends Controller
 
         $datavoter = Votes::with('student')->where('periode_id', $periode_id)->count();
         $datastudent = Students::count();
+        $candidate = Candidates::where('periode_id', $periode_id)->select("id", "no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
+        $candidateIds = $candidate->pluck('id');
+
+        // Menghitung jumlah votes untuk kandidat yang terdaftar pada periode aktif
+        $datavotecandidate = Votes::where('periode_id', $periode_id)
+            ->whereIn('candidate_id', $candidateIds)
+            ->count();
+
+        $nameCandidate = [];
+        $candidates = Candidates::withCount('votes')->get();
+
+        // Siapkan array untuk menyimpan hasil
+        $nameCandidate = [];
+
+        // Iterasi melalui kandidat dan simpan nama serta jumlah suara mereka dalam array
+        foreach ($candidates as $candidate) {
+            $nameCandidate[] = [
+                'nama_ketua' => $candidate->nama_ketua,
+                'votes_count' => $candidate->votes_count
+            ];
+        }
+        // dd($nameCandidate);
+        $candidateNames = array_column($nameCandidate, 'nama_ketua');
+        $candidateVotes = array_column($nameCandidate, 'votes_count');
+        // dd($candidateNames, $candidateVotes);
+        // dd($candidates);
+        // dd($datavotecandidate);
+        // dd($candidate);
         // dd($datastudent);
         // dd($datavoter);
         // dd($statusvote1);
-        return view('superadmin.Dashboard.index', compact('statusvote','datavoter','datastudent'));
+        return view('superadmin.Dashboard.index', compact('statusvote', 'datavoter', 'datastudent', 'candidateNames', 'candidateVotes'));
     }
     public function indexAdmin()
     {

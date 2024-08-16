@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sistem Pemilihan</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
@@ -621,21 +622,34 @@
             </div>
             <div class="modern-form">
                 <h5 class="section-title">Berikan Saran Anda</h5>
-                <form>
+                <form id="complaint-create-form" action="{{ route('aspiration.store') }}" method="POST"
+                    enctype="multipart/form-data" onsubmit="event.preventDefault(); handleComplaintCreate();">
+                    @csrf
+
                     <div class="form-group">
-                        <label for="name">Nama</label>
-                        <input type="text" class="form-control" id="name" placeholder="Masukkan Nama Anda"
-                            required />
+                        <label for="nama">Nama</label>
+                        <input type="text" name="nama" class="form-control" id="nama"
+                            placeholder="Masukkan Nama Anda" required>
                     </div>
+
                     <div class="form-group">
-                        <label for="class">Kelas</label>
-                        <input type="text" class="form-control" id="class" placeholder="Masukkan Kelas Anda"
-                            required />
+                        <label for="nis">NIS</label>
+                        <input type="text" name="nis" class="form-control" id="nis"
+                            placeholder="Masukkan NIS Anda" required>
                     </div>
+
                     <div class="form-group">
-                        <label for="    ">Saran</label>
-                        <textarea class="form-control" id="advice" rows="4" placeholder="Masukkan Saran Anda" required></textarea>
+                        <label for="kelas">Kelas</label>
+                        <input type="text" name="kelas" class="form-control" id="kelas"
+                            placeholder="Masukkan Kelas Anda" required>
                     </div>
+
+                    <div class="form-group">
+                        <label for="description_profiles">Saran</label>
+                        <textarea name="description_profiles" class="form-control" id="description_profiles" rows="4"
+                            placeholder="Masukkan Saran Anda" required></textarea>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">Kirim Saran</button>
                 </form>
             </div>
@@ -893,6 +907,52 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        // Fungsi untuk menampilkan SweetAlert
+        function showSweetAlert(title, text, icon) {
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+            });
+        }
+
+        // Fungsi untuk menangani permintaan HTTP dengan menggunakan Fetch API
+        function handleComplaintCreate() {
+            const form = document.getElementById(
+                'complaint-create-form'); // Mendapatkan elemen form dengan ID 'complaint-create-form'
+            const formData = new FormData(form); // Membuat objek FormData dari form
+
+            fetch(form.action, {
+                    method: 'POST', // Menggunakan metode HTTP POST untuk mengirim data
+                    body: formData, // Mengirim data formulir menggunakan objek FormData
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'
+                        ) // Mengirim token CSRF yang diperlukan untuk melindungi aplikasi dari serangan CSRF
+                    }
+                })
+                .then(response => response.json()) // Menguraikan respons HTTP sebagai JSON
+                .then(data => {
+                    if (data.success) {
+                        // Tampilkan SweetAlert dengan pesan sukses jika permintaan berhasil
+                        showSweetAlert('Hore!', 'Aspirasi berhasil di ajukan. Terimakasih', 'success');
+
+                        form.reset();
+                    } else {
+                        // Tampilkan SweetAlert dengan pesan kesalahan jika ada kesalahan dalam permintaan
+                        showSweetAlert('Oops!', data.message || 'Terjadi kesalahan saat Mengajukan Pengaduan.',
+                            'error');
+
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
 
     <!-- Custom Scroll Script -->
     <script>
