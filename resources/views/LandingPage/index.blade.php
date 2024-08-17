@@ -503,7 +503,7 @@
                                         alt="Foto Kandidat" style="width: 100px; height: 100px" />
                                     <h5 class="card-title mt-2 mb-0" style="font-size: 15px">{{ $item->nama_ketua }}
                                     </h5>
-                                    <span class="badge badge-success">Ketua</span>
+                                    <span class="badge" style="background-color: #273a6b; color: white;">Ketua</span>
                                     <p class="card-text">{{ $item->slogan }}</p>
                                 </div>
                                 <div class="text-center mt-2" style="margin: 0 10px">
@@ -511,7 +511,8 @@
                                         alt="Foto Kandidat" style="width: 100px; height: 100px" />
                                     <h5 class="card-title mt-2 mb-0" style="font-size: 15px">
                                         {{ $item->nama_wakil_ketua }}/h5>
-                                        <span class="badge badge-info mt-2">Wakil</span>
+                                        <span class="badge"
+                                            style="background-color: #1f2942; color: white;">Ketua</span>
                                         <p class="card-text">{{ $item->slogan }}</p>
                                 </div>
                             </div>
@@ -537,7 +538,7 @@
                                     alt="Foto Kandidat" style="width: 150px; height: 150px; margin: auto" />
                                 <div class="card-body text-center mb-0">
                                     <h5 class="card-title mb-0" style="font-size: 15px">{{ $item->nama_ketua }}</h5>
-                                    <span class="badge badge-success">Ketua</span>
+                                    <span class="badge" style="background-color: #273a6b; color: white;">Ketua</span>
                                     <p class="card-text">{{ $item->slogan }}</p>
                                 </div>
                             </div>

@@ -72,11 +72,12 @@ class DashboardController extends Controller
 
         // Mengambil data dari masing-masing tabel berdasarkan periode_id
         $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
+        // dd($jadwalVotes);
         $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
         $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
         $candidate = Candidates::where('periode_id', $periode_id)->select("id", "no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
         $statusSetVote = SettingVote::first();
-        $cekstatusvote = Votes::where('created_by', $user->id)->first();
+        $cekstatusvote = Votes::where('created_by', $user->id)->where('periode_id', $periode_id)->first();
 
         // dd($statusSetVote);
         // dd($candidate);
@@ -85,8 +86,10 @@ class DashboardController extends Controller
 
     public function detaiCandidate($slug)
     {
+        $user = Auth::user();
+        $periode_id = Periode::where('actif', 1)->value('id');
         // Ambil data kandidat berdasarkan slug
-        $candidate = Candidates::where('slug', $slug)->first();
+        $candidate = Candidates::where('periode_id', $periode_id)->where('slug', $slug)->first();
 
         // Memproses konten HTML dari misi kandidat
         $htmlContent = $candidate->misi;
@@ -112,13 +115,15 @@ class DashboardController extends Controller
             }
         }
 
+        $cekstatusvote = Votes::where('created_by', $user->id)->where('periode_id', $periode_id)->first();
         // Menghapus elemen duplikat berdasarkan content
         $uniqueItems = array_unique($items, SORT_REGULAR);
-
+        
         $statusSetVote = SettingVote::first();
+        $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
 
         // Mengirimkan data kandidat dan items ke view
-        return view('Siswa.detail', compact('candidate', 'uniqueItems', 'statusSetVote'));
+        return view('Siswa.detail', compact('candidate', 'uniqueItems', 'statusSetVote', 'jadwalVotes', 'cekstatusvote'));
     }
 
 

@@ -18,7 +18,7 @@
         }
 
         .navbar-light {
-            background-color: #28a745 !important;
+            background-color: #273a6b !important;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
@@ -121,7 +121,7 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #00ff2a;
+            background: #273a6b;
             border: 2px solid #fff;
             z-index: 1;
             /* Ensure it is above the horizontal line */
@@ -144,7 +144,7 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #00ff2a;
+            background-color: #273a6b;
             color: white;
             border: none;
             border-radius: 50%;
@@ -276,9 +276,9 @@
         }
 
         hr {
-            border: 1px solid #00ff2a;
+            border: 1px solid #273a6b;
             height: 1px;
-            background: #00ff2a;
+            background: #273a6b;
             margin: 40px 0;
         }
 
@@ -296,7 +296,7 @@
         }
 
         .footer-icons a:hover {
-            color: #00ff2a;
+            color: #273a6b;
         }
 
         .social-btn {
@@ -355,7 +355,7 @@
             font-size: 2rem;
             margin-bottom: 20px;
             font-weight: bold;
-            color: #00ff2a;
+            color: #273a6b;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
@@ -393,7 +393,7 @@
     <!-- About Section -->
     <div id="about" class="container mb-4 mt-4">
         <div class="about-section">
-            <h5 class="section-title" style="color: #00ff2a;">Informasi Sistem</h5>
+            <h5 class="section-title" style="color: #273a6b;">Informasi Sistem</h5>
             <p class="card-text text-center">Sistem ini memungkinkan Anda untuk memilih kandidat favorit Anda dengan
                 cara yang mudah dan aman.</p>
         </div>
@@ -498,7 +498,8 @@
                                             alt="Foto Kandidat" style="width: 100px; height: 100px" />
                                         <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Candra Waskito Utomo
                                         </h5>
-                                        <span class="badge badge-success">Ketua</span>
+                                        <span class="badge"
+                                            style="background-color: #273a6b; color: white;">Ketua</span>
                                         <p class="card-text">Kelas: XII IPA 1</p>
                                     </div>
                                     <div class="text-center mt-2" style="margin: 0 10px">
@@ -530,7 +531,8 @@
                                     <div class="card-body text-center mb-0">
                                         <h5 class="card-title mb-0" style="font-size: 15px">{{ $item->nama_ketua }}
                                         </h5>
-                                        <span class="badge badge-success">Ketua</span>
+                                        <span class="badge"
+                                            style="background-color: #273a6b; color: white;">Ketua</span>
                                         <p class="card-text">{{ $item->slogan }}</p>
                                     </div>
                                 </div>
@@ -541,20 +543,25 @@
                                         <a class="btn btn-success" style="border-radius: 50px;">Sudah Memilih</a>
                                     @else
                                         @if ($statusSetVote && $statusSetVote->set_vote == 1)
-                                            <form action="{{ route('vote.cast') }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                <input type="hidden" name="candidate_id"
-                                                    value="{{ $item->id }}">
-                                                <button type="submit" class="btn btn-success"
-                                                    style="border-radius: 50px;">Vote</button>
-                                            </form>
+                                            @if (now() >= \Carbon\Carbon::parse($jadwalVotes['tanggal_awal_vote']) &&
+                                                    now() < \Carbon\Carbon::parse($jadwalVotes['tanggal_akhir_vote'])->endOfDay())
+                                                <form action="{{ route('vote.cast') }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    <input type="hidden" name="candidate_id"
+                                                        value="{{ $item->id }}">
+                                                    <button type="submit" class="btn btn-success"
+                                                        style="border-radius: 50px;">Vote</button>
+                                                </form>
+                                            @else
+                                                <a href="#" class="btn btn-success disabled"
+                                                    style="border-radius: 50px;">Vote</a>
+                                            @endif
                                         @else
                                             <a href="#" class="btn btn-success disabled"
                                                 style="border-radius: 50px;">Vote</a>
                                         @endif
                                     @endif
-
                                 </div>
                             </div>
                         </div>
@@ -591,7 +598,7 @@
                         </div>
                     </div>
                 @endforelse
-            
+
             @endif
         </div>
         <!-- Repeat other candidates -->

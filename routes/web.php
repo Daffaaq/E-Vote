@@ -28,6 +28,10 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::middleware(['guest'])->group(function () {
+    // Route::get('/', function () {
+    //     return view('Siswa.success');
+    // });
+
     Route::get('/', [LoginController::class, 'indexlandingpage'])->name('landing-page');
     Route::prefix('/')->group(function () {
         Route::get('/Detail/{slug}', [LoginController::class, 'detaiCandidate'])->name('detail.candidate.landing-page');
@@ -114,5 +118,8 @@ Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function (
     });
     Route::prefix('/dashboardVoter')->group(function () {
         Route::post('/vote', [VotingController::class, 'vote'])->name('vote.cast');
+        Route::get('/vote/success', function () {
+            return view('Siswa.success');
+        })->name('vote.success');
     });
 });

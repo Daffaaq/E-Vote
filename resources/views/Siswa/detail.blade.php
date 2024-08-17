@@ -209,10 +209,19 @@
 
             <div class="back-button">
                 <a href="{{ route('dashboard.voter') }}" class="btn btn-primary">Kembali</a>
-                @if ($statusSetVote && $statusSetVote->set_vote == 1)
-                    <a href="#" class="btn btn-success">Vote</a>
+                @if ($cekstatusvote)
+                    <a class="btn btn-success" style="border-radius: 50px;">Sudah Memilih</a>
                 @else
-                    <a href="#" class="btn btn-success disabled">Vote</a>
+                    @if ($statusSetVote && $statusSetVote->set_vote == 1)
+                        @if (now() >= \Carbon\Carbon::parse($jadwalVotes['tanggal_awal_vote']) &&
+                                now() < \Carbon\Carbon::parse($jadwalVotes['tanggal_akhir_vote'])->endOfDay())
+                            <a href="#" class="btn btn-success">Vote</a>
+                        @else
+                            <a href="#" class="btn btn-success disabled">Vote</a>
+                        @endif
+                    @else
+                        <a href="#" class="btn btn-success disabled">Vote</a>
+                    @endif
                 @endif
             </div>
         </div>

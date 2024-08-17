@@ -36,7 +36,7 @@ class VotingController extends Controller
             ->first();
 
         if (!$jadwalVote) {
-            return redirect()->back()->withErrors('No active voting schedule found.')->withInput();
+            return redirect()->back()->withErrors('Mohon maaf, tidak ada jadwal voting')->withInput();
         }
 
         $data = [
@@ -52,7 +52,7 @@ class VotingController extends Controller
         try {
             $vote = $this->voteService->castVote($data);
 
-            return redirect()->back()->with('success', 'Your vote has been cast successfully.');
+            return redirect()->route('vote.success')->with('success', 'Your vote has been cast successfully.');
         } catch (\Exception $e) {
             Log::error('Voting error: ' . $e->getMessage());
             return redirect()->back()->withErrors($e->getMessage())->withInput();
