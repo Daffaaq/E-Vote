@@ -67,4 +67,11 @@ class Votes extends Model
             $model->uuid = Str::uuid();
         });
     }
+
+    public function scopeActivePeriod($query)
+    {
+        return $query->whereHas('periode', function ($query) {
+            $query->where('actif', 1);
+        });
+    }
 }

@@ -34,7 +34,12 @@ class DashboardController extends Controller
             ->count();
 
         $nameCandidate = [];
-        $candidates = Candidates::withCount('votes')->get();
+        $candidates = Candidates::withCount([
+            'votes' => function ($query) {
+                $query->activePeriod();
+            }
+        ])->get();
+        // dd($candidates);
 
         // Siapkan array untuk menyimpan hasil
         $nameCandidate = [];
@@ -56,7 +61,7 @@ class DashboardController extends Controller
         // dd($datastudent);
         // dd($datavoter);
         // dd($statusvote1);
-        return view('superadmin.Dashboard.index', compact('statusvote', 'datavoter', 'datastudent', 'candidateNames', 'candidateVotes'));
+        return view('superadmin.Dashboard.index', compact('statusvote', 'datavoter', 'datastudent', 'candidateNames', 'candidateVotes', 'candidates'));
     }
     public function indexAdmin()
     {
@@ -120,7 +125,7 @@ class DashboardController extends Controller
         $cekstatusvote = Votes::where('created_by', $user->id)->where('periode_id', $periode_id)->first();
         // Menghapus elemen duplikat berdasarkan content
         $uniqueItems = array_unique($items, SORT_REGULAR);
-        
+
         $statusSetVote = SettingVote::first();
         $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
 

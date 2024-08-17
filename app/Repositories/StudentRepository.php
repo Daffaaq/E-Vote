@@ -9,8 +9,11 @@ class StudentRepository
 {
     public function getAllStudentsWithStatusVote()
     {
-        return Students::with('StatusVote')->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students')->get();
+        return Students::with(['StatusVote' => function ($query) {
+            $query->activePeriod();
+        }])->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students')->get();
     }
+
 
     public function createUser($data)
     {
@@ -27,7 +30,8 @@ class StudentRepository
         return Students::where('uuid', $uuid)->firstOrFail();
     }
 
-    public function findStudentById($nis){
+    public function findStudentById($nis)
+    {
         return Students::where('nis', $nis)->firstOrFail();
     }
 

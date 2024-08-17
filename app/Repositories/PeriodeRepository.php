@@ -31,10 +31,20 @@ class PeriodeRepository
         return $periode->delete();
     }
 
-    public function existsByName($name)
+    public function existsByName($name, $excludeUuid = null)
     {
-        return Periode::where('periode_nama', $name)->exists();
+        // Mulai query untuk mencari periode dengan nama yang sama
+        $query = Periode::where('periode_nama', $name);
+
+        // Jika ada UUID yang harus dikecualikan, tambahkan pengecualian pada query
+        if (!is_null($excludeUuid)) {
+            $query->where('uuid', '!=', $excludeUuid);
+        }
+
+        // Kembalikan apakah ada periode lain dengan nama yang sama (dengan pengecualian UUID)
+        return $query->exists();
     }
+
 
     public function actifExists()
     {

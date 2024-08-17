@@ -39,8 +39,8 @@ class PeriodeService
         // to find periode by uuid
         $periode = $this->periodeRepository->findByUUID($uuid);
 
-        // Check if period name already exists
-        if ($this->periodeRepository->existsByName($request->periode_nama)) {
+        // Cek apakah nama periode sudah ada di data lain (kecuali data yang sedang diupdate)
+        if ($this->periodeRepository->existsByName($request->periode_nama, $periode->uuid)) {
             return ['error' => 'Periode sudah ada'];
         }
 

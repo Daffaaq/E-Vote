@@ -122,30 +122,35 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card" style="width: 625px">
-                            <div class="card-header" style="text-align: center;">
-                                <h4>Perbandingan Kandidat</h4>
-                            </div>
-                            <div class="card-body">
-                                <div id="chart-candidate"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card" style="width: 625px">
-                            <div class="card-header" style="text-align: center;">
-                                <h4>Perbandingan Kandidat</h4>
-                            </div>
-                            <div class="card-body">
-                                <div id="candidateChart"></div>
+                @if ($candidates->sum('votes_count') > 0)
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card" style="width: 625px">
+                                <div class="card-header" style="text-align: center;">
+                                    <h4>Perbandingan Kandidat</h4>
+                                    <button id="download-chart" class="btn btn-primary">Download Chart</button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="chart-candidate"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card" style="width: 625px">
+                                <div class="card-header" style="text-align: center;">
+                                    <h4>Perbandingan Kandidat</h4>
+                                    <button id="download-chart1" class="btn btn-primary">Download Chart</button>
+                                </div>
+                                <div class="card-body">
+                                    <div id="candidateChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 {{-- <div class="row">
                     <div class="col-12">
                         <div class="card" style="width: 625px">
@@ -343,6 +348,17 @@
 
         var chart = new ApexCharts(document.querySelector("#candidateChart"), options);
         chart.render();
+        document.getElementById('download-chart1').addEventListener('click', function() {
+            chart.dataURI().then((uri) => {
+                // Buat elemen <a> untuk mengunduh gambar
+                let a = document.createElement('a');
+                a.href = uri.imgURI;
+                a.download = 'chart-perbandingan-kandidat-pemilih.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+        });
     </script>
     {{-- <script>
         // Data kandidat (misalnya dari PHP atau sumber lain)

@@ -8,6 +8,7 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class StudentsController extends Controller
 {
@@ -125,5 +126,9 @@ class StudentsController extends Controller
     {
         $this->studentService->deleteStudentAndUser($uuid);
         return redirect()->back()->with('success', 'Mahasiswa dan pengguna berhasil dihapus.');
+    }
+
+    public function reportPemilih(){
+        
     }
 }

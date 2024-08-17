@@ -231,3 +231,16 @@ chartEurope.render()
 chartProfileVisit.render()
 chartVisitorsProfile.render()
 chartcandidate.render()
+
+document.getElementById('download-chart').addEventListener('click', function () {
+  chartcandidate.dataURI().then((uri) => {
+    // Buat elemen <a> untuk mengunduh gambar
+    let a = document.createElement('a');
+    a.href = uri.imgURI;
+    a.download = 'chart-perbandingan-kandidat-persen.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+});
+
