@@ -364,7 +364,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="#">Sistem YYYY</a>
+            <a class="navbar-brand" href="#">Sistem {{ $profile->name_events }}</a>
             <div class="ml-auto dropdown">
                 <a href="#" class="d-flex align-items-center dropdown-toggle" style="text-decoration: none;"
                     id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -381,8 +381,10 @@
     </nav>
     <!-- Hero Section (Home) -->
     <div id="home" class="hero-section">
-        <h1>Selamat Datang {{ Auth::user()->name }} di YYYY!</h1>
-        <p>Sistem ini digunakan untuk melakukan YYYY dengan mudah dan cepat.</p>
+        <h1>Selamat Datang {{ Auth::user()->name }} di {{ $profile->name_events }}
+        </h1>
+        <h1> {{ $profile->nickname_profiles }}!</h1>
+        <p>Sistem ini digunakan untuk melakukan {{ $profile->name_events }} dengan mudah dan cepat.</p>
         <a href="javascript:void(0)" class="btn btn-success btn-lg" style="border-radius: 50px;"
             onclick="scrollToSection('caketos')">Mulai
             Sekarang</a>

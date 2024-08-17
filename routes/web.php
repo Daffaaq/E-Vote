@@ -118,6 +118,7 @@ Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function (
     });
     Route::prefix('/dashboardVoter')->group(function () {
         Route::post('/vote', [VotingController::class, 'vote'])->name('vote.cast');
+        Route::post('/detail/vote', [VotingController::class, 'voteInDetail'])->name('vote.detail.cast');
         Route::get('/vote/success', function () {
             return view('Siswa.success');
         })->name('vote.success');

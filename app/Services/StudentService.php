@@ -24,7 +24,7 @@ class StudentService
     {
         $userData = [
             'username' => $request->nis,
-            'name' => $request->nama,
+            'name' => $request->name,
             'password' => Hash::make($request->nis),
             'role' => 'voter',
             'created_at' => now(),
@@ -77,7 +77,7 @@ class StudentService
 
         $userData = [
             'username' => $request->nis,
-            'name' => $request->nama,
+            'name' => $request->name,
             'password' => Hash::make($request->nis),
             'updated_at' => now(),
         ];

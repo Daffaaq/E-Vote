@@ -8,6 +8,7 @@ use App\Models\jadwal_result_vote;
 use App\Models\JadwalVotes;
 use App\Models\Votes;
 use App\Models\Periode;
+use App\Models\profile;
 use App\Models\SettingVote;
 use App\Models\Students;
 use Illuminate\Http\Request;
@@ -78,10 +79,11 @@ class DashboardController extends Controller
         $candidate = Candidates::where('periode_id', $periode_id)->select("id", "no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
         $statusSetVote = SettingVote::first();
         $cekstatusvote = Votes::where('created_by', $user->id)->where('periode_id', $periode_id)->first();
+        $profile = profile::first();
 
         // dd($statusSetVote);
         // dd($candidate);
-        return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'statusSetVote', 'cekstatusvote'));
+        return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'statusSetVote', 'cekstatusvote', 'profile'));
     }
 
     public function detaiCandidate($slug)

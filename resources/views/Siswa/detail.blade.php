@@ -215,7 +215,12 @@
                     @if ($statusSetVote && $statusSetVote->set_vote == 1)
                         @if (now() >= \Carbon\Carbon::parse($jadwalVotes['tanggal_awal_vote']) &&
                                 now() < \Carbon\Carbon::parse($jadwalVotes['tanggal_akhir_vote'])->endOfDay())
-                            <a href="#" class="btn btn-success">Vote</a>
+                            <form action="{{ route('vote.detail.cast') }}" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="candidate_id" value="{{ $candidate->id }}">
+                                <button type="submit" class="btn btn-success"
+                                    style="border-radius: 50px;">Vote</button>
+                            </form>
                         @else
                             <a href="#" class="btn btn-success disabled">Vote</a>
                         @endif
