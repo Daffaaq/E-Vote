@@ -132,7 +132,14 @@
                     },
                     {
                         data: 'actif',
-                        name: 'actif'
+                        name: 'actif',
+                        render: function(data, type, row) {
+                            if (data == 1) {
+                                return '<span class="badge bg-success">Active</span>';
+                            } else {
+                                return '<span class="badge bg-danger">Inactive</span>';
+                            }
+                        }
                     },
                     {
                         data: 'uuid',

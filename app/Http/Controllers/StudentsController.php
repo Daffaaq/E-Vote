@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\StudentService;
+use App\Services\ProfileService;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
@@ -13,10 +14,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class StudentsController extends Controller
 {
     protected $studentService;
+    protected $profileService;
 
-    public function __construct(StudentService $studentService)
+    public function __construct(StudentService $studentService, ProfileService $profileService)
     {
         $this->studentService = $studentService;
+        $this->profileService = $profileService;
     }
 
     public function index()
@@ -128,7 +131,16 @@ class StudentsController extends Controller
         return redirect()->back()->with('success', 'Mahasiswa dan pengguna berhasil dihapus.');
     }
 
-    public function reportPemilih(){
-        
+    public function reportPemilih()
+    {
+        $data = $this->studentService->getStudentsWithStatusVote();
+        // dd($data);
+        $profiles = $this->profileService->getAllProfilesfirst();
+
+        $pdf = Pdf::loadView('Superadmin.Siswa.cetak_pdf', [
+            'profiles' => $profiles,
+            'data' => $data,
+        ]);
+        return $pdf->stream();
     }
 }

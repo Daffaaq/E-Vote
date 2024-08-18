@@ -56,6 +56,7 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::put('/Siswa/update/{uuid}', [StudentsController::class, 'update'])->name('students.update');
         Route::delete('/Siswa/destroy/{uuid}', [StudentsController::class, 'destroy'])->name('students.destroy');
         Route::post('/Siswa/list', [StudentsController::class, 'list'])->name('siswa-list-superadmin');
+        Route::get('/Siswa/cetak', [StudentsController::class, 'reportPemilih'])->name('siswa-pdf-superadmin');
     });
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Periode', [PeriodeController::class, 'index'])->name('periode.index');

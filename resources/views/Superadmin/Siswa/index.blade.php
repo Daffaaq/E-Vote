@@ -30,6 +30,7 @@
                 <a href="{{ url('/dashboardSuperadmin/Siswa/create') }}" class="btn btn-primary"
                     style="margin-right: 5px;">Tambah Pemilih</a>
                 <a href="#" class="btn btn-info">Import Pemilih</a>
+                <a href="{{ route('siswa-pdf-superadmin') }}" class="btn btn-info">Cetak Pemilih</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">

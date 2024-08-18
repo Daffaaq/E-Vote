@@ -17,6 +17,10 @@ class ProfileRepository
     {
         return $this->model->all();
     }
+    public function getfirst()
+    {
+        return $this->model->first();
+    }
 
     public function findByUuid($uuid)
     {

@@ -17,6 +17,10 @@ class ProfileService
     {
         return $this->profileRepository->getAll();
     }
+    public function getAllProfilesfirst()
+    {
+        return $this->profileRepository->getfirst();
+    }
 
 
     public function getProfileByUuid($uuid)
