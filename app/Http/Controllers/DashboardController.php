@@ -32,6 +32,7 @@ class DashboardController extends Controller
         $datavotecandidate = Votes::where('periode_id', $periode_id)
             ->whereIn('candidate_id', $candidateIds)
             ->count();
+        
 
         $nameCandidate = [];
         $candidates = Candidates::withCount([

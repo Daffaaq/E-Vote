@@ -10,6 +10,10 @@ use App\Http\Requests\UpdateStudentRequest;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Validator;
+use App\Imports\StudentImport;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 
 class StudentsController extends Controller
 {
@@ -142,5 +146,72 @@ class StudentsController extends Controller
             'data' => $data,
         ]);
         return $pdf->stream();
+    }
+
+    public function importDataStudent(Request $request)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            $rules = [
+                'file' => 'required|mimes:xls,xlsx'
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'stat'     => false,
+                    'msg'      => 'Terjadi kesalahan.',
+                    'msgField' => $validator->errors()
+                ]);
+            }
+
+            $file = $request->file('file');
+            $nama_file = rand() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/temp_import'), $nama_file);
+
+            try {
+                $collection = Excel::toCollection(new StudentImport, public_path('assets/temp_import/' . $nama_file));
+                $collection = $collection[0];
+
+                $collection->each(function ($item) {
+                    // Periksa apakah ada data yang valid untuk username dan nama
+                    if (!empty($item[1]) && !empty($item[2])) {
+                        $data = [
+                            'nis' => $item[0],    // Ini untuk User dan Student
+                            'nama' => $item[1],   // Ini untuk Student
+                            'kelas' => $item[2],
+                            'jenis_kelamin' => $item[3],
+                            'status_students' => 1, // Default status students
+                            'name' => $item[4]    // Ini untuk User
+                        ];
+
+                        // Panggil metode createStudentAndUser dengan data array
+                        $result = $this->studentService->createStudentAndUser(new Request($data));
+
+                        if (isset($result['error'])) {
+                            throw new \Exception($result['error']);
+                        }
+                    }
+                });
+
+                unlink(public_path('assets/temp_import/' . $nama_file)); // Hapus file setelah selesai
+
+                return response()->json([
+                    'stat' => true,
+                    'mc' => true, // close modal
+                    'msg' => 'Data berhasil diimport'
+                ]);
+            } catch (\Exception $e) {
+                unlink(public_path('assets/temp_import/' . $nama_file)); // Hapus file jika terjadi kesalahan
+
+                Log::error('Import Error: ' . $e->getMessage());
+
+                return response()->json([
+                    'stat' => false,
+                    'msg' => 'Terjadi kesalahan selama proses impor.',
+                    'error' => $e->getMessage()
+                ]);
+            }
+        }
     }
 }

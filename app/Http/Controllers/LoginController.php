@@ -8,11 +8,22 @@ use App\Models\jadwal_result_vote;
 use App\Models\JadwalVotes;
 use App\Models\Periode;
 use App\Models\profile;
+use App\Models\Students;
+use App\Models\Votes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+
+    public function customRounding($progress)
+    {
+        if ($progress >= 99 && $progress < 100) {
+            return floor($progress); // Pembulatan ke bawah jika 99 atau lebih, tapi kurang dari 100
+        } else {
+            return ceil($progress); // Pembulatan ke atas untuk nilai lainnya
+        }
+    }
     public function indexlandingpage()
     {
         $periode_id = Periode::where('actif', 1)->value('id'); // Mengambil id dari periode yang aktif
@@ -23,7 +34,12 @@ class LoginController extends Controller
         $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
         $candidate = Candidates::where('periode_id', $periode_id)->select("no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
         $profile = profile::first();
-        return view('landingpage.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'profile'));
+        $datastudent = Students::count();
+        $datavoter = Votes::with('student')->whereHas('candidate')->where('periode_id', $periode_id)->count();
+        $progress = ($datavoter / $datastudent) * 100;
+        $progress = $this->customRounding($progress);
+        // dd($progress);
+        return view('landingpage.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'profile', 'progress', 'datavoter', 'datastudent'));
     }
 
     public function detaiCandidate($slug)

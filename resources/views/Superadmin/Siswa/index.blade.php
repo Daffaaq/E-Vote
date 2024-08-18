@@ -29,8 +29,11 @@
             <div class="d-flex justify-content-end mb-3">
                 <a href="{{ url('/dashboardSuperadmin/Siswa/create') }}" class="btn btn-primary"
                     style="margin-right: 5px;">Tambah Pemilih</a>
-                <a href="#" class="btn btn-info">Import Pemilih</a>
-                <a href="{{ route('siswa-pdf-superadmin') }}" class="btn btn-info">Cetak Pemilih</a>
+                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal"
+                    style="margin-right: 5px;">Import
+                    Pemilih</button>
+                <a href="{{ route('siswa-pdf-superadmin') }}" class="btn btn-warning">Cetak
+                    Pemilih</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
@@ -47,6 +50,33 @@
                     <tbody>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel">Import Data Pemilih</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="importForm" action="{{ route('siswa.import') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Pilih File Excel</label>
+                            <input type="file" class="form-control" id="file" name="file" required
+                                accept=".xls,.xlsx">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Import Data</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -135,8 +165,31 @@
                 }
             });
             $('#closeModalHeader, #closeModalFooter').on('click', function() {
-                console.log('close');
                 $('#deleteConfirmationModal').modal('hide');
+            });
+            $('#importForm').on('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        $('#importModal').modal('hide');
+                        if (response.stat) {
+                            dataMaster.ajax.reload();
+                            alert('Data berhasil diimport');
+                        } else {
+                            alert('Gagal mengimport data: ' + response.msg);
+                        }
+                    },
+                    error: function(response) {
+                        alert('Terjadi kesalahan: ' + response.responseText);
+                    }
+                });
             });
         });
 

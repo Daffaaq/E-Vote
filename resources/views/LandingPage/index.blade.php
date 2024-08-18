@@ -221,6 +221,14 @@
             margin: 0 auto;
         }
 
+        .progress-bar {
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .modern-form .form-control {
             border-radius: 50px;
             padding: 15px;
@@ -610,6 +618,24 @@
         <!-- Repeat other candidates -->
     </div>
 
+
+    <hr>
+    <div id="caketos" class="container mb-4">
+        <!-- Tambahkan judul Progress Voting -->
+        <h5 class="section-title" style="color: #273a6b;">Progress Voting</h5>
+
+        <div class="progress"
+            style="height: 30px; background-color: #e9ecef; border-radius: 50px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+            <div class="progress-bar progress-bar-animated" role="progressbar"
+                style="width: {{ number_format($progress, 2) }}%; border-radius: 50px; background-color: #273a6b;"
+                aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+                {{ number_format($progress, 0) }}% Kandidat Telah Dipilih
+            </div>
+        </div>
+        <div class="mt-2 text-center" style="color: #273a6b;">
+            <p>{{ $datavoter }} dari {{ $datastudent }} siswa telah memilih.</p>
+        </div>
+    </div>
 
 
     <hr>

@@ -209,7 +209,7 @@
 
             <div class="back-button">
                 <a href="{{ route('landing-page') }}" class="btn btn-primary">Kembali</a>
-                <a href="#" class="btn btn-success">Vote</a>
+                <a href="#" class="btn btn-success disabled">Vote</a>
             </div>
         </div>
     </div>
