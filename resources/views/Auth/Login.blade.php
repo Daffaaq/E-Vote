@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{$profile->name_events}} {{ $profile->name_profiles }}</title>
+    <title>{{ $profile->name_events }} {{ $profile->name_profiles }}</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -35,7 +35,7 @@
                 Welcome To
             </div>
             <div class="text-center mt-4 name">
-                {{$profile->name_events}} {{ $profile->name_profiles }}
+                {{ $profile->name_events }} {{ $profile->name_profiles }}
             </div>
             <form class="p-3 mt-3" method="POST" action="{{ route('loginProcess') }}" autocomplete="off">
                 @csrf
@@ -43,11 +43,13 @@
                     <span class="far fa-user"></span>
                     <input type="text" name="username" id="username" placeholder="Username" autocomplete="off">
                 </div>
-                <div class="form-field d-flex align-items-center">
+                <div class="form-field d-flex align-items-center position-relative">
                     <span class="fas fa-key"></span>
                     <input type="password" name="password" id="password" placeholder="Password"
                         autocomplete="new-password">
+                    <span class="far fa-eye position-absolute" id="togglePassword"></span>
                 </div>
+
                 <button type="submit" class="btn mt-3">Login</button>
             </form>
             <div class="text-center fs-6">
@@ -76,6 +78,21 @@
             @if (session('error'))
                 toastr.error("{{ session('error') }}");
             @endif
+            $('#password').on('input', function() {
+                // Cek apakah elemen fa-eye sudah ada, jika tidak tambahkan
+                if ($('#togglePassword').length === 0) {
+                    $(this).after('<span class="far fa-eye" id="togglePassword"></span>');
+                }
+            });
+
+            $('#togglePassword').on('click', function() {
+                const passwordField = $('#password');
+                const type = passwordField.attr('type') === 'password' ? 'text' : 'password';
+                passwordField.attr('type', type);
+
+                // Toggle the eye slash icon
+                $(this).toggleClass('fa-eye fa-eye-slash');
+            });
         });
     </script>
 </body>

@@ -12,6 +12,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Validator;
 use App\Imports\StudentImport;
+use App\Models\Periode;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -89,11 +90,19 @@ class StudentsController extends Controller
     }
 
 
-    public function show($id)
+    public function show($uuid)
     {
-        $student = $this->studentService->findStudentByUUID($id);
-        return view('students.show', compact('student'));
+        $student = $this->studentService->findStudentByUUID($uuid);
+
+        // Check if student exists
+        if (!$student) {
+            return redirect()->route('students.index')->with('error', 'Siswa tidak ditemukan.');
+        }
+        $periode = Periode::where('actif', 1)->first();
+        // Pass student data to the view
+        return view('Superadmin.Siswa.detail', compact('student', 'periode'));
     }
+
 
     public function edit($uuid)
     {

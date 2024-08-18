@@ -46,17 +46,46 @@ body {
 
 .wrapper .form-field input {
     width: 100%;
-    padding: 10px 15px 10px 40px;
+    padding: 10px 15px 10px 40px; /* Padding for icon on the left */
+    padding-right: 40px; /* Padding for the eye icon on the right in the password field */
     background: #f0f0f0;
     border: none;
     border-radius: 25px;
     color: #1b2a4e;
 }
 
-.wrapper .form-field span {
+.wrapper .form-field span.fas.fa-key,
+.wrapper .form-field span.far.fa-user {
     position: absolute;
-    left: 15px;
-    top: 10px;
+    left: 15px; /* Ensure the icons are placed correctly to the left */
+    top: 50%;
+    transform: translateY(-50%); /* Vertically center the icons */
+    color: #1b2a4e;
+}
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+input[type="password"]::-webkit-textfield-decoration-container {
+    display: none;
+}
+
+.wrapper .form-field span.far.fa-eye,
+.wrapper .form-field span.far.fa-eye-slash {
+    position: absolute;
+    right: 15px; /* Ensure the eye icon is placed correctly to the right */
+    top: 50%;
+    transform: translateY(-50%); /* Vertically center the eye icon */
+    cursor: pointer;
+    color: #1b2a4e;
+}
+
+.wrapper .form-field span.fas.fa-key {
+    position: absolute;
+    left: 15px; /* Keep the key icon on the left */
+    top: 50%;
+    transform: translateY(-50%); /* Center the key icon vertically */
     color: #1b2a4e;
 }
 

@@ -39,10 +39,9 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Periode</th>
-                            <th>Nama Kepala Institusi/Sekolah</th>
-                            <th>No Kepala Institusi/Sekolah</th>
-                            <th>Status Periode</th>
+                            <th>Nama Siswa</th>
+                            <th>Nis Siswa</th>
+                            <th>Kelas Siswa</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -52,27 +51,6 @@
             </div>
         </div>
     </div>
-
-    {{-- <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
-                    <button type="button" id="closeModalHeader" class="btn-close" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus Periode ini?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="closeModalFooter" class="btn btn-secondary"
-                        data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-danger">Hapus</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     <!-- Delete Confirmation Modal -->
     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
@@ -105,7 +83,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('periode-list-superadmin') }}',
+                    url: '{{ route('aspiration.list') }}',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -137,9 +115,9 @@
                         searchable: false,
                         render: function(data) {
                             return `
-                        <button class="btn icon btn-sm btn-danger" onclick="confirmDelete('${data}')">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <a href="/dashboardSuperadmin/aspiration/show/${data}" class="btn icon btn-sm btn-info">
+                                <i class="bi bi-eye"></i>
+                            </a>
                     `;
                         }
                     }
@@ -159,11 +137,5 @@
 
             console.log("data masuk");
         });
-
-
-        function confirmDelete(uuid) {
-            $('#deleteForm').attr('action', `/dashboardSuperadmin/Periode/destroy/${uuid}`);
-            $('#deleteConfirmationModal').modal('show');
-        }
     </script>
 @endsection

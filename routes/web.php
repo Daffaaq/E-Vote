@@ -53,6 +53,7 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::get('/Siswa/create', [StudentsController::class, 'create'])->name('students.create');
         Route::post('/Siswa/store', [StudentsController::class, 'store'])->name('students.store');
         Route::get('/Siswa/edit/{uuid}', [StudentsController::class, 'edit'])->name('students.edit');
+        Route::get('/Siswa/show/{uuid}', [StudentsController::class, 'show'])->name('students.show');
         Route::put('/Siswa/update/{uuid}', [StudentsController::class, 'update'])->name('students.update');
         Route::delete('/Siswa/destroy/{uuid}', [StudentsController::class, 'destroy'])->name('students.destroy');
         Route::post('/Siswa/list', [StudentsController::class, 'list'])->name('siswa-list-superadmin');
@@ -104,7 +105,7 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
     });
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/aspiration', [AspirasiController::class, 'index'])->name('aspiration.index');
-        Route::get('/aspiration/{uuid}', [AspirasiController::class, 'show'])->name('aspiration.show');
+        Route::get('/aspiration/show/{uuid}', [AspirasiController::class, 'show'])->name('aspiration.show');
         Route::post('/aspiration/list', [AspirasiController::class, 'list'])->name('aspiration.list');
         Route::delete('/aspiration/{uuid}', [AspirasiController::class, 'destroy'])->name('aspiration.destroy');
     });

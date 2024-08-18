@@ -152,6 +152,9 @@
                                 <a href="/dashboardSuperadmin/Siswa/edit/${data}" class="btn icon btn-sm btn-warning">
                                     <i class="bi bi-pencil"></i>
                                 </a>
+                                <a href="/dashboardSuperadmin/Siswa/show/${data}" class="btn icon btn-sm btn-info">
+                                    <i class="bi bi-eye"></i>
+                                </a>
                                 <button class="btn icon btn-sm btn-danger" onclick="confirmDelete('${data}')">
                                     <i class="bi bi-trash"></i>
                                 </button>

@@ -114,6 +114,13 @@
                                 <span>Kandidat</span>
                             </a>
                         </li>
+                        <li
+                            class="sidebar-item {{ request()->routeIs('aspiration.index', 'aspiration.show') ? 'active' : '' }}">
+                            <a href="{{ route('aspiration.index') }}" class="sidebar-link">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Aspirasi</span>
+                            </a>
+                        </li>
                         <li class="sidebar-item {{ request()->routeIs('logout') ? 'active' : '' }}">
                             <a href="{{ route('logout') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
