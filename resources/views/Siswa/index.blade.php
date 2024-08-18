@@ -545,8 +545,8 @@
                                         <a class="btn btn-success" style="border-radius: 50px;">Sudah Memilih</a>
                                     @else
                                         @if ($statusSetVote && $statusSetVote->set_vote == 1)
-                                            @if (now() >= \Carbon\Carbon::parse($jadwalVotes['tanggal_awal_vote']) &&
-                                                    now() < \Carbon\Carbon::parse($jadwalVotes['tanggal_akhir_vote'])->endOfDay())
+                                            @if (now() >= \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote) &&
+                                                    now() < \Carbon\Carbon::parse($jadwalVotes->tanggal_akhir_vote)->endOfDay())
                                                 <form action="{{ route('vote.cast') }}" method="POST"
                                                     style="display:inline;">
                                                     @csrf

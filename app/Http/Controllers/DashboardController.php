@@ -12,58 +12,37 @@ use App\Models\profile;
 use App\Models\SettingVote;
 use App\Models\Students;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function indexSuperadmin()
     {
-        $periode_id = Periode::where('actif', 1)->value('id');
-        $statusvote = SettingVote::select("id", "set_vote")->get();
+        // Ambil periode aktif dan setting vote dalam satu kali query masing-masing
+        $periode_id = DB::table('periode')->where('actif', 1)->value('id');
+        $statusvote = SettingVote::select('id', 'set_vote')->get();
 
-        $statusvote1 = SettingVote::value('set_vote');
+        // Ambil jumlah suara per kandidat yang terdaftar pada periode aktif
+        $candidates = Candidates::where('periode_id', $periode_id)
+            ->select('id', 'no_urut_kandidat', 'nama_ketua', 'slogan', 'slug', 'foto', 'status')
+            ->withCount(['votes' => function ($query) use ($periode_id) {
+                $query->where('periode_id', $periode_id);
+            }])
+            ->get();
 
-        $datavoter = Votes::with('student')->where('periode_id', $periode_id)->count();
+        // Hitung jumlah voter dan jumlah student
+        $datavoter = Votes::where('periode_id', $periode_id)->count();
         $datastudent = Students::count();
-        $candidate = Candidates::where('periode_id', $periode_id)->select("id", "no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
-        $candidateIds = $candidate->pluck('id');
 
-        // Menghitung jumlah votes untuk kandidat yang terdaftar pada periode aktif
-        $datavotecandidate = Votes::where('periode_id', $periode_id)
-            ->whereIn('candidate_id', $candidateIds)
-            ->count();
-        
+        // Siapkan array untuk menyimpan nama kandidat dan jumlah suara mereka
+        $candidateNames = $candidates->pluck('nama_ketua')->toArray();
+        $candidateVotes = $candidates->pluck('votes_count')->toArray();
 
-        $nameCandidate = [];
-        $candidates = Candidates::withCount([
-            'votes' => function ($query) {
-                $query->activePeriod();
-            }
-        ])->get();
-        // dd($candidates);
-
-        // Siapkan array untuk menyimpan hasil
-        $nameCandidate = [];
-
-        // Iterasi melalui kandidat dan simpan nama serta jumlah suara mereka dalam array
-        foreach ($candidates as $candidate) {
-            $nameCandidate[] = [
-                'nama_ketua' => $candidate->nama_ketua,
-                'votes_count' => $candidate->votes_count
-            ];
-        }
-        // dd($nameCandidate);
-        $candidateNames = array_column($nameCandidate, 'nama_ketua');
-        $candidateVotes = array_column($nameCandidate, 'votes_count');
-        // dd($candidateNames, $candidateVotes);
-        // dd($candidates);
-        // dd($datavotecandidate);
-        // dd($candidate);
-        // dd($datastudent);
-        // dd($datavoter);
-        // dd($statusvote1);
+        // Render view dengan data yang telah disiapkan
         return view('superadmin.Dashboard.index', compact('statusvote', 'datavoter', 'datastudent', 'candidateNames', 'candidateVotes', 'candidates'));
     }
+
     public function indexAdmin()
     {
         $statusvote = SettingVote::select("id", "set_vote")->get();
@@ -72,25 +51,73 @@ class DashboardController extends Controller
         // dd($statusvote1);
         return view('Admin.Dashboard.index', compact('statusvote'));
     }
+    // public function indexVoter()
+    // {
+    //     $user = Auth::user();
+    //     $periode_id = Periode::where('actif', 1)->value('id'); // Mengambil id dari periode yang aktif
+
+    //     // Mengambil data dari masing-masing tabel berdasarkan periode_id
+    //     $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
+    //     // dd($jadwalVotes);
+    //     $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
+    //     $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
+    //     $candidate = Candidates::where('periode_id', $periode_id)->select("id", "no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
+    //     $statusSetVote = SettingVote::first();
+    //     $cekstatusvote = Votes::where('created_by', $user->id)->where('periode_id', $periode_id)->first();
+    //     $profile = profile::first();
+
+    //     // dd($statusSetVote);
+    //     // dd($candidate);
+    //     return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'statusSetVote', 'cekstatusvote', 'profile'));
+    // }
+
     public function indexVoter()
     {
         $user = Auth::user();
-        $periode_id = Periode::where('actif', 1)->value('id'); // Mengambil id dari periode yang aktif
 
-        // Mengambil data dari masing-masing tabel berdasarkan periode_id
-        $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
-        // dd($jadwalVotes);
-        $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
-        $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
-        $candidate = Candidates::where('periode_id', $periode_id)->select("id", "no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
+        // Menggunakan Query Builder untuk query sederhana dan pengambilan nilai tunggal
+        $periode_id = DB::table('periode')->where('actif', 1)->value('id'); // Mengambil id dari periode yang aktif
+
+        // Menggunakan Query Builder untuk pengambilan data sederhana
+        $jadwalVotes = DB::table('jadwal_votes')
+            ->where('periode_id', $periode_id)
+            ->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")
+            ->first();
+
+        $jadwalResultVote = DB::table('jadwal_result_votes')
+            ->where('periode_id', $periode_id)
+            ->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")
+            ->first();
+
+        $jadwalOrasi = DB::table('jadwal_orasis')
+            ->where(
+                'periode_id',
+                $periode_id
+            )
+            ->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")
+            ->first();
+
+        // Menggunakan Eloquent untuk data yang membutuhkan relasi dan manipulasi model
+        $candidate = Candidates::where('periode_id', $periode_id)
+            ->select("id", "no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")
+            ->get();
+
+        // Menggunakan Eloquent karena SettingVote mungkin membutuhkan manipulasi model
         $statusSetVote = SettingVote::first();
-        $cekstatusvote = Votes::where('created_by', $user->id)->where('periode_id', $periode_id)->first();
-        $profile = profile::first();
 
-        // dd($statusSetVote);
-        // dd($candidate);
+        // Menggunakan Eloquent untuk Votes karena melibatkan data user dan mungkin ada relasi
+        $cekstatusvote = Votes::where('created_by', $user->id)
+            ->where('periode_id', $periode_id)
+            ->first();
+
+        // Menggunakan Eloquent untuk Profile
+        $profile = Profile::first();
+
         return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'statusSetVote', 'cekstatusvote', 'profile'));
     }
+
+
+
 
     public function detaiCandidate($slug)
     {
