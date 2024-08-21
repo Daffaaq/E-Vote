@@ -10,6 +10,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\VotingController;
 use App\Http\Controllers\AspirasiController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +53,18 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
     Route::get('/dashboardSuperadmin', [DashboardController::class, 'indexSuperadmin'])->name('dashboard.superadmin');
     Route::post('/dashboardSuperadmin/status', [DashboardController::class, 'Settingvote'])->name('dashboard.superadmin.setting-vote');
     Route::get('/dashboardSuperadmin/export', [DashboardController::class, 'export_excel'])->name('dashboard.superadmin.export-vote');
+    Route::post('/dashboardSuperadmin/save-chart', function (Request $request) {
+        if ($request->hasFile('chart')) {
+            $path = $request->file('chart')->store('public/charts');
+            // Simpan nama file di session
+            Session::put('chart_filename', basename($path));
+            Log::info("Chart saved at: " . storage_path('app/' . $path));
+            return response()->json(['path' => $path], 200);
+        }
+        Log::error("No chart uploaded");
+        return response()->json(['error' => 'No chart uploaded'], 400);
+    });
+
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Siswa', [StudentsController::class, 'index'])->name('students.index');
         Route::get('/Siswa/create', [StudentsController::class, 'create'])->name('students.create');

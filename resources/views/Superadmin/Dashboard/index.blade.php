@@ -17,10 +17,15 @@
             </div>
         </div>
         <div class="page-title" style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 1rem;">
-            <a href="{{ route('dashboard.superadmin.export-vote') }}"
+            {{-- <a href="{{ route('dashboard.superadmin.export-vote') }}" target="_blank"
+                style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: white; background-color: #007bff; border-radius: 0.25rem; text-decoration: none; transition: background-color 0.2s;">
+                Export Persentase
+            </a> --}}
+            <a href="#" id="export-button"
                 style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: white; background-color: #007bff; border-radius: 0.25rem; text-decoration: none; transition: background-color 0.2s;">
                 Export Persentase
             </a>
+
         </div>
 
 
@@ -235,7 +240,36 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        document.getElementById('export-button').addEventListener('click', function(e) {
+            e.preventDefault(); // Mencegah aksi default dari anchor
 
+            html2canvas(document.querySelector("#candidateChart")).then(canvas => {
+                canvas.toBlob(function(blob) {
+                    var formData = new FormData();
+                    formData.append('chart', blob, 'chart.png');
+
+                    fetch('/dashboardSuperadmin/save-chart', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        }).then(response => response.json())
+                        .then(data => {
+                            if (data.path) {
+                                // Setelah gambar tersimpan, mulai proses download Excel
+                                window.location.href =
+                                    "{{ route('dashboard.superadmin.export-vote') }}";
+                            } else {
+                                alert('Failed to save chart image.');
+                            }
+                        });
+                });
+            });
+        });
+    </script>
     <script>
         var totalstudent = {!! json_encode($datastudent) !!};
         var totalvoter = {!! json_encode($datavoter) !!};

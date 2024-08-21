@@ -70,8 +70,12 @@ class DashboardController extends Controller
 
     public function export_excel(): BinaryFileResponse
     {
-        return Excel::download(new VotesExport, 'persentase_hasil_pemilihan' . Carbon::now() . '.xlsx');
+        $periode_id = DB::table('periode')->where('actif', 1)->value('periode_nama');
+        $timestamp = Carbon::now()->format('Y-m-d_H-i-s');
+        $filename = 'persentase_hasil_pemilihan_' . $periode_id . '_' . $timestamp . '.xlsx';
+        return Excel::download(new VotesExport, $filename);
     }
+
 
     public function indexAdmin()
     {

@@ -4,12 +4,16 @@
 namespace App\Exports;
 
 use App\Models\Votes;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\WithDrawings;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\FromCollection;
 
-class VotesExport implements FromView
+class VotesExport implements FromView, WithDrawings
 {
     /**
      * @return \Illuminate\Support\Collection
@@ -79,6 +83,7 @@ class VotesExport implements FromView
             ->where('periode_id', $periode_id)
             ->pluck('status')
             ->first();
+        // dd($statusCandidate);
 
         // Modifikasi query berdasarkan status
         if ($statusCandidate === 'perseorangan') {
@@ -127,5 +132,25 @@ class VotesExport implements FromView
             'title' => 'Laporan Hasil Perhitungan Suara',
             'statusCandidate' => $statusCandidate // Kirim status kandidat ke view
         ]);
+    }
+
+    public function drawings()
+    {
+        // Ambil nama file dari sesi
+        $filename = Session::get('chart_filename', '');
+
+        if ($filename && file_exists(storage_path('app/public/charts/' . $filename))) {
+            $drawing = new Drawing();
+            $drawing->setName('Chart');
+            $drawing->setDescription('Chart Image');
+            $drawing->setPath(storage_path('app/public/charts/' . $filename));
+            $drawing->setHeight(300);
+            $drawing->setCoordinates('A10'); // Tempat gambar di Excel
+
+            return [$drawing];
+        } else {
+            Log::error("Chart file not found at: " . storage_path('app/public/charts/' . $filename));
+            return [];
+        }
     }
 }

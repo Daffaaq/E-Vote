@@ -6,12 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        /* Gaya tambahan untuk membuat presentase terlihat lebih jelas */
+        td.percent-cell {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
 </head>
 
 <body>
     <h1>{{ $title }}</h1>
 
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 @if ($statusCandidate === 'ganda')
@@ -34,7 +77,7 @@
                         <td>{{ $candidates->nama }}</td>
                     @endif
                     <td>{{ $candidates->jumlah_suara ?? 0 }}</td>
-                    <td>{{ $candidates->persentase ?? '0%' }} %</td>
+                    <td class="percent-cell">{{ $candidates->persentase ?? '0' }} %</td>
                 </tr>
             @endforeach
         </tbody>
