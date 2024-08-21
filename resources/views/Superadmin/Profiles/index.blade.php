@@ -1,4 +1,20 @@
 @extends('Superadmin.layouts.index')
+<style>
+    hr {
+        border: none;
+        border-top: 1px solid;
+        opacity: 0.6;
+        /* Transparansi untuk mengurangi kontras */
+    }
+
+    [data-bs-theme="light"] hr {
+        border-color: #000 !important;
+    }
+
+    [data-bs-theme="dark"] hr {
+        border-color: #ffffff !important;
+    }
+</style>
 @section('breadcrumbs')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -29,12 +45,14 @@
 
             <!-- Personal Information Section -->
             <div class="card mb-4 shadow-sm">
-                <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Personal Information</h5>
-                    <a href="{{ route('profiles.edit-personal', $profile->uuid) }}" class="btn btn-outline-secondary btn-sm">
+                    <a href="{{ route('profiles.edit-personal', $profile->uuid) }}"
+                        class="btn btn-outline-secondary btn-sm">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                 </div>
+                <hr>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -63,13 +81,14 @@
 
             <!-- Social Media Section -->
             <div class="card shadow-sm mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center bg-white">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Social Media</h5>
                     <a href="{{ route('profiles.edit-sosial-media', $profile->uuid) }}"
                         class="btn btn-outline-secondary btn-sm">
                         <i class="fas fa-edit"></i> Edit
                     </a>
                 </div>
+                <hr>
                 <div class="card-body">
                     <div class="row">
                         @if ($profile->twitter_url)

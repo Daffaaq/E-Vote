@@ -17,6 +17,22 @@
     <link href="{{ asset('assets/compiled/css/iconly.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('assets/extensions/summernote/summernote-lite.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/compiled/css/form-editor-summernote.css') }}">
+    <style>
+        hr {
+            border: none;
+            border-top: 1px solid;
+            opacity: 0.6;
+            /* Transparansi untuk mengurangi kontras */
+        }
+
+        [data-bs-theme="light"] hr {
+            border-color: #000 !important;
+        }
+
+        [data-bs-theme="dark"] hr {
+            border-color: #ffffff !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -133,7 +149,7 @@
         </div>
         <div id="main">
             @yield('breadcrumbs')
-            <hr style="border: 0; height: 1px; background: #dee2e6; margin: 1rem 0;">
+            <hr>
             @yield('content')
 
             {{-- <footer>
