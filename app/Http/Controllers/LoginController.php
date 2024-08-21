@@ -32,7 +32,7 @@ class LoginController extends Controller
         $jadwalVotes = JadwalVotes::where('periode_id', $periode_id)->select("tanggal_awal_vote", "tanggal_akhir_vote", "tempat_vote")->first();
         $jadwalResultVote = jadwal_result_vote::where('periode_id', $periode_id)->select("tanggal_result_vote", "jam_result_vote", "tempat_result_vote")->first();
         $jadwalOrasi = jadwal_orasi::where('periode_id', $periode_id)->select("tanggal_orasi_vote", "jam_orasi_mulai", "tempat_orasi")->first();
-        $candidate = Candidates::where('periode_id', $periode_id)->select("no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")->get();
+        $candidate = Candidates::where('periode_id', $periode_id)->select("no_urut_kandidat", "nama_ketua", "nama_wakil_ketua", "slogan", "slug", "foto", "foto_wakil", "status")->get();
         $profile = profile::first();
         $datastudent = Students::count();
         $datavoter = Votes::with('student')->whereHas('candidate')->where('periode_id', $periode_id)->count();

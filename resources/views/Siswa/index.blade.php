@@ -17,6 +17,15 @@
             font-family: 'Roboto', sans-serif;
         }
 
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none;
+        }
+
+        input[type="password"]::-webkit-textfield-decoration-container {
+            display: none;
+        }
+
         .navbar-light {
             background-color: #273a6b !important;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -371,7 +380,13 @@
                     {{ Auth::user()->name }}
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
-                    <a class="dropdown-item" href="#">Profile</a>
+                    <!-- Trigger the modal -->
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#updateProfileModal"
+                        data-name="{{ Auth::user()->name }}" data-username="{{ Auth::user()->username }}"
+                        data-nis="{{ Auth::user()->student->nis ?? '' }}"
+                        data-nama="{{ Auth::user()->student->nama ?? '' }}"
+                        data-jenis-kelamin="{{ Auth::user()->student->jenis_kelamin ?? '' }}">Profile</a>
+
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
                 </div>
@@ -401,6 +416,14 @@
         </div>
     </div>
 
+    <div class="form-message text-center p-2">
+        @if (now() >= \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote) &&
+                now() < \Carbon\Carbon::parse($jadwalVotes->tanggal_akhir_vote)->endOfDay())
+            <div class="alert alert-success">Voting Sedang Berlangsung</div>
+        @else
+            <div class="alert alert-danger">Voting Selesai</div>
+        @endif
+    </div>
     <hr>
 
     <!-- Schedule Section -->
@@ -496,25 +519,51 @@
                                 <div class="d-flex justify-content-center align-items-center flex-wrap"
                                     style="height: 100%">
                                     <div class="text-center mt-2" style="margin: 0 10px">
-                                        <img src="https://via.placeholder.com/150" class="card-img-top"
+                                        <img src="{{ Storage::url($item->foto) }}" class="card-img-top"
                                             alt="Foto Kandidat" style="width: 100px; height: 100px" />
-                                        <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Candra Waskito Utomo
+                                        <h5 class="card-title mt-2 mb-0" style="font-size: 15px">
+                                            {{ $item->nama_ketua }}
                                         </h5>
                                         <span class="badge"
                                             style="background-color: #273a6b; color: white;">Ketua</span>
-                                        <p class="card-text">Kelas: XII IPA 1</p>
                                     </div>
                                     <div class="text-center mt-2" style="margin: 0 10px">
-                                        <img src="https://via.placeholder.com/150" class="card-img-top"
+                                        <img src="{{ Storage::url($item->foto_wakil) }}" class="card-img-top"
                                             alt="Foto Kandidat" style="width: 100px; height: 100px" />
-                                        <h5 class="card-title mt-2 mb-0" style="font-size: 15px">Dwi Fatah Rahayu</h5>
-                                        <span class="badge badge-info mt-2">Wakil</span>
-                                        <p class="card-text">Kelas: XII IPA 1</p>
+                                        <h5 class="card-title mt-2 mb-0" style="font-size: 15px">
+                                            {{ $item->nama_wakil_ketua }}</h5>
+                                        <span class="badge badge-info mt-2">Wakil Ketua</span>
                                     </div>
                                 </div>
                                 <div class="card-body text-center">
-                                    <a href="#" class="btn btn-primary" style="border-radius: 50px;">Detail</a>
-                                    <a href="#" class="btn btn-success" style="border-radius: 50px;">Vote</a>
+                                    <p class="card-text">{{ $item->slogan }}</p>
+                                </div>
+                                <div class="card-body text-center">
+                                    <a href="{{ route('detail.candidate.voter', $item->slug) }}"
+                                        class="btn btn-primary" style="border-radius: 50px;">Detail</a>
+                                    @if ($cekstatusvote)
+                                        <a class="btn btn-success" style="border-radius: 50px;">Sudah Memilih</a>
+                                    @else
+                                        @if ($statusSetVote && $statusSetVote->set_vote == 1)
+                                            @if (now() >= \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote) &&
+                                                    now() < \Carbon\Carbon::parse($jadwalVotes->tanggal_akhir_vote)->endOfDay())
+                                                <form action="{{ route('vote.cast') }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    <input type="hidden" name="candidate_id"
+                                                        value="{{ $item->id }}">
+                                                    <button type="submit" class="btn btn-success"
+                                                        style="border-radius: 50px;">Vote</button>
+                                                </form>
+                                            @else
+                                                <a href="#" class="btn btn-success disabled"
+                                                    style="border-radius: 50px;">Vote</a>
+                                            @endif
+                                        @else
+                                            <a href="#" class="btn btn-success disabled"
+                                                style="border-radius: 50px;">Vote</a>
+                                        @endif
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -656,10 +705,164 @@
         <i class="fas fa-chevron-up"></i>
     </button>
 
+    <!-- Update Profile Modal -->
+    <!-- Update Profile Modal -->
+    <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #273a6b; color: white">
+                    <h5 class="modal-title" id="updateProfileModalLabel">Update Profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                        style="color: white !important; background: none !important; border: none !important;">
+                        <span aria-hidden="true" style="font-size: 1.5rem; color: white !important;">&times;</span>
+                    </button>
+                </div>
+                <form id="updateProfileForm">
+                    <div class="modal-body">
+                        <div id="updateMessage" style="display: none; text-align: center"></div>
+                        <!-- Form Fields for Updating Profile -->
+                        <div class="form-group">
+                            <label for="name">Nama Panggilan</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                            <small>Masukkan Nama Panggilan Anda.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                            <small>Masukkan Username Anda.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password (opsional)</label>
+                            <div style="position: relative;">
+                                <input type="password" class="form-control" id="password" name="password"
+                                    autocomplete="new-password" style="padding-right: 30px;">
+                                <i class="fas fa-eye" id="togglePassword"
+                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
+                            </div>
+                            <small>Password kosongkan jika tidak ingin diupdate. Update password minimal 8
+                                karakter</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="nis">NIS</label>
+                            <input type="text" class="form-control" id="nis" name="nis" required>
+                            <small>Masukkan NIS Anda.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="nama">Nama Lengkap</label>
+                            <input type="text" class="form-control" id="nama" name="nama" required>
+                            <small>Masukkan Nama Lengkap Anda.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="jenis_kelamin">Jenis Kelamin</label>
+                            <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
+                                <option value="Laki-laki">Laki-laki</option>
+                                <option value="Perempuan">Perempuan</option>
+                            </select>
+                            <small>Pilih Jenis Kelamin Anda.</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color: #273a6b; color: white">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript (jQuery, Popper.js, Bootstrap) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    {{-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> --}}
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#togglePassword').on('click', function() {
+                const passwordField = $('#password');
+                const passwordFieldType = passwordField.attr('type');
+                const icon = $(this);
+
+                if (passwordFieldType === 'password') {
+                    passwordField.attr('type', 'text');
+                    icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    passwordField.attr('type', 'password');
+                    icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+            // Trigger the modal and populate data when the modal is opened
+            $('#updateProfileModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+
+                // Extract info from data-* attributes
+                var name = button.data('name');
+                var username = button.data('username');
+                var nis = button.data('nis');
+                var nama = button.data('nama');
+                var jenis_kelamin = button.data('jenis-kelamin');
+
+                // Update the modal's input fields
+                var modal = $(this);
+                modal.find('.modal-body #name').val(name);
+                modal.find('.modal-body #username').val(username);
+                modal.find('.modal-body #nis').val(nis);
+                modal.find('.modal-body #nama').val(nama);
+                modal.find('.modal-body #jenis_kelamin').val(jenis_kelamin);
+            });
+        });
+        $(document).ready(function() {
+            $('#updateProfileForm').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Gather the form data
+                let formData = {
+                    name: $('#name').val(),
+                    username: $('#username').val(),
+                    password: $('#password').val(),
+                    nis: $('#nis').val(),
+                    nama: $('#nama').val(),
+                    jenis_kelamin: $('#jenis_kelamin').val(),
+                    _token: '{{ csrf_token() }}' // Include CSRF token
+                };
+
+                console.log(formData);
+
+                // Send an AJAX request to update the profile
+                $.ajax({
+                    url: '/dashboardVoter/Profile/Update', // Your backend route to handle the request
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.success) {
+                            $('#updateMessage').html(
+                                '<div class="alert alert-success">Profil berhasil diperbarui</div>'
+                            ).show();
+                            setTimeout(function() {
+                                $('#updateProfileModal').modal('hide');
+                                location
+                                    .reload(); // Reload the page to reflect the changes
+                            }, 1500);
+                        } else {
+                            $('#updateMessage').html(
+                                '<div class="alert alert-danger">Gagal memperbarui profil</div>'
+                            ).show();
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMsg =
+                            '<div class="alert alert-danger">Gagal memperbarui profil:<ul>';
+                        $.each(xhr.responseJSON.errors, function(key, value) {
+                            errorMsg += '<li>' + value + '</li>';
+                        });
+                        errorMsg += '</ul></div>';
+                        $('#updateMessage').html(errorMsg).show();
+                    }
+                });
+            });
+        });
+    </script>
 
     <!-- Custom Scroll Script -->
     <script>

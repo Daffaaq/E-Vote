@@ -58,7 +58,9 @@ class CandidateController extends Controller
     public function store(StoreCandidateRequest $request, CandidateService $candidateService)
     {
         try {
+            // dd($request->all());
             $candidateService->createCandidate($request->validated());
+            // dd($candidateService);
             return redirect()->route('Candidate.index')->with('success', 'Candidate created successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors($e->getMessage())->withInput();

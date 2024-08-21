@@ -23,6 +23,7 @@ class Candidates extends Model
         'misi',
         'slogan',
         'foto',
+        'foto_wakil',
         'periode_id',
     ];
 

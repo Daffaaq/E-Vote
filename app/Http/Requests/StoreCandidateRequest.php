@@ -31,24 +31,33 @@ class StoreCandidateRequest extends FormRequest
             'misi' => 'required',
             'slogan' => 'required',
             'foto' => 'nullable|image',
+            'foto_wakil' => 'nullable|image',
             'periode_id' => 'nullable|exists:periode,id',
         ];
     }
 
     public function withValidator($validator)
     {
+
         $validator->after(function ($validator) {
+            // Ambil periode_id dari Periode yang aktif
+            $periode_id = \App\Models\Periode::where('actif', 1)->value('id');
             $data = $this->validated();
 
-            // Check for sequential and unique no_urut_kandidat
-            $lastNumber = \App\Models\Candidates::max('no_urut_kandidat');
+            // Validasi nomor urut kandidat
+            $lastNumber = \App\Models\Candidates::where('periode_id', $periode_id)
+                ->max('no_urut_kandidat');
+            // dd($lastNumber);
             $expectedNumber = $lastNumber + 1;
 
             if ($data['no_urut_kandidat'] != $expectedNumber) {
                 $validator->errors()->add('no_urut_kandidat', "Nomor urut kandidat harus berurutan dan tidak boleh ada yang terlewat. Silakan masukkan nomor yang benar ($expectedNumber).");
             }
 
-            if (\App\Models\Candidates::where('no_urut_kandidat', $data['no_urut_kandidat'])->exists()) {
+            if (\App\Models\Candidates::where('periode_id', $periode_id)
+                ->where('no_urut_kandidat', $data['no_urut_kandidat'])
+                ->exists()
+            ) {
                 $validator->errors()->add('no_urut_kandidat', 'Nomor urut kandidat sudah ada.');
             }
 

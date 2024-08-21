@@ -495,6 +495,7 @@
     <div id="caketos" class="container mb-4">
         <h5 class="section-title">Kandidate Ketua Osis</h5>
         <div class="row">
+            {{-- @dd($candidate->slogan) --}}
             @forelse ($candidate as $item)
                 @if ($item->status == 'ganda')
                     <div class="col-md-6 col-lg-4 mb-4">
@@ -512,17 +513,17 @@
                                     <h5 class="card-title mt-2 mb-0" style="font-size: 15px">{{ $item->nama_ketua }}
                                     </h5>
                                     <span class="badge" style="background-color: #273a6b; color: white;">Ketua</span>
-                                    <p class="card-text">{{ $item->slogan }}</p>
                                 </div>
                                 <div class="text-center mt-2" style="margin: 0 10px">
-                                    <img src="{{ Storage::url($item->foto) }}" class="card-img-top"
+                                    <img src="{{ Storage::url($item->foto_wakil) }}" class="card-img-top"
                                         alt="Foto Kandidat" style="width: 100px; height: 100px" />
                                     <h5 class="card-title mt-2 mb-0" style="font-size: 15px">
-                                        {{ $item->nama_wakil_ketua }}/h5>
-                                        <span class="badge"
-                                            style="background-color: #1f2942; color: white;">Ketua</span>
-                                        <p class="card-text">{{ $item->slogan }}</p>
+                                        {{ $item->nama_wakil_ketua }}</h5>
+                                    <span class="badge badge-info mt-2">Wakil Ketua</span>
                                 </div>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="card-text">{{ $item->slogan }}</p>
                             </div>
                             <div class="card-body text-center">
                                 <a href="{{ route('detail.candidate.landing-page', $item->slug) }}"
@@ -626,11 +627,24 @@
 
         <div class="progress"
             style="height: 30px; background-color: #e9ecef; border-radius: 50px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
-            <div class="progress-bar progress-bar-animated" role="progressbar"
-                style="width: {{ number_format($progress, 2) }}%; border-radius: 50px; background-color: #273a6b;"
-                aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
-                {{ number_format($progress, 0) }}% Kandidat Telah Dipilih
-            </div>
+            {{-- @dd($progress) --}}
+            @if ($progress >= 30.0)
+                <!-- Jika progress lebih dari atau sama dengan 30%, gunakan progress bar ini -->
+                <div class="progress-bar progress-bar-animated" role="progressbar"
+                    style="width: {{ number_format($progress, 2) }}%; border-radius: 50px; background-color: #273a6b;"
+                    aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+                    {{ number_format($progress, 0) }}% Kandidat Telah Dipilih
+                </div>
+            @else
+                <!-- Jika progress kurang dari 30%, gunakan progress bar ini -->
+                <div class="progress-bar progress-bar-animated" role="progressbar"
+                    style="width: {{ number_format($progress, 2) }}%; border-radius: 50px; background-color: #273a6b; height: 100%;"
+                    aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+                </div>
+                <span style="position: absolute; width: 100%; text-align: center; color: #273a6b; line-height: 30px;">
+                    {{ number_format($progress, 0) }}% Kandidat Telah Dipilih
+                </span>
+            @endif
         </div>
         <div class="mt-2 text-center" style="color: #273a6b;">
             <p>{{ $datavoter }} dari {{ $datastudent }} siswa telah memilih.</p>

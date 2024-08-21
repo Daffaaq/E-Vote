@@ -13,7 +13,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Tambah Candidate</h4>
+                        <h4 class="card-title">Edit Candidate</h4>
                     </div>
                     @if (session('error'))
                         <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px"
@@ -91,17 +91,19 @@
 
                             <div class="col-md-12" id="wakil_ketua_container">
                                 <div class="form-group row align-items-center">
-                                    <label for="nama_wakil_ketua" class="form-label">{{ __('Nama Wakil') }}</label>
-                                    <input id="nama_wakil_ketua" type="text"
-                                        class="form-control @error('nama_wakil_ketua') is-invalid @enderror"
-                                        name="nama_wakil_ketua"
-                                        value="{{ old('nama_wakil_ketua', $candidate->nama_wakil_ketua) }}"
-                                        autocomplete="nama_wakil_ketua" autofocus>
-                                    @error('nama_wakil_ketua')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                    @enderror
+                                    <label for="nama_wakil_ketua" class="col-lg-3 col-form-label">{{ __('Nama Wakil') }}</label>
+                                    <div class="col-lg-9">
+                                        <input id="nama_wakil_ketua" type="text"
+                                            class="form-control @error('nama_wakil_ketua') is-invalid @enderror"
+                                            name="nama_wakil_ketua"
+                                            value="{{ old('nama_wakil_ketua', $candidate->nama_wakil_ketua) }}"
+                                            autocomplete="nama_wakil_ketua" autofocus>
+                                        @error('nama_wakil_ketua')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
 
@@ -120,6 +122,7 @@
 
                             <div class="col-md-12">
                                 <div class="form-group">
+                                    <label for="misi" class="form-label">{{ __('Misi') }}</label>
                                     <textarea id="misi" class="form-control summernote @error('misi') is-invalid @enderror" name="misi" required
                                         autocomplete="misi" autofocus>{{ old('misi', $candidate->misi) }}</textarea>
                                     @error('misi')
@@ -178,6 +181,40 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-12" id="wakil_ketua_foto">
+                                <div class="form-group">
+                                    <label for="foto_wakil" class="form-label">{{ __('Foto Wakil') }}</label>
+                                    <div class="input-group">
+                                        <input id="foto_wakil" type="file"
+                                            class="form-control @error('foto_wakil') is-invalid @enderror"
+                                            name="foto_wakil" accept="image/*">
+                                        <label class="input-group-text" for="foto_wakil">Pilih File</label>
+                                    </div>
+                                    <small class="text-muted">Pilih file gambar (JPG, PNG) maksimal 2MB</small>
+                                    @error('foto_wakil')
+                                        <div class="invalid-feedback d-block" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" id="wakil_ketua_foto_preview">
+                                <div class="form-group">
+                                    <label class="form-label">{{ __('Preview Gambar Wakil') }}</label>
+                                    <div id="foto_wakil_preview" class="mt-2">
+                                        @if ($candidate->foto_wakil)
+                                            <img src="{{ asset('storage/' . $candidate->foto_wakil) }}"
+                                                class="img-thumbnail mt-2" style="height: 200px; width: 200px"
+                                                id="currentImageWakil">
+                                        @endif
+                                    </div>
+                                    <button type="button" id="hapusPreviewWakilBtn"
+                                        class="btn btn-danger mt-2 {{ $candidate->foto_wakil ? '' : 'd-none' }}">Hapus</button>
+                                </div>
+                            </div>
+
+
                             <div class="col-12 d-flex justify-content-end mt-3">
                                 <a href="{{ url('/dashboardSuperadmin/Candidate') }}"
                                     class="btn btn-primary rounded-pill me-1 mb-1">
@@ -214,16 +251,23 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         const currentImageHtml = imagePreview.innerHTML;
+        const currentImageHtmlWakil = foto_wakil_preview.innerHTML;
         document.addEventListener('DOMContentLoaded', function() {
 
             const statusSelect = document.getElementById('status');
             const wakilKetuacontainer = document.getElementById('wakil_ketua_container');
+            const wakilKetuacontainer1 = document.getElementById('wakil_ketua_foto');
+            const wakilKetuacontainer2 = document.getElementById('wakil_ketua_foto_preview');
 
             function toggleWakilKetuacontainer() {
                 if (statusSelect.value === 'ganda') {
                     wakilKetuacontainer.style.display = 'block';
+                    wakilKetuacontainer1.style.display = 'block';
+                    wakilKetuacontainer2.style.display = 'block';
                 } else {
                     wakilKetuacontainer.style.display = 'none';
+                    wakilKetuacontainer1.style.display = 'none';
+                    wakilKetuacontainer2.style.display = 'none';
                 }
             }
 
@@ -253,22 +297,69 @@
             reader.readAsDataURL(file);
         });
 
+        document.getElementById('foto_wakil').addEventListener('change', function(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.createElement("img");
+                img.src = e.target.result;
+                img.className = "img-thumbnail mt-2";
+                img.style.width = "200px";
+                img.style.height = "200px";
+                var previewContainer = document.getElementById('foto_wakil_preview');
+                previewContainer.innerHTML = '';
+                previewContainer.appendChild(img);
+
+                document.getElementById('hapusPreviewWakilBtn').classList.remove('d-none');
+            };
+            reader.readAsDataURL(file);
+        });
+
         reviewBtn.addEventListener('click', function() {
             const previewContainer = document.getElementById('imagePreview').innerHTML;
             reviewFoto.innerHTML = previewContainer;
             $('#reviewModal').modal('show');
         });
 
+        document.getElementById('reviewBtn').addEventListener('click', function() {
+            const previewContainerKetua = document.getElementById('imagePreview').innerHTML;
+            const previewContainerWakil = document.getElementById('foto_wakil_preview').innerHTML;
+
+            const reviewContent = `
+            <h5>Foto Ketua</h5>
+            ${previewContainerKetua}
+            <h5 class="mt-4">Foto Wakil</h5>
+            ${previewContainerWakil}
+        `;
+
+            document.getElementById('reviewFoto').innerHTML = reviewContent;
+            $('#reviewModal').modal('show');
+        });
         // Script untuk menghapus preview gambar
         hapusPreviewBtn.addEventListener('click', function() {
             // Hapus hanya jika gambar baru dipilih
             var img = document.getElementById('currentImage');
             if (!img) {
                 imagePreview.innerHTML = currentImageHtml;
+
                 document.getElementById('foto').value = '';
 
                 // Sembunyikan tombol Hapus
                 hapusPreviewBtn.classList.add('d-none');
+            } else {
+                alert('Gambar lama tidak bisa dihapus');
+            }
+        });
+        hapusPreviewWakilBtn.addEventListener('click', function() {
+            // Hapus hanya jika gambar baru dipilih
+            var imgWakil = document.getElementById('currentImageWakil');
+
+            if (!imgWakil) {
+                foto_wakil_preview.innerHTML = currentImageHtmlWakil;
+                document.getElementById('foto_wakil').value = '';
+
+                // Sembunyikan tombol Hapus
+                document.getElementById('hapusPreviewWakilBtn').classList.add('d-none');
             } else {
                 alert('Gambar lama tidak bisa dihapus');
             }

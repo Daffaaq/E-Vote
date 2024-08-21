@@ -135,16 +135,26 @@
 <body>
     <div class="container">
         <div class="card-detail text-center">
-            <img src="{{ asset('storage/' . $candidate->foto) }}" alt="Foto {{ $candidate->nama_ketua }}"
-                class="img-fluid" />
+            <!-- Tampilkan foto ketua -->
+            <img src="{{ asset('storage/' . $candidate->foto) }}" alt="Foto {{ $candidate->nama_ketua }}" />
+
+            <!-- Cek apakah kandidat memiliki wakil dan tampilkan foto wakil -->
+            @if ($candidate->status !== 'perseorangan')
+                <img src="{{ asset('storage/' . $candidate->foto_wakil) }}"
+                    alt="Foto {{ $candidate->nama_wakil_ketua }}" />
+            @endif
+
+            <!-- Tampilkan detail kandidat -->
             <h1>Detail Kandidat: <span>{{ $candidate->no_urut_kandidat }}</span></h1>
             <div class="divider"></div>
+
 
             <!-- Nama Ketua -->
             <p>
                 <i class="fas fa-user-tie" style="color: #007bff"></i>
                 <strong>Nama Ketua:</strong>
-                <span style="color: #343a40; font-weight: 600">{{ $candidate->nama_ketua }}</span>
+                <span style="color: #343a40; font-weight: 600">{{ $candidate->nama_ketua }} <span class="badge"
+                        style="background-color: #273a6b; color: white;">Ketua</span></span>
             </p>
 
             <!-- Nama Wakil Ketua (If not perseorangan) -->
@@ -152,7 +162,8 @@
                 <p>
                     <i class="fas fa-user-friends" style="color: #28a745"></i>
                     <strong>Nama Wakil Ketua:</strong>
-                    <span style="color: #343a40; font-weight: 600">{{ $candidate->nama_wakil_ketua }}</span>
+                    <span style="color: #343a40; font-weight: 600">{{ $candidate->nama_wakil_ketua }} <span
+                            class="badge" style="background-color: #273a6b; color: white;">Wakil Ketua</span></span>
                 </p>
             @endif
 

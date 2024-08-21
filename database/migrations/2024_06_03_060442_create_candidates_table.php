@@ -23,6 +23,7 @@ return new class extends Migration
             $table->longText('misi');
             $table->string('slogan');
             $table->string('foto')->nullable();
+            $table->string('foto_wakil')->nullable();
             $table->unsignedBigInteger('periode_id');
             $table->foreign('periode_id')->references('id')->on('periode');
             $table->timestamps();

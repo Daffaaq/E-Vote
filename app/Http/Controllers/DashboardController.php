@@ -11,9 +11,17 @@ use App\Models\Periode;
 use App\Models\profile;
 use App\Models\SettingVote;
 use App\Models\Students;
+use App\Http\Requests\UpdateAuthRequest;
+use App\Services\AuthService;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Exports\VotesExport;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DashboardController extends Controller
 {
@@ -25,22 +33,44 @@ class DashboardController extends Controller
 
         // Ambil jumlah suara per kandidat yang terdaftar pada periode aktif
         $candidates = Candidates::where('periode_id', $periode_id)
-            ->select('id', 'no_urut_kandidat', 'nama_ketua', 'slogan', 'slug', 'foto', 'status')
+            ->select('id', 'no_urut_kandidat', 'nama_ketua', 'nama_wakil_ketua', 'slogan', 'slug', 'foto', 'status')
             ->withCount(['votes' => function ($query) use ($periode_id) {
                 $query->where('periode_id', $periode_id);
             }])
             ->get();
 
+        $countCandidate = $candidates->count();
+        // dd($countCandidate);
+        // dd($candidates);
         // Hitung jumlah voter dan jumlah student
         $datavoter = Votes::where('periode_id', $periode_id)->count();
         $datastudent = Students::count();
 
         // Siapkan array untuk menyimpan nama kandidat dan jumlah suara mereka
-        $candidateNames = $candidates->pluck('nama_ketua')->toArray();
+        $candidateNames = $candidates->map(function ($candidate) {
+            if ($candidate->status == 'ganda') {
+                return $candidate->nama_ketua . ' & ' . $candidate->nama_wakil_ketua;
+            }
+            return $candidate->nama_ketua;
+        })->toArray();
+        // dd($candidateNames);
         $candidateVotes = $candidates->pluck('votes_count')->toArray();
 
+        // Hitung apakah total votes sudah melebihi 15% dari total siswa
+        $percentageVotes = ($datavoter / $datastudent) * 100;
+        $isAboveThreshold = ceil($percentageVotes) > 5;
+
+        // dd(floor($percentageVotes));
+        // dd($percentageVotes);
+        // dd($isAboveThreshold);
+
         // Render view dengan data yang telah disiapkan
-        return view('superadmin.Dashboard.index', compact('statusvote', 'datavoter', 'datastudent', 'candidateNames', 'candidateVotes', 'candidates'));
+        return view('superadmin.Dashboard.index', compact('statusvote', 'countCandidate', 'datavoter', 'datastudent', 'candidateNames', 'candidateVotes', 'candidates', 'isAboveThreshold'));
+    }
+
+    public function export_excel(): BinaryFileResponse
+    {
+        return Excel::download(new VotesExport, 'persentase_hasil_pemilihan' . Carbon::now() . '.xlsx');
     }
 
     public function indexAdmin()
@@ -99,7 +129,7 @@ class DashboardController extends Controller
 
         // Menggunakan Eloquent untuk data yang membutuhkan relasi dan manipulasi model
         $candidate = Candidates::where('periode_id', $periode_id)
-            ->select("id", "no_urut_kandidat", "nama_ketua", "slogan", "slug", "foto", "status")
+            ->select("id", "no_urut_kandidat", "nama_ketua", "nama_wakil_ketua", "slogan", "slug", "foto", "foto_wakil", "status")
             ->get();
 
         // Menggunakan Eloquent karena SettingVote mungkin membutuhkan manipulasi model
@@ -118,6 +148,36 @@ class DashboardController extends Controller
 
 
 
+    protected $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+    public function updateProfile(UpdateAuthRequest $request)
+    {
+        // Ambil pengguna yang sedang diautentikasi
+        $user = Auth::user();
+
+        // Ambil data yang telah tervalidasi dari request
+        $validatedData = $request->validated();
+
+        // Panggil service untuk memperbarui profil
+        $profile = $this->authService->updateProfile($user, $validatedData);
+
+        if ($profile) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Profil berhasil diperbarui',
+                'profile' => $profile
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Profil tidak ditemukan'
+            ], 404);
+        }
+    }
 
     public function detaiCandidate($slug)
     {

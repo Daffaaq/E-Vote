@@ -48,6 +48,7 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
     Route::get('/dashboardSuperadmin', [DashboardController::class, 'indexSuperadmin'])->name('dashboard.superadmin');
     Route::post('/dashboardSuperadmin/status', [DashboardController::class, 'Settingvote'])->name('dashboard.superadmin.setting-vote');
+    Route::get('/dashboardSuperadmin/export', [DashboardController::class, 'export_excel'])->name('dashboard.superadmin.export-vote');
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Siswa', [StudentsController::class, 'index'])->name('students.index');
         Route::get('/Siswa/create', [StudentsController::class, 'create'])->name('students.create');
@@ -118,6 +119,9 @@ Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function (
     Route::get('/dashboardVoter', [DashboardController::class, 'indexVoter'])->name('dashboard.voter');
     Route::prefix('/dashboardVoter')->group(function () {
         Route::get('/Detail/{slug}', [DashboardController::class, 'detaiCandidate'])->name('detail.candidate.voter');
+    });
+    Route::prefix('/dashboardVoter')->group(function () {
+        Route::post('/Profile/Update', [DashboardController::class, 'UpdateProfile'])->name('update.candidate.voter');
     });
     Route::prefix('/dashboardVoter')->group(function () {
         Route::post('/vote', [VotingController::class, 'vote'])->name('vote.cast');

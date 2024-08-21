@@ -21,6 +21,7 @@ class UpdateCandidateRequest extends FormRequest
             'misi' => 'required',
             'slogan' => 'required',
             'foto' => 'nullable|image',
+            'foto_wakil' => 'nullable|image',
         ];
     }
 

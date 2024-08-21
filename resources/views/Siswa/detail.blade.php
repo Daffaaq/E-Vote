@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <style>
         body {
-            background-color: #f0f2f5;
             font-family: "Roboto", sans-serif;
         }
 
@@ -137,7 +136,13 @@
         <div class="card-detail text-center">
             <img src="{{ asset('storage/' . $candidate->foto) }}" alt="Foto {{ $candidate->nama_ketua }}"
                 class="img-fluid" />
-            <h1>Detail Kandidat: <span>{{ $candidate->no_urut_kandidat }}</span></h1>
+
+            @if ($candidate->status !== 'perseorangan')
+                <img src="{{ asset('storage/' . $candidate->foto_wakil) }}"
+                    alt="Foto {{ $candidate->nama_wakil_ketua }}" />
+            @endif
+
+            <h1>Kandidat: <span>{{ $candidate->no_urut_kandidat }}</span></h1>
             <div class="divider"></div>
 
             <!-- Nama Ketua -->
@@ -264,7 +269,7 @@
                 </a>
             </section>
         </footer>
-        <div class="text-center p-3 bg-dark text-white">
+        <div class="footer-copyright text-center p-3">
             &copy; 2024 Sistem Pemilihan. All rights reserved. Developed by Ache.
         </div>
     </div>
