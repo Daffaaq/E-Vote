@@ -14,12 +14,15 @@ use App\Models\Students;
 use App\Http\Requests\UpdateAuthRequest;
 use App\Services\AuthService;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\VotesExport;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -76,6 +79,84 @@ class DashboardController extends Controller
         return Excel::download(new VotesExport, $filename);
     }
 
+    public function export_vote_pdf()
+    {
+        $periode_nama = DB::table('periode')->where('actif', 1)->value('periode_nama');
+        $periode_id = DB::table('periode')->where('actif', 1)->value('id');
+        $totalVotes = Votes::where('periode_id', $periode_id)->count();
+
+        // Ambil status kandidat yang pertama ditemukan
+        $statusCandidate = DB::table('candidates')
+            ->where('periode_id', $periode_id)
+            ->pluck('status')
+            ->first();
+        // dd($statusCandidate);
+
+        // Modifikasi query berdasarkan status
+        if ($statusCandidate === 'perseorangan') {
+            $candidate = DB::table("candidates")
+                ->leftJoin("votes", "votes.candidate_id", "=", "candidates.id")
+                ->where('candidates.periode_id', $periode_id)
+                ->select(array(
+                    "candidates.nama_ketua AS nama",
+                    DB::raw("COUNT(votes.candidate_id) as jumlah_suara"),
+                    DB::raw("ROUND((COUNT(votes.candidate_id) * 100 / $totalVotes), 2) as persentase")
+                ))
+                ->groupBy("candidates.id", "candidates.nama_ketua")
+                ->get()
+                ->map(function ($item) {
+                    // Set jumlah_suara dan persentase ke 0 jika null
+                    $item->jumlah_suara = $item->jumlah_suara ?? 0;
+                    $item->persentase = $item->persentase ?? 0;
+                    return $item;
+                });
+        } else if ($statusCandidate === 'ganda') {
+            $candidate = DB::table("candidates")
+                ->leftJoin("votes", "votes.candidate_id", "=", "candidates.id")
+                ->where('candidates.periode_id', $periode_id)
+                ->select(array(
+                    "candidates.nama_ketua AS nama_ketua",
+                    "candidates.nama_wakil_ketua AS nama_wakil",
+                    DB::raw("COUNT(votes.candidate_id) as jumlah_suara"),
+                    DB::raw("ROUND((COUNT(votes.candidate_id) * 100 / $totalVotes), 2) as persentase")
+                ))
+                ->groupBy("candidates.id", "candidates.nama_ketua", "candidates.nama_wakil_ketua")
+                ->get()
+                ->map(function ($item) {
+                    // Set jumlah_suara dan persentase ke 0 jika null
+                    $item->jumlah_suara = $item->jumlah_suara ?? 0;
+                    $item->persentase = $item->persentase ?? 0;
+                    return $item;
+                });
+        } else {
+            // Tangani kondisi lain jika ada
+            $candidate = collect(); // Atau bisa ditangani sesuai kebutuhan
+        }
+        $timestamp = Carbon::now()->format('Y-m-d H-i-s');
+        // dd($timestamp);
+
+        $filename = Session::get('chart_filename', '');
+        // dd($filename);
+        $logoPath = storage_path('app/public/charts/' . $filename);
+
+        $logoBase64 = '';
+        if (file_exists($logoPath)) {
+            $logoBase64 = 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath));
+        } else {
+            Log::error('Image file not found: ' . $logoPath);
+        }
+        // dd($logoBase64);
+        $pdf = Pdf::loadView('exports.votes_pdf', [
+            'candidate' => $candidate,
+            'counting' => $totalVotes,
+            'timestamp' => $timestamp,
+            'periode_nama' => $periode_nama,
+            'logoBase64' => $logoBase64,
+            'title' => 'Laporan Hasil Perhitungan Suara',
+            'statusCandidate' => $statusCandidate
+        ]);
+        return $pdf->stream();
+    }
 
     public function indexAdmin()
     {

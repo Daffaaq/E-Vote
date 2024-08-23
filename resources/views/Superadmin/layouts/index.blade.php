@@ -43,8 +43,6 @@
                 <div class="sidebar-header position-relative">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="logo">
-                            {{-- <a href="index.html"><img src="./assets/compiled/svg/logo.svg" alt="Logo"
-                                    srcset="" /></a> --}}
                             <a href="{{ route('dashboard.superadmin') }}"><img
                                     src="{{ asset('assets/compiled/svg/logo.svg') }}" alt="Logo"
                                     srcset="" /></a>
@@ -137,6 +135,20 @@
                                 <span>Aspirasi</span>
                             </a>
                         </li>
+                        <li
+                            class="sidebar-item {{ request()->routeIs('users.index', 'users.create', 'users.edit', 'users.show') ? 'active' : '' }}">
+                            <a href="{{ route('users.index') }}" class="sidebar-link">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>SuperAdmin/Admin</span>
+                            </a>
+                        </li>
+                        {{-- <li
+                            class="sidebar-item {{ request()->routeIs('aspiration.index', 'aspiration.show') ? 'active' : '' }}">
+                            <a href="{{ route('aspiration.index') }}" class="sidebar-link">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Profile Superadmin</span>
+                            </a>
+                        </li> --}}
                         <li class="sidebar-item {{ request()->routeIs('logout') ? 'active' : '' }}">
                             <a href="{{ route('logout') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>

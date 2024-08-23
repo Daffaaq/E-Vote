@@ -3,7 +3,7 @@
 @section('breadcrumbs')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Daftar Periode</li>
+            <li class="breadcrumb-item active" aria-current="page">Daftar Pemilih</li>
         </ol>
     </nav>
 @endsection
@@ -11,7 +11,7 @@
 @section('content')
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Periode</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Daftar Pemilih</h6>
         </div>
         @if (session('error'))
             <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px" role="alert">
@@ -25,16 +25,18 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
-
         <div class="card-body">
+            <div class="d-flex justify-content-end mb-3">
+                <a href="{{ route('users.create') }}" class="btn btn-primary" style="margin-right: 5px;">Tambah User</a>
+            </div>
             <div class="table-responsive">
-                <table class="table table-bordered" id="periodeTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Siswa</th>
-                            <th>Nis Siswa</th>
-                            <th>Kelas Siswa</th>
+                            <th>Nama</th>
+                            <th>Username</th>
+                            <th>Role</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -56,7 +58,7 @@
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus Periode ini?
+                    Apakah Anda yakin ingin menghapus siswa ini?
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="closeModalFooter" class="btn btn-secondary"
@@ -70,13 +72,14 @@
             </div>
         </div>
     </div>
+
     <script>
         $(document).ready(function() {
-            var dataMaster = $('#periodeTable').DataTable({
+            var dataMaster = $('#usersTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('aspiration.list') }}',
+                    url: '{{ route('users-list-superadmin') }}',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -90,16 +93,23 @@
                         searchable: false
                     },
                     {
-                        data: 'nama',
-                        name: 'nama'
+                        data: 'name',
+                        name: 'name'
                     },
                     {
-                        data: 'nis',
-                        name: 'nis'
+                        data: 'username',
+                        name: 'username'
                     },
                     {
-                        data: 'kelas',
-                        name: 'kelas'
+                        data: 'role',
+                        name: 'role',
+                        render: function(data, type, row) {
+                            if (data == 'superadmin') {
+                                return '<span class="badge bg-success">Superadmin</span>';
+                            } else {
+                                return '<span class="badge bg-info">Admin</span>';
+                            }
+                        }
                     },
                     {
                         data: 'uuid',
@@ -108,10 +118,13 @@
                         searchable: false,
                         render: function(data) {
                             return `
-                        <a href="/dashboardSuperadmin/aspiration/show/${data}" class="btn icon btn-sm btn-info">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                    `;
+                                <a href="/dashboardSuperadmin/Users/edit/${data}" class="btn icon btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn icon btn-sm btn-danger" onclick="confirmDelete('${data}')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            `;
                         }
                     }
                 ],
@@ -120,15 +133,14 @@
                     $('a').tooltip();
                 }
             });
-
-            console.log("DataTable loaded");
-
             $('#closeModalHeader, #closeModalFooter').on('click', function() {
-                console.log('close');
                 $('#deleteConfirmationModal').modal('hide');
             });
-
-            console.log("data masuk");
         });
+
+        function confirmDelete(uuid) {
+            $('#deleteForm').attr('action', `/dashboardSuperadmin/Users/destroy/${uuid}`);
+            $('#deleteConfirmationModal').modal('show');
+        }
     </script>
 @endsection

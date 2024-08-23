@@ -21,11 +21,16 @@
                 style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: white; background-color: #007bff; border-radius: 0.25rem; text-decoration: none; transition: background-color 0.2s;">
                 Export Persentase
             </a> --}}
+            @if($datavoter !== 0)
+            <a href="#" id="export-button1"
+                style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: white; background-color: #007bff; border-radius: 0.25rem; text-decoration: none; transition: background-color 0.2s;">
+                Export Persentase (PDF)
+            </a>
             <a href="#" id="export-button"
                 style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: white; background-color: #007bff; border-radius: 0.25rem; text-decoration: none; transition: background-color 0.2s;">
                 Export Persentase
             </a>
-
+            @endif
         </div>
 
 
@@ -262,6 +267,35 @@
                                 // Setelah gambar tersimpan, mulai proses download Excel
                                 window.location.href =
                                     "{{ route('dashboard.superadmin.export-vote') }}";
+                            } else {
+                                alert('Failed to save chart image.');
+                            }
+                        });
+                });
+            });
+        });
+    </script>
+    <script>
+        document.getElementById('export-button1').addEventListener('click', function(e) {
+            e.preventDefault(); // Mencegah aksi default dari anchor
+
+            html2canvas(document.querySelector("#candidateChart")).then(canvas => {
+                canvas.toBlob(function(blob) {
+                    var formData = new FormData();
+                    formData.append('chart', blob, 'chart.png');
+
+                    fetch('/dashboardSuperadmin/save-chart', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        }).then(response => response.json())
+                        .then(data => {
+                            if (data.path) {
+                                // Setelah gambar tersimpan, mulai proses download Excel
+                                window.location.href =
+                                    "{{ route('dashboard.superadmin.export-vote-pdf') }}";
                             } else {
                                 alert('Failed to save chart image.');
                             }

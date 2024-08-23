@@ -900,31 +900,41 @@
     <div class="mb-0">
         <footer class="bg-dark text-center text-white p-4" style="margin-bottom: 0">
             <section class="mb-4 footer-icons">
-                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #3b5998"
-                    href="#!" role="button">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
                 <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #55acee"
-                    href="#!" role="button">
+                    href="{{ $profile->twitter_url }}" target="_blank" role="button">
                     <i class="fab fa-twitter"></i>
                 </a>
-                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #dd4b39"
-                    href="#!" role="button">
-                    <i class="fab fa-google"></i>
+                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #3b5998"
+                    href="{{ $profile->facebook_url }}" target="_blank" role="button">
+                    <i class="fab fa-facebook-f"></i>
                 </a>
                 <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #ac2bac"
-                    href="#!" role="button">
+                    href="{{ $profile->instagram_url }}" target="_blank" role="button">
                     <i class="fab fa-instagram"></i>
                 </a>
-                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #0082ca"
-                    href="#!" role="button">
+                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #00a400"
+                    href="{{ $profile->threads_url }}" target="_blank" role="button">
+                    <img src="{{ asset('Image-Assets/threads-fill.svg') }}" alt="Threads Icon"
+                        style="width: 19px; height: 19px; filter: brightness(0) invert(1);">
+                </a>
+                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #0072b1"
+                    href="{{ $profile->linkedin_url }}" target="_blank" role="button">
                     <i class="fab fa-linkedin-in"></i>
                 </a>
-                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #333333"
-                    href="#!" role="button">
-                    <i class="fab fa-github"></i>
+                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #000000"
+                    href="{{ $profile->tiktok_url }}" target="_blank" role="button">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #00a680"
+                    href="{{ $profile->line_url }}" target="_blank" role="button">
+                    <i class="fab fa-line"></i>
+                </a>
+                <a class="btn btn-primary btn-floating m-1 social-btn" style="background-color: #FF0000"
+                    href="{{ $profile->youtube_url }}" target="_blank" role="button">
+                    <i class="fab fa-youtube"></i>
                 </a>
             </section>
+
         </footer>
         <div class="footer-icons">
             <a href="#!" class="social-btn"><i class="fab fa-facebook-f"></i></a>

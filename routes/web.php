@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\VotingController;
 use App\Http\Controllers\AspirasiController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -53,6 +54,7 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
     Route::get('/dashboardSuperadmin', [DashboardController::class, 'indexSuperadmin'])->name('dashboard.superadmin');
     Route::post('/dashboardSuperadmin/status', [DashboardController::class, 'Settingvote'])->name('dashboard.superadmin.setting-vote');
     Route::get('/dashboardSuperadmin/export', [DashboardController::class, 'export_excel'])->name('dashboard.superadmin.export-vote');
+    Route::get('/dashboardSuperadmin/export-pdf', [DashboardController::class, 'export_vote_pdf'])->name('dashboard.superadmin.export-vote-pdf');
     Route::post('/dashboardSuperadmin/save-chart', function (Request $request) {
         if ($request->hasFile('chart')) {
             $path = $request->file('chart')->store('public/charts');
@@ -65,6 +67,16 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         return response()->json(['error' => 'No chart uploaded'], 400);
     });
 
+    Route::prefix('/dashboardSuperadmin')->group(function () {
+        Route::get('/Users', [UserController::class, 'index'])->name('users.index');
+        Route::get('/Users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('/Users/store', [UserController::class, 'store'])->name('users.store');
+        Route::get('/Users/edit/{uuid}', [UserController::class, 'edit'])->name('users.edit');
+        Route::get('/Users/show/{uuid}', [UserController::class, 'show'])->name('users.show');
+        Route::put('/Users/update/{uuid}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/Users/destroy/{uuid}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::post('/Users/list', [UserController::class, 'list'])->name('users-list-superadmin');
+    });
     Route::prefix('/dashboardSuperadmin')->group(function () {
         Route::get('/Siswa', [StudentsController::class, 'index'])->name('students.index');
         Route::get('/Siswa/create', [StudentsController::class, 'create'])->name('students.create');
