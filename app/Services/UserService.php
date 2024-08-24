@@ -47,6 +47,17 @@ class UserService
         }
         return $this->userRepository->updateUser($uuid, $data);
     }
+    public function updateUsernouuid($data)
+    {
+        // Check if password is provided
+        if (isset($data['password']) && !empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            // Remove the password field from the data array if it is not set or is empty
+            unset($data['password']);
+        }
+        return $this->userRepository->updateUsernouuid($data);
+    }
 
     public function deleteUser($uuid)
     {

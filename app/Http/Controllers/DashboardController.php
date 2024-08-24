@@ -20,8 +20,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\VotesExport;
+use App\Services\UserService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -186,6 +189,105 @@ class DashboardController extends Controller
     //     return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'statusSetVote', 'cekstatusvote', 'profile'));
     // }
 
+    public function profileSuperadmin()
+    {
+        $user = Auth::user();
+        // dd($user);
+        // Check if the user has the 'superadmin' role
+        if ($user->role !== 'superadmin') {
+            // Redirect or abort if the user is not a superadmin
+            return redirect()->route('home')->with('error', 'Unauthorized access');
+        }
+
+        return view('superadmin.Dashboard.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        // dd($request->all());
+        // Validasi file gambar
+        $request->validate([
+            'foto_profile' => 'required|image',
+        ]);
+
+        $user = Auth::user();
+
+        // Hapus gambar lama jika ada
+        if ($user->foto_profile && Storage::disk('public')->exists($user->foto_profile)) {
+            Storage::disk('public')->delete($user->foto_profile);
+        }
+
+        // Simpan gambar baru
+        $path = $request->file('foto_profile')->store('profile_photos', 'public');
+
+        // Perbarui gambar profil pengguna dengan path lengkap
+        $user->foto_profile = $path;
+        // dd($user->foto_profile);
+        $user->save();
+        // dd($user);
+        // Redirect dengan pesan sukses
+        return redirect()->back()->with('success', 'Profile picture updated successfully');
+    }
+
+    public function deleteProfilePhoto(Request $request)
+    {
+        $user = Auth::user();
+
+        // Periksa apakah pengguna memiliki foto profil
+        if ($user->foto_profile && Storage::disk('public')->exists($user->foto_profile)) {
+            // Hapus foto dari storage
+            Storage::disk('public')->delete($user->foto_profile);
+
+            // Set kolom foto_profile ke null
+            $user->foto_profile = null;
+            $user->save();
+
+            return redirect()->back()->with('success', 'Foto profil berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Tidak ada foto profil yang ditemukan.');
+    }
+
+    // Change Password
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|confirmed|min:8',
+        ]);
+
+        $user = Auth::user();
+
+        // Check if current password matches
+        if (!Hash::check($request->current_password, $user->password)) {
+            throw ValidationException::withMessages([
+                'current_password' => 'Your current password does not match our records.',
+            ]);
+        }
+
+        // Update password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password changed successfully');
+    }
+
+    protected $userService;
+    protected $authService;
+
+    public function __construct(AuthService $authService, UserService $userService)
+    {
+        $this->authService = $authService;
+        $this->userService = $userService;
+    }
+
+    public function updateProfileSuperadmin(Request $request)
+    {
+        $user = $this->userService->updateUsernouuid($request->validated());
+        return redirect()->route('users.index')->with('success', 'User updated successfully');
+    }
+
+
     public function indexVoter()
     {
         $user = Auth::user();
@@ -233,36 +335,33 @@ class DashboardController extends Controller
 
 
 
-    protected $authService;
 
-    public function __construct(AuthService $authService)
-    {
-        $this->authService = $authService;
-    }
-    public function updateProfile(UpdateAuthRequest $request)
-    {
-        // Ambil pengguna yang sedang diautentikasi
-        $user = Auth::user();
 
-        // Ambil data yang telah tervalidasi dari request
-        $validatedData = $request->validated();
 
-        // Panggil service untuk memperbarui profil
-        $profile = $this->authService->updateProfile($user, $validatedData);
+    // public function updateProfile(UpdateAuthRequest $request)
+    // {
+    //     // Ambil pengguna yang sedang diautentikasi
+    //     $user = Auth::user();
 
-        if ($profile) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Profil berhasil diperbarui',
-                'profile' => $profile
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Profil tidak ditemukan'
-            ], 404);
-        }
-    }
+    //     // Ambil data yang telah tervalidasi dari request
+    //     $validatedData = $request->validated();
+
+    //     // Panggil service untuk memperbarui profil
+    //     $profile = $this->authService->updateProfile($user, $validatedData);
+
+    //     if ($profile) {
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Profil berhasil diperbarui',
+    //             'profile' => $profile
+    //         ], 200);
+    //     } else {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'Profil tidak ditemukan'
+    //         ], 404);
+    //     }
+    // }
 
     public function detaiCandidate($slug)
     {

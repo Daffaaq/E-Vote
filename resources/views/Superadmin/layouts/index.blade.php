@@ -142,13 +142,12 @@
                                 <span>SuperAdmin/Admin</span>
                             </a>
                         </li>
-                        {{-- <li
-                            class="sidebar-item {{ request()->routeIs('aspiration.index', 'aspiration.show') ? 'active' : '' }}">
-                            <a href="{{ route('aspiration.index') }}" class="sidebar-link">
+                        <li class="sidebar-item {{ request()->routeIs('my-profile.index') ? 'active' : '' }}"">
+                            <a href="{{ route('my-profile.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
-                                <span>Profile Superadmin</span>
+                                <span>Your Profile</span>
                             </a>
-                        </li> --}}
+                        </li>
                         <li class="sidebar-item {{ request()->routeIs('logout') ? 'active' : '' }}">
                             <a href="{{ route('logout') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>

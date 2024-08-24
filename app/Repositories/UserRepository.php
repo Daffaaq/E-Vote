@@ -5,6 +5,8 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserRepository
@@ -30,6 +32,18 @@ class UserRepository
         $user->update($data);
         return $user;
     }
+    public function updateUsernouuid($data)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            throw new \Exception('No authenticated user found.');
+        }
+
+        $userId = $user->id;
+
+        return DB::table('users')->where('id', $userId)->update($data);
+    }
 
     public function deleteUser($uuid)
     {
@@ -39,7 +53,7 @@ class UserRepository
 
     public function getUsersForDataTable()
     {
-        $query = User::select(['uuid', 'name', 'username','role'])->where('role', '!=', 'voter');
+        $query = User::select(['uuid', 'name', 'username', 'role'])->where('role', '!=', 'voter');
         return DataTables::of($query)->addIndexColumn()->make(true);
     }
 }
