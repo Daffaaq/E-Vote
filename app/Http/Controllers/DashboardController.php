@@ -33,6 +33,11 @@ class DashboardController extends Controller
 {
     public function indexSuperadmin()
     {
+        $user = Auth::user();
+        if ($user->role !== 'superadmin') {
+            // Redirect or abort if the user is not a superadmin
+            abort(403, 'Unauthorized action.');
+        }
         // Ambil periode aktif dan setting vote dalam satu kali query masing-masing
         $periode_id = DB::table('periode')->where('actif', 1)->value('id');
         $statusvote = SettingVote::select('id', 'set_vote')->get();
@@ -46,8 +51,6 @@ class DashboardController extends Controller
             ->get();
 
         $countCandidate = $candidates->count();
-        // dd($countCandidate);
-        // dd($candidates);
         // Hitung jumlah voter dan jumlah student
         $datavoter = Votes::where('periode_id', $periode_id)->count();
         $datastudent = Students::count();
@@ -166,8 +169,44 @@ class DashboardController extends Controller
         $statusvote = SettingVote::select("id", "set_vote")->get();
 
         $statusvote1 = SettingVote::value('set_vote');
+
+        $user = Auth::user();
+        if ($user->role !== 'admin') {
+            // Redirect or abort if the user is not a superadmin
+            abort(403, 'Unauthorized action.');
+        }
+        // Ambil periode aktif dan setting vote dalam satu kali query masing-masing
+        $periode_id = DB::table('periode')->where('actif', 1)->value('id');
+        $statusvote = SettingVote::select('id', 'set_vote')->get();
+
+        // Ambil jumlah suara per kandidat yang terdaftar pada periode aktif
+        $candidates = Candidates::where('periode_id', $periode_id)
+            ->select('id', 'no_urut_kandidat', 'nama_ketua', 'nama_wakil_ketua', 'slogan', 'slug', 'foto', 'status')
+            ->withCount(['votes' => function ($query) use ($periode_id) {
+                $query->where('periode_id', $periode_id);
+            }])
+            ->get();
+
+        $countCandidate = $candidates->count();
+        // Hitung jumlah voter dan jumlah student
+        $datavoter = Votes::where('periode_id', $periode_id)->count();
+        $datastudent = Students::count();
+
+        // Siapkan array untuk menyimpan nama kandidat dan jumlah suara mereka
+        $candidateNames = $candidates->map(function ($candidate) {
+            if ($candidate->status == 'ganda') {
+                return $candidate->nama_ketua . ' & ' . $candidate->nama_wakil_ketua;
+            }
+            return $candidate->nama_ketua;
+        })->toArray();
+        // dd($candidateNames);
+        $candidateVotes = $candidates->pluck('votes_count')->toArray();
+
+        // Hitung apakah total votes sudah melebihi 15% dari total siswa
+        $percentageVotes = ($datavoter / $datastudent) * 100;
+        $isAboveThreshold = ceil($percentageVotes) > 5;
         // dd($statusvote1);
-        return view('Admin.Dashboard.index', compact('statusvote'));
+        return view('Admin.Dashboard.index', compact('statusvote', 'countCandidate', 'datavoter', 'datastudent', 'candidateNames', 'candidateVotes', 'candidates', 'isAboveThreshold'));
     }
     // public function indexVoter()
     // {
@@ -196,7 +235,7 @@ class DashboardController extends Controller
         // Check if the user has the 'superadmin' role
         if ($user->role !== 'superadmin') {
             // Redirect or abort if the user is not a superadmin
-            return redirect()->route('home')->with('error', 'Unauthorized access');
+            abort(403, 'Unauthorized action.');
         }
 
         return view('superadmin.Dashboard.profile', compact('user'));

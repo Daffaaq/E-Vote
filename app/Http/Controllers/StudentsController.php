@@ -30,11 +30,12 @@ class StudentsController extends Controller
     public function index()
     {
         $login = Auth::user();
-
+        $profiles = $this->profileService->getAllProfilesfirst();
+        // dd($profiles);
         if ($login->role == 'superadmin') {
-            return view('Superadmin.Siswa.index');
+            return view('Superadmin.Siswa.index', compact('profiles'));
         } elseif ($login->role == 'admin') {
-            return view('Superadmin.Siswa.index1'); // belum fix view
+            return view('Admin.Siswa.index', compact('profiles')); // belum fix view
         } else {
             abort(403, 'Unauthorized action.');
         }
@@ -65,7 +66,7 @@ class StudentsController extends Controller
         if ($login->role == 'superadmin') {
             return view('Superadmin.Siswa.create');
         } elseif ($login->role == 'admin') {
-            return view('Superadmin.Siswa.create1'); // belum fix view
+            return view('Admin.Siswa.create'); // belum fix view
         } else {
             abort(403, 'Unauthorized action.');
         }
@@ -99,8 +100,15 @@ class StudentsController extends Controller
             return redirect()->route('students.index')->with('error', 'Siswa tidak ditemukan.');
         }
         $periode = Periode::where('actif', 1)->first();
-        // Pass student data to the view
-        return view('Superadmin.Siswa.detail', compact('student', 'periode'));
+        $login = Auth::user();
+
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.Siswa.detail', compact('student', 'periode'));
+        } elseif ($login->role == 'admin') {
+            return view('Admin.Siswa.detail', compact('student', 'periode')); // belum fix view
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
 
@@ -114,11 +122,10 @@ class StudentsController extends Controller
         if ($login->role == 'superadmin') {
             return view('Superadmin.Siswa.edit', compact('student'));
         } elseif ($login->role == 'admin') {
-            return view('Superadmin.Siswa.edit1', compact('student')); // belum fix view
+            return view('Admin.Siswa.edit', compact('student')); // belum fix view
         } else {
             abort(403, 'Unauthorized action.');
         }
-        return view('Superadmin.Siswa.edit', compact('student'));
     }
 
     public function update(UpdateStudentRequest $request, $uuid)
@@ -149,11 +156,23 @@ class StudentsController extends Controller
         $data = $this->studentService->getStudentsWithStatusVote();
         // dd($data);
         $profiles = $this->profileService->getAllProfilesfirst();
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            $pdf = Pdf::loadView('Superadmin.Siswa.cetak_pdf', [
+                'profiles' => $profiles,
+                'data' => $data,
+            ]);
+            return $pdf->stream();
+        } elseif ($login->role == 'admin') {
+            $pdf = Pdf::loadView('Admin.Siswa.cetak_pdf', [
+                'profiles' => $profiles,
+                'data' => $data,
+            ]);
+            return $pdf->stream();
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
 
-        $pdf = Pdf::loadView('Superadmin.Siswa.cetak_pdf', [
-            'profiles' => $profiles,
-            'data' => $data,
-        ]);
         return $pdf->stream();
     }
 

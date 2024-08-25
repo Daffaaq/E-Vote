@@ -32,8 +32,10 @@
                 <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal"
                     style="margin-right: 5px;">Import
                     Pemilih</button>
-                <a href="{{ route('siswa-pdf-superadmin') }}" class="btn btn-warning">Cetak
-                    Pemilih</a>
+                @if ($profiles->logo_profiles != null)
+                    <a href="{{ route('siswa-pdf-superadmin') }}" class="btn btn-warning">Cetak
+                        Pemilih</a>
+                @endif
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">

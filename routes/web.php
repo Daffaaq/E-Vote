@@ -147,6 +147,19 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
 });
 Route::middleware(['auth', 'check.role:admin'])->group(function () {
     Route::get('/dashboardAdmin', [DashboardController::class, 'indexAdmin'])->name('dashboard.admin');
+    Route::get('/dashboardAdmin/export', [DashboardController::class, 'export_excel'])->name('dashboard.admin.export-vote');
+    Route::get('/dashboardAdmin/export-pdf', [DashboardController::class, 'export_vote_pdf'])->name('dashboard.admin.export-vote-pdf');
+    Route::post('/dashboardAdmin/save-chart', function (Request $request) {
+        if ($request->hasFile('chart')) {
+            $path = $request->file('chart')->store('public/charts');
+            // Simpan nama file di session
+            Session::put('chart_filename', basename($path));
+            Log::info("Chart saved at: " . storage_path('app/' . $path));
+            return response()->json(['path' => $path], 200);
+        }
+        Log::error("No chart uploaded");
+        return response()->json(['error' => 'No chart uploaded'], 400);
+    });
     Route::prefix('/dashboardAdmin')->group(function () {});
 });
 Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function () {

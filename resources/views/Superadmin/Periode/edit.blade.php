@@ -86,7 +86,7 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col-12 d-flex justify-content-end">
-                                    <a href="{{ url('/dashboardSuperadmin/Periode') }}"
+                                    <a href="{{ route('periode.index') }}"
                                         class="btn btn-primary rounded-pill me-1 mb-1">
                                         {{ __('Batal') }}
                                     </a>

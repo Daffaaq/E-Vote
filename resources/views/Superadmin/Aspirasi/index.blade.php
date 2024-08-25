@@ -3,7 +3,7 @@
 @section('breadcrumbs')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Daftar Periode</li>
+            <li class="breadcrumb-item active" aria-current="page">Daftar Aspirasi</li>
         </ol>
     </nav>
 @endsection
@@ -11,7 +11,7 @@
 @section('content')
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Periode</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Daftar Aspirasi</h6>
         </div>
         @if (session('error'))
             <div class="alert alert-light-danger alert-dismissible fade show" style="height: 50px" role="alert">

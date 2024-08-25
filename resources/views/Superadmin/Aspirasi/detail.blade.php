@@ -3,7 +3,7 @@
 @section('breadcrumbs')
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url('/dashboardSuperadmin/aspirasi') }}">Daftar Aspirasi</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('aspiration.index') }}">Daftar Aspirasi</a></li>
             <li class="breadcrumb-item active" aria-current="page">Detail Aspirasi</li>
         </ol>
     </nav>
