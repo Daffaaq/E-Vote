@@ -1,4 +1,4 @@
-@extends('Superadmin.layouts.index')
+@extends('Admin.layouts.index')
 
 @section('breadcrumbs')
     <nav aria-label="breadcrumb">
@@ -51,7 +51,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('aspiration.list') }}',
+                    url: '{{ route('aspiration.admin.list') }}',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -83,7 +83,7 @@
                         searchable: false,
                         render: function(data) {
                             return `
-                        <a href="/dashboardSuperadmin/aspiration/show/${data}" class="btn icon btn-sm btn-info">
+                        <a href="/dashboardAdmin/aspiration/show/${data}" class="btn icon btn-sm btn-info">
                                 <i class="bi bi-eye"></i>
                             </a>
                     `;

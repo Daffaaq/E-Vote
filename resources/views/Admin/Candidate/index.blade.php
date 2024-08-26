@@ -1,4 +1,4 @@
-@extends('Superadmin.layouts.index')
+@extends('Admin.layouts.index')
 
 @section('breadcrumbs')
     <nav aria-label="breadcrumb">
@@ -15,8 +15,8 @@
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-end mb-3">
-                <a href="{{ url('/dashboardSuperadmin/Candidate/create') }}" class="btn btn-primary"
-                    style="margin-right: 5px;">Tambah Kandidat</a>
+                <a href="{{ route('Candidate.admin.create') }}" class="btn btn-primary" style="margin-right: 5px;">Tambah
+                    Kandidat</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="CandidateTable" width="100%" cellspacing="0">
@@ -48,7 +48,7 @@
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Apakah Anda yakin ingin menghapus siswa ini?
+                    Apakah Anda yakin ingin menghapus Kandidat ini?
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="closeModalFooter" class="btn btn-secondary"
@@ -82,10 +82,10 @@
                     searchable: false,
                     render: function(data) {
                         return `
-                            <a href="/dashboardSuperadmin/Candidate/edit/${data}" class="btn icon btn-sm btn-warning">
+                            <a href="/dashboardAdmin/Candidate/edit/${data}" class="btn icon btn-sm btn-warning">
                                 <i class="bi bi-pencil"></i>
                             </a>
-                            <a href="/dashboardSuperadmin/Candidate/show/${data}" class="btn icon btn-sm btn-info">
+                            <a href="/dashboardAdmin/Candidate/show/${data}" class="btn icon btn-sm btn-info">
                                 <i class="bi bi-eye"></i>
                             </a>
                             <button class="btn icon btn-sm btn-danger" onclick="confirmDelete('${data}')">
@@ -107,7 +107,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: '{{ route('candidate-list-superadmin') }}',
+                    url: '{{ route('candidate-list-admin') }}',
                     type: 'POST',
                     dataType: 'json',
                     data: {
@@ -127,7 +127,7 @@
         });
 
         function confirmDelete(uuid) {
-            $('#deleteForm').attr('action', `/dashboardSuperadmin/Candidate/destroy/${uuid}`);
+            $('#deleteForm').attr('action', `/dashboardAdmin/Candidate/destroy/${uuid}`);
             $('#deleteConfirmationModal').modal('show');
         }
     </script>

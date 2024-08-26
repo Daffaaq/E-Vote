@@ -11,6 +11,7 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CandidateController extends Controller
 {
@@ -19,7 +20,15 @@ class CandidateController extends Controller
         $periode_id = Periode::where('actif', 1)->value('id');
         $candidates = Candidates::where('periode_id', $periode_id)->select("status")->first();
 
-        return view('Superadmin.Candidate.index', compact('candidates'));
+        $login = Auth::user();
+
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.Candidate.index', compact('candidates'));
+        } elseif ($login->role == 'admin') {
+            return view('Admin.Candidate.index', compact('candidates'));
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function list(Request $request)
@@ -52,7 +61,14 @@ class CandidateController extends Controller
 
     public function create()
     {
-        return view('Superadmin.Candidate.create');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.Candidate.create');
+        } elseif ($login->role == 'admin') {
+            return view('Admin.Candidate.create');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function store(StoreCandidateRequest $request, CandidateService $candidateService)
@@ -61,7 +77,14 @@ class CandidateController extends Controller
             // dd($request->all());
             $candidateService->createCandidate($request->validated());
             // dd($candidateService);
-            return redirect()->route('Candidate.index')->with('success', 'Candidate created successfully.');
+            $login = Auth::user();
+            if ($login->role == 'superadmin') {
+                return redirect()->route('Candidate.index')->with('success', 'Candidate created successfully.');
+            } elseif ($login->role == 'admin') {
+                return redirect()->route('Candidate.admin.index')->with('success', 'Candidate created successfully.');
+            } else {
+                abort(403, 'Unauthorized action.');
+            }
         } catch (\Exception $e) {
             return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
@@ -70,15 +93,35 @@ class CandidateController extends Controller
 
     public function show($uuid)
     {
-        $candidate = Candidates::where('uuid', $uuid)->firstOrFail();
-        return view('Superadmin.Candidate.show', compact('candidate'));
+        $candidate = Candidates::where('uuid', $uuid)->firstOrFail(); // Mengambil data kandidat berdasarkan UUID
+        // dd($candidate);
+        $login = Auth::user();
+        $periode = $candidate->periode; // Mengambil data periode yang terkait dengan kandidat
+
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.Candidate.detail', compact('candidate', 'periode'));
+        } elseif ($login->role == 'admin') {
+            return view('Admin.Candidate.detail', compact('candidate', 'periode'));
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
+
 
     public function edit($uuid)
     {
         $candidate = Candidates::where('uuid', $uuid)->firstOrFail();
         $periodes = Periode::all();
-        return view('Superadmin.Candidate.edit', compact('candidate', 'periodes'));
+
+        $login = Auth::user();
+
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.Candidate.edit', compact('candidate', 'periodes'));
+        } elseif ($login->role == 'admin') {
+            return view('Admin.Candidate.edit', compact('candidate', 'periodes'));
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
 
@@ -87,7 +130,15 @@ class CandidateController extends Controller
         try {
             $candidateService->updateCandidate($uuid, $request->validated());
             // dd($candidateService);
-            return redirect()->route('Candidate.index')->with('success', 'Candidate updated successfully.');
+
+            $login = Auth::user();
+            if ($login->role == 'superadmin') {
+                return redirect()->route('Candidate.index')->with('success', 'Candidate updated successfully.');
+            } elseif ($login->role == 'admin') {
+                return redirect()->route('Candidate.admin.index')->with('success', 'Candidate updated successfully.');
+            } else {
+                abort(403, 'Unauthorized action.');
+            }
         } catch (\Exception $e) {
             return redirect()->back()->withErrors($e->getMessage())->withInput();
         }
@@ -104,6 +155,13 @@ class CandidateController extends Controller
 
         $candidate->delete();
 
-        return redirect()->back()->with('success', 'Candidate deleted successfully.');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('Candidate.index')->with('success', 'Candidate deleted successfully.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('Candidate.admin.index')->with('success', 'Candidate deleted successfully.');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }

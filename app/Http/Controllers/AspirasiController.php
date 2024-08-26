@@ -29,7 +29,7 @@ class AspirasiController extends Controller
         if ($login->role == 'superadmin') {
             return view('Superadmin.Aspirasi.index');
         } elseif ($login->role == 'admin') {
-            return view('Superadmin.Siswa.index1'); // belum fix view
+            return view('Admin.Aspirasi.index'); // belum fix view
         } else {
             abort(403, 'Unauthorized action.');
         }
@@ -64,8 +64,15 @@ class AspirasiController extends Controller
     public function show($uuid)
     {
         $aspirasi = $this->aspirasiService->getAspirasiByUuid($uuid);
+        $login = Auth::user();
 
-        return view('Superadmin.Aspirasi.detail', compact('aspirasi'));
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.Aspirasi.detail', compact('aspirasi'));
+        } elseif ($login->role == 'admin') {
+            return view('Admin.Aspirasi.detail', compact('aspirasi'));
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
 

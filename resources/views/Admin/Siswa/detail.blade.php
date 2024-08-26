@@ -63,8 +63,8 @@
             </div>
 
             <div class="d-flex justify-content-end">
-                <a href="{{ route('students.admin.index') }}" class="btn btn-secondary mr-2">Kembali</a>
-                <a href="{{ route('students.admin.edit', $student->uuid) }}" class="btn btn-primary mr-2">Edit</a>
+                <a href="{{ route('students.admin.index') }}" class="btn btn-secondary mr-2" style="margin-right: 5px;">Kembali</a>
+                <a href="{{ route('students.admin.edit', $student->uuid) }}" class="btn btn-primary mr-2" style="margin-right: 5px;">Edit</a>
                 <form action="{{ route('students.admin.destroy', $student->uuid) }}" method="POST"
                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus siswa ini?');">
                     @csrf

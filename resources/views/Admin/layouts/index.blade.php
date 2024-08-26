@@ -108,21 +108,21 @@
                             </a>
                         </li>
                         <li
-                            class="sidebar-item {{ request()->routeIs('Candidate.index', 'Candidate.create', 'Candidate.edit') ? 'active' : '' }}">
-                            <a href="{{ route('Candidate.index') }}" class="sidebar-link">
+                            class="sidebar-item {{ request()->routeIs('Candidate.admin.index', 'Candidate.admin.create', 'Candidate.admin.edit', 'Candidate.admin.show') ? 'active' : '' }}">
+                            <a href="{{ route('Candidate.admin.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Kandidat</span>
                             </a>
                         </li>
                         <li
-                            class="sidebar-item {{ request()->routeIs('aspiration.index', 'aspiration.show') ? 'active' : '' }}">
-                            <a href="{{ route('aspiration.index') }}" class="sidebar-link">
+                            class="sidebar-item {{ request()->routeIs('aspiration.admin.index', 'aspiration.admin.show') ? 'active' : '' }}">
+                            <a href="{{ route('aspiration.admin.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Aspirasi</span>
                             </a>
                         </li>
-                        <li class="sidebar-item {{ request()->routeIs('my-profile.index') ? 'active' : '' }}"">
-                            <a href="{{ route('my-profile.index') }}" class="sidebar-link">
+                        <li class="sidebar-item {{ request()->routeIs('my-profile.admin.index') ? 'active' : '' }}"">
+                            <a href="{{ route('my-profile.admin.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Your Profile</span>
                             </a>

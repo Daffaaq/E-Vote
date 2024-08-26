@@ -122,7 +122,7 @@
                             </a>
                         </li>
                         <li
-                            class="sidebar-item {{ request()->routeIs('Candidate.index', 'Candidate.create', 'Candidate.edit') ? 'active' : '' }}">
+                            class="sidebar-item {{ request()->routeIs('Candidate.index', 'Candidate.create', 'Candidate.edit', 'Candidate.show') ? 'active' : '' }}">
                             <a href="{{ route('Candidate.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Kandidat</span>

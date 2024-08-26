@@ -240,6 +240,18 @@ class DashboardController extends Controller
 
         return view('superadmin.Dashboard.profile', compact('user'));
     }
+    public function profileAdmin()
+    {
+        $user = Auth::user();
+        // dd($user);
+        // Check if the user has the 'superadmin' role
+        if ($user->role !== 'admin') {
+            // Redirect or abort if the user is not a superadmin
+            abort(403, 'Unauthorized action.');
+        }
+
+        return view('admin.Dashboard.profile', compact('user'));
+    }
 
     public function updateProfile(Request $request)
     {
