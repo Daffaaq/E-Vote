@@ -11,10 +11,9 @@
     <style>
         html,
         body {
-            height: 100%;
+            width: 100%;
             margin: 0;
-            display: flex;
-            flex-direction: column;
+            overflow-x: hidden;
             font-family: 'Roboto', sans-serif;
         }
 
@@ -172,7 +171,7 @@
 
             .timeline-item {
                 margin: 20px 0;
-                width: 100%;
+                width: 100vw;
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
@@ -216,7 +215,7 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
+            width: 100vw;
             max-width: 500px;
             margin: 0 auto;
         }
@@ -267,7 +266,7 @@
         }
 
         .form-container img {
-            width: 100%;
+            width: 100vw;
             max-width: 500px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -319,7 +318,7 @@
 
             .form-container img {
                 margin-bottom: 20px;
-                max-width: 100%;
+                width: 100vw;
             }
         }
 

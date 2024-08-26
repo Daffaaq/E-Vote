@@ -204,7 +204,7 @@ Route::middleware(['auth', 'check.role:admin'])->group(function () {
         Route::post('/aspiration/list', [AspirasiController::class, 'list'])->name('aspiration.admin.list');
         Route::delete('/aspiration/{uuid}', [AspirasiController::class, 'destroy'])->name('aspiration.admin.destroy');
     });
-    Route::prefix('/dashboardSuperadmin')->group(function () {
+    Route::prefix('/dashboardAdmin')->group(function () {
         Route::get('/my-profiles', [DashboardController::class, 'profileAdmin'])->name('my-profile.admin.index');
         Route::post('update-profile', [DashboardController::class, 'updateProfile'])->name('admin.updateProfile');
         Route::post('change-password', [DashboardController::class, 'changePassword'])->name('admin.changePassword');

@@ -10,10 +10,9 @@
     <style>
         html,
         body {
-            height: 100%;
+            width: 100%;
             margin: 0;
-            display: flex;
-            flex-direction: column;
+            overflow-x: hidden;
             font-family: 'Roboto', sans-serif;
         }
 
@@ -417,13 +416,23 @@
     </div>
 
     <div class="form-message text-center p-2">
-        @if (now() >= \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote) &&
+        @if (now() < \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote))
+            <div class="alert alert-warning">
+                Voting Akan Segera Berlangsung dalam
+                {{ now()->diffInDays(\Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote)->endOfDay()) }} hari
+            </div>
+        @elseif (now() >= \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote) &&
                 now() < \Carbon\Carbon::parse($jadwalVotes->tanggal_akhir_vote)->endOfDay())
-            <div class="alert alert-success">Voting Sedang Berlangsung</div>
+            <div class="alert alert-success">
+                Voting Sedang Berlangsung, tersisa
+                {{ now()->diffInDays(\Carbon\Carbon::parse($jadwalVotes->tanggal_akhir_vote)->endOfDay()) }} hari lagi
+            </div>
         @else
             <div class="alert alert-danger">Voting Selesai</div>
         @endif
     </div>
+
+
     <hr>
 
     <!-- Schedule Section -->
