@@ -172,6 +172,21 @@ Route::middleware(['auth', 'check.role:admin'])->group(function () {
         Route::get('/Siswa/cetak', [StudentsController::class, 'reportPemilih'])->name('siswa-pdf-admin');
         Route::post('/Siswa/import', [StudentsController::class, 'importDataStudent'])->name('siswa.admin.import');
     });
+    Route::prefix('/dashboardAdmin')->group(function () {
+        Route::get('/Jadwal', [JadwalController::class, 'index'])->name('jadwal.admin.index');
+        Route::get('/Jadwal/create', [JadwalController::class, 'create'])->name('jadwal.admin.create');
+        Route::post('/Jadwal/store', [JadwalController::class, 'store'])->name('jadwal.admin.store');
+        Route::get('/Jadwal/edit/orasi/{uuid}', [JadwalController::class, 'editOrasi'])->name('jadwal-orasi.admin.edit');
+        Route::get('/Jadwal/edit/votes/{uuid}', [JadwalController::class, 'editVotes'])->name('jadwal-votes.admin.edit');
+        Route::get('/Jadwal/edit/result/{uuid}', [JadwalController::class, 'editResult'])->name('jadwal-result.admin.edit');
+        Route::put('/Jadwal/update/orasi/{uuid}', [JadwalController::class, 'updateOrasi'])->name('jadwal-orasi.admin.update');
+        Route::put('/Jadwal/update/votes/{uuid}', [JadwalController::class, 'updateVote'])->name('jadwal-votes.admin.update');
+        Route::put('/Jadwal/update/result/{uuid}', [JadwalController::class, 'updateResult'])->name('jadwal-result.admin.update');
+        Route::delete('/Jadwal/destroy/orasi/{uuid}', [JadwalController::class, 'destroyOrasi'])->name('jadwal-orasi.admin.destroy');
+        Route::delete('/Jadwal/destroy/votes/{uuid}', [JadwalController::class, 'destroyVotes'])->name('jadwal-votes.admin.destroy');
+        Route::delete('/Jadwal/destroy/result/{uuid}', [JadwalController::class, 'destroyResult'])->name('jadwal-result.admin.destroy');
+        Route::delete('/jadwal/delete-all/{uuidOrasi}/{uuidVotes}/{uuidResult}', [JadwalController::class, 'destroyAll'])->name('jadwal.admin.destroyAll');
+    });
 });
 Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function () {
     Route::get('/dashboardVoter', [DashboardController::class, 'indexVoter'])->name('dashboard.voter');

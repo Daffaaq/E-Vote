@@ -101,8 +101,8 @@
                             </a>
                         </li>
                         <li
-                            class="sidebar-item {{ request()->routeIs('jadwal.index', 'jadwal.create', 'jadwal-orasi.edit', 'jadwal-votes.edit', 'jadwal-result.edit') ? 'active' : '' }}">
-                            <a href="{{ route('jadwal.index') }}" class="sidebar-link">
+                            class="sidebar-item {{ request()->routeIs('jadwal.admin.index', 'jadwal.admin.create', 'jadwal-orasi.admin.edit', 'jadwal-votes.admin.edit', 'jadwal-result.admin.edit') ? 'active' : '' }}">
+                            <a href="{{ route('jadwal.admin.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Jadwal</span>
                             </a>

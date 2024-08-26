@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateJadwalResultRequest;
 use App\Http\Requests\UpdateJadwalOrasiRequest;
 use App\Http\Requests\UpdateJadwalVoteRequest;
 use App\Models\Periode;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class JadwalController extends Controller
@@ -59,12 +60,15 @@ class JadwalController extends Controller
     public function index()
     {
         $periode_id = Periode::where('actif', 1)->value('id');
+        // dd($periode_id);
         $jadwal = $this->jadwalService->getJadwalForPeriode($periode_id);
 
         // Extracting relevant data from the $jadwal array
         $jadwalOrasi = $jadwal['jadwalOrasi'] ?? collect();
         $jadwalVotes = $jadwal['jadwalVotes'] ?? collect();
         $jadwalResultVote = $jadwal['jadwalResultVote'] ?? collect();
+
+        // dd($jadwalOrasi, $jadwalVotes, $jadwalResultVote);
 
         // Prepare parameters for form action
         $routeParams = [
@@ -75,15 +79,28 @@ class JadwalController extends Controller
 
         // Filter out null values and create the URL
         $filteredParams = implode('/', array_filter($routeParams));
-        $routeUrl = url("dashboardSuperadmin/jadwal/delete-all/{$filteredParams}");
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            $routeUrl = url("dashboardSuperadmin/jadwal/delete-all/{$filteredParams}");
 
-        // Pass data to the view
-        return view('Superadmin.jadwal.index', [
-            'jadwalOrasi' => $jadwalOrasi,
-            'jadwalVotes' => $jadwalVotes,
-            'jadwalResultVote' => $jadwalResultVote,
-            'routeUrl' => $routeUrl,
-        ]);
+            // Pass data to the view
+            return view('Superadmin.jadwal.index', [
+                'jadwalOrasi' => $jadwalOrasi,
+                'jadwalVotes' => $jadwalVotes,
+                'jadwalResultVote' => $jadwalResultVote,
+                'routeUrl' => $routeUrl,
+            ]);
+        } elseif ($login->role == 'admin') {
+            $routeUrl = url("dashboardAdmin/jadwal/delete-all/{$filteredParams}");
+            return view('Admin.jadwal.index', [
+                'jadwalOrasi' => $jadwalOrasi,
+                'jadwalVotes' => $jadwalVotes,
+                'jadwalResultVote' => $jadwalResultVote,
+                'routeUrl' => $routeUrl,
+            ]);
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
 
@@ -95,79 +112,150 @@ class JadwalController extends Controller
         if ($this->jadwalService->checkIfJadwalExists()) {
             return redirect()->route('jadwal.index')->with('error', 'Jadwal sudah ada.');
         }
-
-        return view('Superadmin.jadwal.create');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.jadwal.create');
+        } elseif ($login->role == 'admin') {
+            return view('Admin.jadwal.create');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
     public function store(StoreJadwalRequest $request)
     {
         $validatedData = $request->validated();
         $periode_id = Periode::where('actif', 1)->value('id');
         $this->jadwalService->storeJadwal($validatedData, $periode_id);
-
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil ditambahkan.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('jadwal.admin.index')->with('success', 'Jadwal berhasil ditambahkan.');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function editOrasi($uuid)
     {
         $jadwal_orasi = $this->jadwalService->getJadwalOrasiByUuid($uuid);
-        return view('Superadmin.jadwal.editOrasi', compact('jadwal_orasi'));
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.jadwal.editOrasi', compact('jadwal_orasi'));
+        } elseif ($login->role == 'admin') {
+            return view('Admin.jadwal.editOrasi', compact('jadwal_orasi'));
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function editVotes($uuid)
     {
         $jadwalVotes = $this->jadwalService->getJadwalVotesByUuid($uuid);
-        return view('Superadmin.jadwal.editVotes', compact('jadwalVotes'));
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.jadwal.editVotes', compact('jadwalVotes'));
+        } elseif ($login->role == 'admin') {
+            return view('Admin.jadwal.editVotes', compact('jadwalVotes'));
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function editResult($uuid)
     {
         $jadwalResultVote = $this->jadwalService->getJadwalResultVoteByUuid($uuid);
-        return view('Superadmin.jadwal.editResult', compact('jadwalResultVote'));
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return view('Superadmin.jadwal.editResult', compact('jadwalResultVote'));
+        } elseif ($login->role == 'admin') {
+            return view('Admin.jadwal.editResult', compact('jadwalResultVote'));
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function updateOrasi(UpdateJadwalOrasiRequest $request, $uuid)
     {
         $validatedData = $request->validated();
         $this->jadwalService->updateJadwalOrasi($uuid, $validatedData);
-
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('jadwal.index')->with('success', 'Jadwal Orasi berhasil diperbarui.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('jadwal.admin.index')->with('success', 'Jadwal Orasi berhasil diperbarui.');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function updateVote(UpdateJadwalVoteRequest $request, $uuid)
     {
         $validatedData = $request->validated();
         $this->jadwalService->updateJadwalVotes($uuid, $validatedData);
-
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal berhasil diperbarui.');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('jadwal.index')->with('success', 'Jadwal Votes berhasil diperbarui.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('jadwal.admin.index')->with('success', 'Jadwal Votes berhasil diperbarui.');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function updateResult(UpdateJadwalResultRequest $request, $uuid)
     {
         $validatedData = $request->validated();
         $this->jadwalService->updateJadwalResultVote($uuid, $validatedData);
-
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal Pembacaan Hasil berhasil diperbarui.');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('jadwal.index')->with('success', 'Jadwal Pembacaan Hasil berhasil diperbarui.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('jadwal.admin.index')->with('success', 'Jadwal Pembacaan Hasil berhasil diperbarui.');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function destroyOrasi($uuid)
     {
         $this->jadwalService->deleteJadwalOrasi($uuid);
-
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal Orasi berhasil dihapus.');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('jadwal.index')->with('success', 'Jadwal Orasi berhasil dihapus.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('jadwal.admin.index')->with('success', 'Jadwal Orasi berhasil dihapus.');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function destroyVotes($uuid)
     {
         $this->jadwalService->deleteJadwalVotes($uuid);
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal Votes berhasil dihapus.');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('jadwal.index')->with('success', 'Jadwal Votes berhasil dihapus.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('jadwal.admin.index')->with('success', 'Jadwal Votes berhasil dihapus.');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function destroyResult($uuid)
     {
         $this->jadwalService->deleteJadwalResultVote($uuid);
 
-        return redirect()->route('jadwal.index')->with('success', 'Jadwal Pembacaan Hasil berhasil dihapus.');
+        $login = Auth::user();
+        if ($login->role == 'superadmin') {
+            return redirect()->route('jadwal.index')->with('success', 'Jadwal Pembacaan Hasil berhasil dihapus.');
+        } elseif ($login->role == 'admin') {
+            return redirect()->route('jadwal.admin.index')->with('success', 'Jadwal Pembacaan Hasil berhasil dihapus.');
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
 
     public function destroyAll($uuidOrasi, $uuidVotes, $uuidResult)
@@ -193,10 +281,24 @@ class JadwalController extends Controller
 
         // Redirect dengan pesan sukses atau error berdasarkan hasil penghapusan
         if ($deletedCount > 0) {
-            return redirect()->route('jadwal.index')->with('success', 'Semua jadwal terkait berhasil dihapus.');
+            $login = Auth::user();
+            if ($login->role == 'superadmin') {
+                return redirect()->route('jadwal.index')->with('success', 'Semua jadwal terkait berhasil dihapus.');
+            } elseif ($login->role == 'admin') {
+                return redirect()->route('jadwal.admin.index')->with('success', 'Semua jadwal terkait berhasil dihapus.');
+            } else {
+                abort(403, 'Unauthorized action.');
+            }
         } else {
+            $login = Auth::user();
+            if ($login->role == 'superadmin') {
+                return redirect()->route('jadwal.index')->with('error', 'Tidak ada jadwal yang dihapus.');
+            } elseif ($login->role == 'admin') {
+                return redirect()->route('jadwal.admin.index')->with('error', 'Tidak ada jadwal yang dihapus.');
+            } else {
+                abort(403, 'Unauthorized action.');
+            }
             return redirect()->route('jadwal.index')->with('error', 'Tidak ada jadwal yang dihapus.');
         }
     }
-
 }
