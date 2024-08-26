@@ -84,7 +84,7 @@ class StudentsController extends Controller
         if ($login->role == 'superadmin') {
             return redirect()->route('students.index')->with('success', 'Mahasiswa berhasil ditambahkan.');
         } elseif ($login->role == 'admin') {
-            return redirect()->route('students.index1')->with('success', 'Mahasiswa berhasil ditambahkan.'); // belum fix view
+            return redirect()->route('students.admin.index')->with('success', 'Mahasiswa berhasil ditambahkan.'); // belum fix view
         } else {
             abort(403, 'Unauthorized action.');
         }
@@ -139,7 +139,7 @@ class StudentsController extends Controller
         if ($login->role == 'superadmin') {
             return redirect()->route('students.index')->with('success', 'Data mahasiswa dan pengguna berhasil diperbarui.');
         } elseif ($login->role == 'admin') {
-            return redirect()->route('students.index1')->with('success', 'Data mahasiswa dan pengguna berhasil diperbarui.'); // belum fix view
+            return redirect()->route('students.admin.index')->with('success', 'Data mahasiswa dan pengguna berhasil diperbarui.'); // belum fix view
         } else {
             abort(403, 'Unauthorized action.');
         }

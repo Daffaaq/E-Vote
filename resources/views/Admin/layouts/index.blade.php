@@ -87,15 +87,15 @@
                     <ul class="menu">
                         <li class="sidebar-title">Menu</li>
 
-                        <li class="sidebar-item {{ request()->routeIs('dashboard.superadmin') ? 'active' : '' }}">
-                            <a href="{{ route('dashboard.superadmin') }}" class="sidebar-link">
+                        <li class="sidebar-item {{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">
+                            <a href="{{ route('dashboard.admin') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
                         <li
-                            class="sidebar-item {{ request()->routeIs('students.index', 'students.create', 'students.edit') ? 'active' : '' }}">
-                            <a href="{{ route('students.index') }}" class="sidebar-link">
+                            class="sidebar-item {{ request()->routeIs('students.admin.index', 'students.admin.create', 'students.admin.edit') ? 'active' : '' }}">
+                            <a href="{{ route('students.admin.index') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>
                                 <span>Daftar Pemilih</span>
                             </a>

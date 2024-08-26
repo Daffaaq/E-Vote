@@ -160,7 +160,18 @@ Route::middleware(['auth', 'check.role:admin'])->group(function () {
         Log::error("No chart uploaded");
         return response()->json(['error' => 'No chart uploaded'], 400);
     });
-    Route::prefix('/dashboardAdmin')->group(function () {});
+    Route::prefix('/dashboardAdmin')->group(function () {
+        Route::get('/Siswa', [StudentsController::class, 'index'])->name('students.admin.index');
+        Route::get('/Siswa/create', [StudentsController::class, 'create'])->name('students.admin.create');
+        Route::post('/Siswa/store', [StudentsController::class, 'store'])->name('students.admin.store');
+        Route::get('/Siswa/edit/{uuid}', [StudentsController::class, 'edit'])->name('students.admin.edit');
+        Route::get('/Siswa/show/{uuid}', [StudentsController::class, 'show'])->name('students.admin.show');
+        Route::put('/Siswa/update/{uuid}', [StudentsController::class, 'update'])->name('students.admin.update');
+        Route::delete('/Siswa/destroy/{uuid}', [StudentsController::class, 'destroy'])->name('students.admin.destroy');
+        Route::post('/Siswa/list', [StudentsController::class, 'list'])->name('siswa-list-admin');
+        Route::get('/Siswa/cetak', [StudentsController::class, 'reportPemilih'])->name('siswa-pdf-admin');
+        Route::post('/Siswa/import', [StudentsController::class, 'importDataStudent'])->name('siswa.admin.import');
+    });
 });
 Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function () {
     Route::get('/dashboardVoter', [DashboardController::class, 'indexVoter'])->name('dashboard.voter');
