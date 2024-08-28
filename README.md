@@ -28,30 +28,34 @@ E-Vote adalah sistem pemungutan suara digital yang dirancang untuk digunakan ole
     ```
 
 2. Install Dependencies:
+
     ```
     cd e-vote
     composer install
     npm install
 
     ```
-4. Konfigurasi .env: Salin file .env.example menjadi .env dan sesuaikan konfigurasi database dan pengaturan lainnya.
-   ```
-   cp .env.example .env
-   ```
-6. Generate Key:
-   ```
-   php artisan key:generate
-   ```
-8. Migrate Database:
-   ```
-   php artisan migrate
-   ```
-10. Seed Database (Opsional):
+
+3. Konfigurasi .env: Salin file .env.example menjadi .env dan sesuaikan konfigurasi database dan pengaturan lainnya.
+    ```
+    cp .env.example .env
+    ```
+4. Generate Key:
+    ```
+    php artisan key:generate
+    ```
+5. Migrate Database:
+    ```
+    php artisan migrate
+    ```
+6. Seed Database (Opsional):
     ```
     php artisan db:seed
     ```
-12. Jalankan Aplikasi:
+7. Jalankan Aplikasi:
     ```
     php artisan serve
     ```
 
+## Lisensi
+    silahkan kalau mau pakai E-Votenya ini, silahkan diperbaiki sendiri yaa 🤣🤣🤣 kalau ada bug saya males nge QA 🤣🤣
