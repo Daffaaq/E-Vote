@@ -19,6 +19,11 @@ class StudentService
         // to get all students
         return $this->studentRepository->getAllStudentsWithStatusVote();
     }
+    public function getStudentsWithStatusVoteFilter($statusVote = null)
+    {
+        return $this->studentRepository->getAllStudentsWithStatusVoteFilter($statusVote);
+    }
+
 
     public function createStudentAndUser($request)
     {

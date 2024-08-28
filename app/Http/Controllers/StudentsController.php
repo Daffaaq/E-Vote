@@ -44,7 +44,9 @@ class StudentsController extends Controller
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $data = $this->studentService->getStudentsWithStatusVote();
+            $statusVote = $request->get('status_vote'); // Get the status_vote from the request
+            $data = $this->studentService->getStudentsWithStatusVoteFilter($statusVote);
+
             return DataTables::of($data)
                 ->addColumn('status_vote', function ($row) {
                     if ($row->StatusVote) {
@@ -59,6 +61,7 @@ class StudentsController extends Controller
         }
         return response()->json(['message' => 'Method not allowed'], 405);
     }
+
 
     public function create()
     {
