@@ -96,7 +96,7 @@ if (warna.length < datanjumlahvote.length) {
 let optionsCandidate = {
   series: datanjumlahvote,
   labels: datanamacandidate,
-  colors: ["#435ebe", "#55c6e8"],
+  colors: warna,
   chart: {
     type: "donut",
     width: "100%",

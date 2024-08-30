@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +28,37 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($this->isHttpException($exception)) {
+            $statusCode = $exception->getStatusCode();
+
+            if (Auth::check()) {
+                Log::info('User is logged in');
+                if ($statusCode == 404) {
+                    return response()->view('Error-Template.404-login', [], 404);
+                }
+                if ($statusCode == 500) {
+                    return response()->view('Error-Template.500', [], 500);
+                }
+                if ($statusCode == 403) {
+                    return response()->view('Error-Template.403', [], 403);
+                }
+            } else {
+                Log::info('User is not logged in');
+                if ($statusCode == 404) {
+                    return response()->view('Error-Template.404', [], 404);
+                }
+                if ($statusCode == 500) {
+                    return response()->view('Error-Template.500', [], 500);
+                }
+                if ($statusCode == 403) {
+                    return response()->view('Error-Template.403', [], 403);
+                }
+            }
+        }
+        return parent::render($request, $exception);
     }
 }

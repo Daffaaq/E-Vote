@@ -26,16 +26,30 @@
             </div>
         @endif
         <div class="card-body">
-            <div class="d-flex justify-content-end mb-3">
-                <a href="{{ url('/dashboardAdmin/Siswa/create') }}" class="btn btn-primary"
-                    style="margin-right: 5px;">Tambah Pemilih</a>
-                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal"
-                    style="margin-right: 5px;">Import
-                    Pemilih</button>
-                @if ($profiles->logo_profiles != null)
-                    <a href="{{ route('siswa-pdf-admin') }}" class="btn btn-warning">Cetak
-                        Pemilih</a>
-                @endif
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="form-group d-flex align-items-center">
+                    <label for="statusVoteFilter"
+                        style="font-weight: bold; margin-right: 10px; margin-bottom: 20px">Status:</label>
+                    <div>
+                        <select id="statusVoteFilter" class="form-control" style="min-width: 200px;">
+                            <option value="">Semua Status</option>
+                            <option value="1">Sudah Memilih</option>
+                            <option value="0">Belum Memilih</option>
+                        </select>
+                        <small>Pilih Status Pemilihan Anda.</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <a href="{{ url('/dashboardAdmin/Siswa/create') }}" class="btn btn-primary"
+                        style="margin-right: 5px;">Tambah Pemilih</a>
+                    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#importModal"
+                        style="margin-right: 5px;">Import
+                        Pemilih</button>
+                    @if ($profiles->logo_profiles != null)
+                        <a href="{{ route('siswa-pdf-admin') }}" class="btn btn-warning">Cetak
+                            Pemilih</a>
+                    @endif
+                </div>
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
@@ -119,8 +133,10 @@
                     url: '{{ route('siswa-list-admin') }}',
                     type: 'POST',
                     dataType: 'json',
-                    data: {
-                        _token: '{{ csrf_token() }}'
+                    data: function(d) {
+                        d._token = '{{ csrf_token() }}';
+                        d.status_vote = $('#statusVoteFilter')
+                            .val(); // Get the value of the status vote filter
                     }
                 },
                 columns: [{
@@ -169,6 +185,9 @@
                 drawCallback: function(settings) {
                     $('a').tooltip();
                 }
+            });
+            $('#statusVoteFilter').on('change', function() {
+                dataMaster.draw();
             });
             $('#closeModalHeader, #closeModalFooter').on('click', function() {
                 $('#deleteConfirmationModal').modal('hide');

@@ -166,6 +166,11 @@ class DashboardController extends Controller
 
     public function indexAdmin()
     {
+        $user = Auth::user();
+        if ($user->role !== 'admin') {
+            // Redirect or abort if the user is not a superadmin
+            abort(403, 'Unauthorized action.');
+        }
         $statusvote = SettingVote::select("id", "set_vote")->get();
 
         $statusvote1 = SettingVote::value('set_vote');
@@ -342,6 +347,10 @@ class DashboardController extends Controller
     public function indexVoter()
     {
         $user = Auth::user();
+        if ($user->role !== 'voter') {
+            // Redirect or abort if the user is not a superadmin
+            abort(403, 'Unauthorized action.');
+        }
 
         // Menggunakan Query Builder untuk query sederhana dan pengambilan nilai tunggal
         $periode_id = DB::table('periode')->where('actif', 1)->value('id'); // Mengambil id dari periode yang aktif
