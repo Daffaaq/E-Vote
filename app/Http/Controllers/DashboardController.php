@@ -347,6 +347,7 @@ class DashboardController extends Controller
     public function indexVoter()
     {
         $user = Auth::user();
+        // dd($user);
         if ($user->role !== 'voter') {
             // Redirect or abort if the user is not a superadmin
             abort(403, 'Unauthorized action.');
@@ -390,7 +391,34 @@ class DashboardController extends Controller
         // Menggunakan Eloquent untuk Profile
         $profile = Profile::first();
 
-        return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'statusSetVote', 'cekstatusvote', 'profile'));
+        // Ambil semua siswa dengan voting terkait
+        $periods = Periode::all();
+
+        // Ambil data voting untuk siswa yang sedang login
+        $studentVotes = Votes::where('created_by', Auth::id())
+            ->with('student', 'periode')
+            ->get();
+
+        // Ambil ID siswa yang sedang login
+        $studentId = Auth::id();
+        $student_id = Students::where('users_id', $studentId)->value('id');
+        $student = Students::find($student_id);
+
+        // Siapkan array untuk menyimpan hasil
+        $votingHistory = [];
+
+        // Loop melalui semua periode
+        foreach ($periods as $period) {
+            // Cari voting yang relevan untuk periode ini
+            $vote = $studentVotes->firstWhere('periode_id', $period->id);
+
+            $votingHistory[] = [
+                'student' => $student,
+                'tanggal_vote' => $vote ? $vote->tanggal_vote : null,
+                'periode' => $period->periode_nama
+            ];
+        }
+        return view('Siswa.index', compact('jadwalVotes', 'jadwalResultVote', 'jadwalOrasi', 'candidate', 'statusSetVote', 'cekstatusvote', 'profile', 'votingHistory'));
     }
 
 

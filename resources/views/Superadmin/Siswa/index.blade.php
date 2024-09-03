@@ -28,15 +28,27 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="form-group d-flex align-items-center">
-                    <label for="statusVoteFilter"
-                        style="font-weight: bold; margin-right: 10px; margin-bottom: 20px">Status:</label>
+                    <label for="statusVoteFilter" style="font-weight: bold; margin-right: 10px; margin-bottom: 20px">Status
+                        Pemilihan:</label>
                     <div>
-                        <select id="statusVoteFilter" class="form-control" style="min-width: 200px;">
+                        <select id="statusVoteFilter" class="form-control" style="min-width: 100px;">
                             <option value="">Semua Status</option>
                             <option value="1">Sudah Memilih</option>
                             <option value="0">Belum Memilih</option>
                         </select>
-                        <small>Pilih Status Pemilihan Anda.</small>
+                        <small>Pilih Status Pemilihan.</small>
+                    </div>
+                </div>
+                <div class="form-group d-flex align-items-center">
+                    <label for="statusVoteFilter" style="font-weight: bold; margin-right: 10px; margin-bottom: 20px">Status
+                        Account:</label>
+                    <div>
+                        <select id="statusAccountFilter" class="form-control" style="min-width: 100px;">
+                            <option value="">Semua Status</option>
+                            <option value="1">Aktif</option>
+                            <option value="2">Non Aktif</option>
+                        </select>
+                        <small>Pilih Status Account.</small>
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
@@ -60,6 +72,7 @@
                             <th>NIS Siswa</th>
                             <th>Kelas</th>
                             <th>Status Pemilihan</th>
+                            <th>Status Pemilih</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -136,6 +149,8 @@
                         d._token = '{{ csrf_token() }}';
                         d.status_vote = $('#statusVoteFilter')
                             .val(); // Get the value of the status vote filter
+                        d.status_account = $('#statusAccountFilter')
+                            .val(); // Get the value of the status vote filter
                     }
                 },
                 columns: [{
@@ -159,6 +174,21 @@
                     {
                         data: 'status_vote',
                         name: 'status_vote'
+                    },
+                    {
+                        data: 'status_students',
+                        name: 'status_students',
+                        render: function(data, type, row) {
+                            let badgeClass = '';
+                            if (data === 1) {
+                                badgeClass = 'badge bg-success'; // Untuk Bootstrap 5
+                            } else if (data === 2) {
+                                badgeClass = 'badge bg-danger'; // Untuk Bootstrap 5
+                            } else {
+                                badgeClass = 'badge bg-secondary'; // Untuk status default
+                            }
+                            return `<span class="${badgeClass}">${data === 1 ? 'Aktif' : 'Tidak Aktif'}</span>`;
+                        }
                     },
                     {
                         data: 'uuid',
@@ -186,6 +216,9 @@
                 }
             });
             $('#statusVoteFilter').on('change', function() {
+                dataMaster.draw();
+            });
+            $('#statusAccountFilter').on('change', function() {
                 dataMaster.draw();
             });
             $('#closeModalHeader, #closeModalFooter').on('click', function() {

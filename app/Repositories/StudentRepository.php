@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Students;
 use App\Models\User;
+use Illuminate\Http\Request;
 
 class StudentRepository
 {
@@ -13,24 +14,52 @@ class StudentRepository
             $query->activePeriod();
         }])->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students')->get();
     }
-    public function getAllStudentsWithStatusVoteFilter($statusVote = null)
+    // public function getAllStudentsWithStatusVoteFilter($statusVote = null)
+    // {
+    //     $query = Students::with(['StatusVote' => function ($query) {
+    //         // Ensure that the StatusVote relationship only includes votes from active periods
+    //         $query->whereHas('periode', function ($query) {
+    //             $query->where('actif', 1);
+    //         });
+    //     }])->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students');
+
+    //     if ($statusVote === '1') {
+    //         // Filter for students who have voted in an active period
+    //         $query->whereHas('StatusVote', function ($q) {
+    //             $q->whereHas('periode', function ($q) {
+    //                 $q->where('actif', 1);
+    //             });
+    //         });
+    //     } elseif ($statusVote === '0') {
+    //         // Filter for students who have not voted in an active period
+    //         $query->whereDoesntHave('StatusVote', function ($q) {
+    //             $q->whereHas('periode', function ($q) {
+    //                 $q->where('actif', 1);
+    //             });
+    //         });
+    //     }
+
+    //     return $query->get();
+    // }
+
+    public function getAllStudentsWithStatusVoteFilter(Request $request)
     {
+        $statusVote = $request->input('status_vote');
+        $statusAccount = $request->input('status_account');
+
         $query = Students::with(['StatusVote' => function ($query) {
-            // Ensure that the StatusVote relationship only includes votes from active periods
             $query->whereHas('periode', function ($query) {
                 $query->where('actif', 1);
             });
         }])->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students');
 
         if ($statusVote === '1') {
-            // Filter for students who have voted in an active period
             $query->whereHas('StatusVote', function ($q) {
                 $q->whereHas('periode', function ($q) {
                     $q->where('actif', 1);
                 });
             });
         } elseif ($statusVote === '0') {
-            // Filter for students who have not voted in an active period
             $query->whereDoesntHave('StatusVote', function ($q) {
                 $q->whereHas('periode', function ($q) {
                     $q->where('actif', 1);
@@ -38,8 +67,13 @@ class StudentRepository
             });
         }
 
+        if ($statusAccount) {
+            $query->where('status_students', $statusAccount);
+        }
+
         return $query->get();
     }
+
 
     public function createUser($data)
     {

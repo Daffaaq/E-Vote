@@ -34,6 +34,13 @@ class Students extends Model
         return $this->hasOne(Votes::class, 'students_id');
     }
 
+    // Model Student
+    public function votes()
+    {
+        return $this->hasMany(Votes::class, 'students_id');
+    }
+
+
     protected static function boot()
     {
         parent::boot();

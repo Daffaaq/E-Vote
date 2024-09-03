@@ -28,4 +28,9 @@ class Periode extends Model
             $model->uuid = Str::uuid();
         });
     }
+
+    public function votes()
+    {
+        return $this->hasMany(Votes::class, 'periode_id');
+    }
 }

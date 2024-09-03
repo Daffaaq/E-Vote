@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\StudentRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class StudentService
@@ -19,9 +20,13 @@ class StudentService
         // to get all students
         return $this->studentRepository->getAllStudentsWithStatusVote();
     }
-    public function getStudentsWithStatusVoteFilter($statusVote = null)
+    // public function getStudentsWithStatusVoteFilter($statusVote = null)
+    // {
+    //     return $this->studentRepository->getAllStudentsWithStatusVoteFilter($statusVote);
+    // }
+    public function getStudentsWithStatusVoteFilter(Request $request)
     {
-        return $this->studentRepository->getAllStudentsWithStatusVoteFilter($statusVote);
+        return $this->studentRepository->getAllStudentsWithStatusVoteFilter($request);
     }
 
 

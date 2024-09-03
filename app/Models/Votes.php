@@ -30,17 +30,14 @@ class Votes extends Model
     /**
      * Get the periode associated with the vote.
      */
-    public function periode()
-    {
-        return $this->belongsTo(Periode::class);
-    }
-
-    /**
-     * Get the student associated with the vote.
-     */
     public function student()
     {
-        return $this->belongsTo(Students::class);
+        return $this->belongsTo(Students::class, 'students_id');
+    }
+
+    public function periode()
+    {
+        return $this->belongsTo(Periode::class, 'periode_id');
     }
 
     /**
@@ -48,7 +45,7 @@ class Votes extends Model
      */
     public function candidate()
     {
-        return $this->belongsTo(Candidates::class);
+        return $this->belongsTo(Candidates::class,'candidate_id');
     }
 
     /**
@@ -56,7 +53,7 @@ class Votes extends Model
      */
     public function jadwalVote()
     {
-        return $this->belongsTo(JadwalVotes::class);
+        return $this->belongsTo(JadwalVotes::class,'jadwal_votes_id');
     }
 
     protected static function boot()

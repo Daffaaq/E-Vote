@@ -664,6 +664,51 @@
         <!-- Repeat other candidates -->
     </div>
 
+    <hr>
+    <div id="voting-history" class="container mb-4">
+        <h5 class="section-title">Riwayat Voting</h5>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Siswa</th>
+                        <th>Status Voting</th>
+                        <th>Tanggal Voting</th>
+                        <th>Periode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($votingHistory as $index => $history)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $history['student']->nama }}</td>
+                            <td>
+                                @if ($history['tanggal_vote'])
+                                    Sudah Voting
+                                @else
+                                    Belum Voting
+                                @endif
+                            </td>
+                            <td>
+                                @if ($history['tanggal_vote'])
+                                    {{ \Carbon\Carbon::parse($history['tanggal_vote'])->translatedFormat('d F Y') }}
+                                @else
+                                    -
+                                @endif
+                            </td>
+                            <td>{{ $history['periode'] }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Belum ada riwayat voting</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     </div>
 
     <!-- Footer -->

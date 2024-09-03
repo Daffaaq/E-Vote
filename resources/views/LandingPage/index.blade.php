@@ -752,8 +752,7 @@
                 <div id="faqCollapseThree" class="collapse" aria-labelledby="faqHeadingThree"
                     data-parent="#faqAccordion">
                     <div class="card-body" style="border-radius: 50px;">
-                        Hasil voting akan diumumkan pada tanggal yang telah ditentukan setelah proses perhitungan suara
-                        selesai.
+                        Hasil voting akan diumumkan sesuai jadwal yang sudah ditentukan.
                     </div>
                 </div>
             </div>
@@ -781,7 +780,7 @@
                         <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
                             type="button" style="text-decoration: none;" data-toggle="collapse"
                             data-target="#faqCollapseFive" aria-expanded="false" aria-controls="faqCollapseFive">
-                            Apakah saya perlu mendaftar untuk voting?
+                            Bagaimana jika saya lupa password?.
                             <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseFive"></i>
                         </a>
                     </h2>
@@ -789,7 +788,7 @@
                 <div id="faqCollapseFive" class="collapse" aria-labelledby="faqHeadingFive"
                     data-parent="#faqAccordion">
                     <div class="card-body" style="border-radius: 50px;">
-                        Ya, Anda harus mendaftar dan memiliki akun untuk dapat melakukan voting.
+                        Anda dapat menghubungi administrator jika Anda lupa password.
                     </div>
                 </div>
             </div>
@@ -799,7 +798,7 @@
                         <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
                             type="button" style="text-decoration: none;" data-toggle="collapse"
                             data-target="#faqCollapseSix" aria-expanded="false" aria-controls="faqCollapseSix">
-                            Bagaimana cara mengetahui kandidat mana yang saya pilih?
+                            Bagaimana cara mendaftar menjadi pemilih?
                             <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseSix"></i>
                         </a>
                     </h2>
@@ -807,8 +806,7 @@
                 <div id="faqCollapseSix" class="collapse" aria-labelledby="faqHeadingSix"
                     data-parent="#faqAccordion">
                     <div class="card-body" style="border-radius: 50px;">
-                        Setelah Anda memilih kandidat, pilihan Anda akan ditampilkan di halaman konfirmasi sebelum
-                        menyelesaikan voting.
+                        Anda dapat menghubungi administrator, jika anda ingin menjadi pemilih.
                     </div>
                 </div>
             </div>
@@ -876,7 +874,7 @@
                         <a class="btn btn-link text-white d-flex justify-content-between align-items-center w-100 collapsed"
                             type="button" style="text-decoration: none;" data-toggle="collapse"
                             data-target="#faqCollapseTen" aria-expanded="false" aria-controls="faqCollapseTen">
-                            Bagaimana saya tahu bahwa suara saya telah dihitung?
+                            Bagaimana jika Account saya tidak aktif?
                             <i class="fas fa-chevron-down text-white" aria-controls="faqCollapseTen"></i>
                         </a>
                     </h2>
@@ -884,8 +882,7 @@
                 <div id="faqCollapseTen" class="collapse" aria-labelledby="faqHeadingTen"
                     data-parent="#faqAccordion">
                     <div class="card-body" style="border-radius: 50px;">
-                        Setelah Anda melakukan voting, Anda akan menerima notifikasi bahwa suara Anda telah berhasil
-                        dihitung.
+                        untuk mengaktifkan Account anda, silahkan hubungi administrator.
                     </div>
                 </div>
             </div>
