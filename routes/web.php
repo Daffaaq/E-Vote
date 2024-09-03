@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\VotingController;
 use App\Http\Controllers\AspirasiController;
+use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -227,3 +228,7 @@ Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function (
         })->name('vote.success');
     });
 });
+
+Route::get('/error/404', [ErrorController::class, 'handle404'])->name('error.404');
+Route::get('/error/500', [ErrorController::class, 'handle500'])->name('error.500');
+Route::get('/error/403', [ErrorController::class, 'handle403'])->name('error.403');
