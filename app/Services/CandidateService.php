@@ -18,12 +18,15 @@ class CandidateService
     public function createCandidate(array $data)
     {
         // Ambil periode_id dari Periode yang aktif
-        $periode_id = \App\Models\Periode::where('actif', 1)->value('id');
-        // dd($periode_id);
-        $data['periode_id'] = $periode_id;
+        $periode = \App\Models\Periode::where('actif', 1)->first();
+        if (!$periode) {
+            throw new \Exception('No active periode found.');
+        }
+
+        $data['periode_id'] = $periode->id;
 
         // Check for sequential and unique no_urut_kandidat
-        $lastNumber = $this->candidateRepository->getMaxNoUrut($periode_id);
+        $lastNumber = $this->candidateRepository->getMaxNoUrut($periode->id);
         $expectedNumber = $lastNumber + 1;
         // dd($lastNumber);
 
@@ -34,16 +37,6 @@ class CandidateService
         if ($this->candidateRepository->existsByNoUrut($data['no_urut_kandidat'])) {
             throw new \Exception('Nomor urut kandidat sudah ada.');
         }
-
-        // // Jika statusnya 'perseorangan', pastikan nama_wakil_ketua tidak diisi
-        // if ($data['status'] === 'perseorangan' && !empty($data['nama_wakil_ketua'])) {
-        //     throw new \Exception('Nama wakil ketua tidak diperlukan jika status adalah perseorangan.');
-        // }
-
-        // // Jika statusnya 'ganda', pastikan nama_wakil_ketua diisi
-        // if ($data['status'] === 'ganda' && empty($data['nama_wakil_ketua'])) {
-        //     throw new \Exception('Nama wakil ketua diperlukan jika status adalah ganda.');
-        // }
 
         // Buat slug secara otomatis jika tidak disediakan
         if (empty($data['slug'])) {
@@ -70,9 +63,27 @@ class CandidateService
             }
         }
 
-        // dd($data);
+        $candidate = $this->candidateRepository->create($data);
 
-        return $this->candidateRepository->create($data);
+        // Logging
+        $logData = 'Created Candidate | Nama Ketua: ' . $candidate->nama_ketua .
+            ($candidate->status === 'ganda' ? ' | Nama Wakil: ' . $candidate->nama_wakil_ketua : '') .
+            ' | Slogan: ' . $candidate->slogan .
+            ' | Periode: ' . $periode->periode_nama;
+
+        $logEntry = [
+            'action' => 'create',
+            'url' => request()->url(),
+            'tanggal' => now()->toDateString(),
+            'waktu' => now()->toTimeString(),
+            'data' => $logData,
+            'periode_id' => $periode->id,
+            'user_id' => auth()->id(),
+        ];
+
+        \App\Models\Log::create($logEntry);
+
+        return $candidate;
     }
 
     public function updateCandidate($uuid, array $data)
@@ -82,6 +93,8 @@ class CandidateService
         if (!$candidate) {
             throw new \Exception('Candidate not found.');
         }
+
+        $periode = $candidate->periode;
 
         // Handle the photo upload
         if (isset($data['foto'])) {
@@ -95,9 +108,30 @@ class CandidateService
             if ($candidate->foto_wakil) {
                 Storage::disk('public')->delete($candidate->foto_wakil);
             }
-            $data['foto_wakil'] = $data['foto_wakil']->store('photos', 'public');
+            $data['foto_wakil'] = $data['foto_wakil']->store('photos_wakil', 'public');
         }
 
-        return $this->candidateRepository->update($candidate->id, $data);
+        // Update candidate
+        $updatedCandidate = $this->candidateRepository->update($candidate->id, $data);
+
+        // Logging
+        $logData = 'Updated Candidate | Nama Ketua: ' . $updatedCandidate->nama_ketua .
+            ($updatedCandidate->status === 'ganda' ? ' | Nama Wakil: ' . $updatedCandidate->nama_wakil_ketua : '') .
+            ' | Slogan: ' . $updatedCandidate->slogan .
+            ' | Periode: ' . $periode->periode_nama;
+
+        $logEntry = [
+            'action' => 'update',
+            'url' => request()->url(),
+            'tanggal' => now()->toDateString(),
+            'waktu' => now()->toTimeString(),
+            'data' => $logData,
+            'periode_id' => $periode->id,
+            'user_id' => auth()->id(),
+        ];
+
+        \App\Models\Log::create($logEntry);
+
+        return $updatedCandidate;
     }
 }

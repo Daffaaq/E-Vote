@@ -153,6 +153,26 @@ class CandidateController extends Controller
             Storage::disk('public')->delete($candidate->foto);
         }
 
+        $periode = $candidate->periode;
+
+        // Logging
+        $logData = 'Deleted Candidate | Nama Ketua: ' . $candidate->nama_ketua .
+            ($candidate->status === 'ganda' ? ' | Nama Wakil: ' . $candidate->nama_wakil_ketua : '') .
+            ' | Slogan: ' . $candidate->slogan .
+            ' | Periode: ' . $periode->periode_nama;
+
+        $logEntry = [
+            'action' => 'delete',
+            'url' => request()->url(),
+            'tanggal' => now()->toDateString(),
+            'waktu' => now()->toTimeString(),
+            'data' => $logData,
+            'periode_id' => $periode->id,
+            'user_id' => auth()->id(),
+        ];
+
+        \App\Models\Log::create($logEntry);
+
         $candidate->delete();
 
         $login = Auth::user();

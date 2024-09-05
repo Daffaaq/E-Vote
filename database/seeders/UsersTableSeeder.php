@@ -46,7 +46,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Faza',
                 'username' => '11223344',
-                'password' => 'voterpassword1',
+                'password' => '11223344',
                 'student_name' => 'Faza Rahardian',
                 'nis' => '11223344',
                 'kelas' => 'VII A',
@@ -55,7 +55,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Sindiana',
                 'username' => '44332211',
-                'password' => 'voterpassword2',
+                'password' => '44332211',
                 'student_name' => 'Sindiana Karim',
                 'nis' => '44332211',
                 'kelas' => 'VII B',
@@ -64,7 +64,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Nayla',
                 'username' => '44332219',
-                'password' => 'voterpassword3',
+                'password' => '44332219',
                 'student_name' => 'Queen Nayla',
                 'nis' => '44332219',
                 'kelas' => 'VII C',
@@ -73,7 +73,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Syamsul',
                 'username' => '44332218',
-                'password' => 'voterpassword4',
+                'password' => '44332218',
                 'student_name' => 'Muhammad Syamsul Arifin',
                 'nis' => '44332218',
                 'kelas' => 'VII D',
@@ -83,7 +83,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Dani',
                 'username' => '55443322',
-                'password' => 'voterpassword5',
+                'password' => '55443322',
                 'student_name' => 'Dani Santoso',
                 'nis' => '55443322',
                 'kelas' => 'VII E',
@@ -92,7 +92,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Rahma',
                 'username' => '66554433',
-                'password' => 'voterpassword6',
+                'password' => '66554433',
                 'student_name' => 'Rahma Aulia',
                 'nis' => '66554433',
                 'kelas' => 'VII F',
@@ -101,7 +101,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Nahla',
                 'username' => '66554434',
-                'password' => 'voterpassword7',
+                'password' => '66554434',
                 'student_name' => 'Nahla Aulia',
                 'nis' => '66554434',
                 'kelas' => 'VII F',
@@ -110,7 +110,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Nadiya',
                 'username' => '66554435',
-                'password' => 'voterpassword8',
+                'password' => '66554435',
                 'student_name' => 'Nadiya Aulia',
                 'nis' => '66554435',
                 'kelas' => 'VII F',
@@ -119,7 +119,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Balqis',
                 'username' => '66554436',
-                'password' => 'voterpassword9',
+                'password' => '66554436',
                 'student_name' => 'Balqis Aulia',
                 'nis' => '66554436',
                 'kelas' => 'VII F',
@@ -128,7 +128,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Siti',
                 'username' => '66554437',
-                'password' => 'voterpassword10',
+                'password' => '66554437',
                 'student_name' => 'Siti Aulia',
                 'nis' => '66554437',
                 'kelas' => 'VII F',
@@ -137,7 +137,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Dini',
                 'username' => '66554438',
-                'password' => 'voterpassword11',
+                'password' => '66554438',
                 'student_name' => 'Dini Aulia',
                 'nis' => '66554438',
                 'kelas' => 'VII F',
@@ -146,7 +146,7 @@ class UsersTableSeeder extends Seeder
             [
                 'name' => 'Rayza',
                 'username' => '66554439',
-                'password' => 'voterpassword12',
+                'password' => '66554439',
                 'student_name' => 'Rayza Aulia',
                 'nis' => '66554439',
                 'kelas' => 'VII F',
@@ -227,8 +227,8 @@ class UsersTableSeeder extends Seeder
             [
                 'uuid' => Str::uuid(),
                 'periode_id' => 1, // Assuming this relates to an existing periode
-                'tanggal_awal_vote' => '2024-08-01',
-                'tanggal_akhir_vote' => '2024-08-07',
+                'tanggal_awal_vote' => '2024-09-04',
+                'tanggal_akhir_vote' => '2024-09-22',
                 'tempat_vote' => 'Aula Sekolah',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -240,7 +240,7 @@ class UsersTableSeeder extends Seeder
             [
                 'uuid' => Str::uuid(),
                 'periode_id' => 1,
-                'tanggal_orasi_vote' => '2024-07-25',
+                'tanggal_orasi_vote' => '2024-09-03',
                 'jam_orasi_mulai' => '09:00:00',
                 'tempat_orasi' => 'Lapangan Sekolah',
                 'created_at' => now(),
@@ -253,7 +253,7 @@ class UsersTableSeeder extends Seeder
             [
                 'uuid' => Str::uuid(),
                 'periode_id' => $periodeActiveId,
-                'tanggal_result_vote' => '2024-08-08',
+                'tanggal_result_vote' => '2024-09-23',
                 'jam_result_vote' => '15:00:00',
                 'tempat_result_vote' => 'Aula Sekolah',
                 'created_at' => now(),

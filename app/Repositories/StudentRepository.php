@@ -14,33 +14,6 @@ class StudentRepository
             $query->activePeriod();
         }])->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students')->get();
     }
-    // public function getAllStudentsWithStatusVoteFilter($statusVote = null)
-    // {
-    //     $query = Students::with(['StatusVote' => function ($query) {
-    //         // Ensure that the StatusVote relationship only includes votes from active periods
-    //         $query->whereHas('periode', function ($query) {
-    //             $query->where('actif', 1);
-    //         });
-    //     }])->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students');
-
-    //     if ($statusVote === '1') {
-    //         // Filter for students who have voted in an active period
-    //         $query->whereHas('StatusVote', function ($q) {
-    //             $q->whereHas('periode', function ($q) {
-    //                 $q->where('actif', 1);
-    //             });
-    //         });
-    //     } elseif ($statusVote === '0') {
-    //         // Filter for students who have not voted in an active period
-    //         $query->whereDoesntHave('StatusVote', function ($q) {
-    //             $q->whereHas('periode', function ($q) {
-    //                 $q->where('actif', 1);
-    //             });
-    //         });
-    //     }
-
-    //     return $query->get();
-    // }
 
     public function getAllStudentsWithStatusVoteFilter(Request $request)
     {

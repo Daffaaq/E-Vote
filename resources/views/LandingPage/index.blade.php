@@ -362,7 +362,7 @@
     <!-- Navbar dengan Navigasi -->
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <a class="navbar-brand" href="#">{{ $profile->name_events }}</a>
+            <a class="navbar-brand" href="{{ route('landing-page') }}">{{ $profile->name_events }}</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -370,22 +370,34 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('home')">Home</a>
+                        <a class="nav-link" style= "outline: none;
+    color: white;" href="javascript:void(0)"
+                            onclick="scrollToSection('home')">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('about')">About</a>
+                        <a class="nav-link" style= "outline: none;
+    color: white;" href="javascript:void(0)"
+                            onclick="scrollToSection('about')">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('schedule')">Schedule</a>
+                        <a class="nav-link" style= "outline: none;
+    color: white;" href="javascript:void(0)"
+                            onclick="scrollToSection('schedule')">Schedule</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('caketos')">Caketos</a>
+                        <a class="nav-link" style= "outline: none;
+    color: white;" href="javascript:void(0)"
+                            onclick="scrollToSection('caketos')">Caketos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="javascript:void(0)" onclick="scrollToSection('advice')">Advice</a>
+                        <a class="nav-link" style= "outline: none;
+    color: white;" href="javascript:void(0)"
+                            onclick="scrollToSection('advice')">Advice</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        <a class="nav-link" style= "outline: none;
+    color: white;"
+                            href="{{ route('login') }}">Login</a>
                     </li>
                 </ul>
             </div>
