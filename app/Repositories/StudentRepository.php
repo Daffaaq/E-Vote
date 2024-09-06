@@ -15,6 +15,38 @@ class StudentRepository
         }])->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students')->get();
     }
 
+    // public function getAllStudentsWithStatusVoteFilter(Request $request)
+    // {
+    //     $statusVote = $request->input('status_vote');
+    //     $statusAccount = $request->input('status_account');
+
+    //     $query = Students::with(['StatusVote' => function ($query) {
+    //         $query->whereHas('periode', function ($query) {
+    //             $query->where('actif', 1);
+    //         });
+    //     }])->select('id', 'uuid', 'nama', 'nis', 'kelas', 'status_students');
+
+    //     if ($statusVote === '1') {
+    //         $query->whereHas('StatusVote', function ($q) {
+    //             $q->whereHas('periode', function ($q) {
+    //                 $q->where('actif', 1);
+    //             });
+    //         });
+    //     } elseif ($statusVote === '0') {
+    //         $query->whereDoesntHave('StatusVote', function ($q) {
+    //             $q->whereHas('periode', function ($q) {
+    //                 $q->where('actif', 1);
+    //             });
+    //         });
+    //     }
+
+    //     if ($statusAccount) {
+    //         $query->where('status_students', $statusAccount);
+    //     }
+
+    //     return $query->get();
+    // }
+
     public function getAllStudentsWithStatusVoteFilter(Request $request)
     {
         $statusVote = $request->input('status_vote');
@@ -40,13 +72,17 @@ class StudentRepository
             });
         }
 
-        if ($statusAccount) {
-            $query->where('status_students', $statusAccount);
+        // Filter status akun jika ada
+        if (!empty($statusAccount)) {
+            if ($statusAccount === 'aktif') {
+                $query->where('status_students', 1);
+            } elseif ($statusAccount === 'nonaktif') {
+                $query->where('status_students', 2);
+            }
         }
 
         return $query->get();
     }
-
 
     public function createUser($data)
     {

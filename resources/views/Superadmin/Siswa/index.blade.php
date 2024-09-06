@@ -27,9 +27,9 @@
         @endif
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="form-group d-flex align-items-center">
-                    <label for="statusVoteFilter" style="font-weight: bold; margin-right: 10px; margin-bottom: 20px">Status
-                        Pemilihan:</label>
+                {{-- <div class="form-group d-flex align-items-center">
+                    <label for="statusVoteFilter"
+                        style="font-weight: bold; margin-right: 10px; margin-bottom: 20px; margin-left: 10px">Status:</label>
                     <div>
                         <select id="statusVoteFilter" class="form-control" style="min-width: 100px;">
                             <option value="">Semua Status</option>
@@ -40,8 +40,8 @@
                     </div>
                 </div>
                 <div class="form-group d-flex align-items-center">
-                    <label for="statusVoteFilter" style="font-weight: bold; margin-right: 10px; margin-bottom: 20px">Status
-                        Account:</label>
+                    <label for="statusVoteFilter"
+                        style="font-weight: bold; margin-right: 10px; margin-bottom: 20px">Status:</label>
                     <div>
                         <select id="statusAccountFilter" class="form-control" style="min-width: 100px;">
                             <option value="">Semua Status</option>
@@ -50,7 +50,25 @@
                         </select>
                         <small>Pilih Status Account.</small>
                     </div>
+                </div> --}}
+                <div class="form-group d-flex align-items-center">
+                    <label for="combinedStatusFilter" class="me-2 mb-0 fw-bold">Status Pemilihan & Akun:</label>
+                    <div>
+                        <select id="combinedStatusFilter" class="form-control" style="min-width: 200px;">
+                            <option value="all_all">Semua Status Pemilihan & Akun</option>
+                            <optgroup label="Status Pemilihan">
+                                <option value="1">Sudah Memilih</option>
+                                <option value="0">Belum Memilih</option>
+                            </optgroup>
+                            <optgroup label="Status Akun">
+                                <option value="all_aktif">Akun Aktif</option>
+                                <option value="all_nonaktif">Akun Non-Aktif</option>
+                            </optgroup>
+                        </select>
+                        <small class="text-muted">Pilih Status Pemilihan & Akun.</small>
+                    </div>
                 </div>
+
                 <div class="d-flex align-items-center">
                     <a href="{{ url('/dashboardSuperadmin/Siswa/create') }}" class="btn btn-primary"
                         style="margin-right: 5px; margin-bottom: 25px;">Tambah Pemilih</a>
@@ -61,8 +79,6 @@
                     @endif
                 </div>
             </div>
-
-
             <div class="table-responsive">
                 <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
                     <thead>
@@ -99,6 +115,10 @@
                             <label for="file" class="form-label">Pilih File Excel</label>
                             <input type="file" class="form-control" id="file" name="file" required
                                 accept=".xls,.xlsx">
+                        </div>
+                        <div class="mb-3">
+                            <a href="{{ asset('Excel/Contoh_Pemilih.xlsx') }}" class="btn btn-outline-info">Download Contoh
+                                Excel</a>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -147,10 +167,14 @@
                     dataType: 'json',
                     data: function(d) {
                         d._token = '{{ csrf_token() }}';
-                        d.status_vote = $('#statusVoteFilter')
-                            .val(); // Get the value of the status vote filter
-                        d.status_account = $('#statusAccountFilter')
-                            .val(); // Get the value of the status vote filter
+                        var combinedFilter = $('#combinedStatusFilter').val();
+                        var filters = combinedFilter.split('_');
+
+                        // Pastikan format filter benar-benar sesuai
+                        d.status_vote = filters[0] !== 'all' ? filters[0] :
+                            ''; // Jika 'all', kirim sebagai kosong
+                        d.status_account = filters[1] !== 'all' ? filters[1] :
+                            ''; // Jika 'all', kirim sebagai kosong
                     }
                 },
                 columns: [{
@@ -215,10 +239,7 @@
                     $('a').tooltip();
                 }
             });
-            $('#statusVoteFilter').on('change', function() {
-                dataMaster.draw();
-            });
-            $('#statusAccountFilter').on('change', function() {
+            $('#combinedStatusFilter').on('change', function() {
                 dataMaster.draw();
             });
             $('#closeModalHeader, #closeModalFooter').on('click', function() {

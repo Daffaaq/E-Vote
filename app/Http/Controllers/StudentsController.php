@@ -61,22 +61,18 @@ class StudentsController extends Controller
     //     }
     //     return response()->json(['message' => 'Method not allowed'], 405);
     // }
-
     public function list(Request $request)
     {
         if ($request->ajax()) {
-            $statusVote = $request->get('status_vote'); // Get the status_vote from the request
-            $statusAccount = $request->get('status_account'); // Also get the status_account
+            $statusVote = $request->get('status_vote');
+            $statusAccount = $request->get('status_account');
 
             $data = $this->studentService->getStudentsWithStatusVoteFilter($request);
 
             return DataTables::of($data)
                 ->addColumn('status_vote', function ($row) {
-                    if ($row->StatusVote) {
-                        return '<span class="badge bg-success">Sudah Memilih</span>';
-                    } else {
-                        return '<span class="badge bg-danger">Belum Memilih</span>';
-                    }
+                    return $row->StatusVote ? '<span class="badge bg-success">Sudah Memilih</span>' :
+                        '<span class="badge bg-danger">Belum Memilih</span>';
                 })
                 ->rawColumns(['status_vote'])
                 ->addIndexColumn()
@@ -84,6 +80,7 @@ class StudentsController extends Controller
         }
         return response()->json(['message' => 'Method not allowed'], 405);
     }
+
 
 
 
