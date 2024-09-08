@@ -163,8 +163,11 @@
                         success: function(response) {
                             if (response.success) {
                                 showAlert('success', response.message);
+
+                                dataMaster.ajax.reload();
                             } else {
                                 showAlert('error', response.message);
+                                dataMaster.ajax.reload();
                             }
                         },
                         error: function(xhr) {
