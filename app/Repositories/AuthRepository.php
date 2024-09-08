@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Log;
+use App\Models\Periode;
 use App\Models\User;
 use App\Models\Students;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class AuthRepository
     public function updateUser($user, $data)
     {
         if (isset($data['password'])) {
-            $user->password = $data['password'];
+            $user->password = bcrypt($data['password']); // Gunakan bcrypt untuk hashing password
         }
         $user->name = $data['name'];
         $user->username = $data['username'];
@@ -28,7 +29,7 @@ class AuthRepository
             (isset($data['password']) ? ' | Password Changed' : '');
 
         // Create a log entry
-        $this->createLog('update', $user->id, $logData);
+        $this->createLog('update', $logData); // Panggil dengan dua parameter
 
         return $user;
     }
@@ -49,22 +50,25 @@ class AuthRepository
                 ' | Jenis Kelamin: ' . $student->jenis_kelamin;
 
             // Create a log entry
-            $this->createLog('update', $userId, $logData);
+            $this->createLog('update', $logData); // Panggil dengan dua parameter
         }
 
         return $student;
     }
 
-    protected function createLog($action, $userId, $logData)
+    protected function createLog($action, $logData)
     {
+        $currentUrl = url()->current();
+        $cleanedUrl = preg_replace('/\/[a-f0-9\-]{36}/', '', $currentUrl);
+
         $log = new Log();
         $log->action = $action;
-        $log->url = request()->fullUrl(); // Get the current request URL
+        $log->url = $cleanedUrl; // Get the current request URL
         $log->tanggal = now()->format('Y-m-d');
         $log->waktu = now()->format('H:i:s');
         $log->data = $logData; // Use the formatted log data
-        $log->periode_id = Auth::user()->periode_id ?? null; // Assuming the user has a periode_id attribute
-        $log->user_id = $userId;
+        $log->periode_id = Periode::where('actif', 1)->value('id'); // Periode aktif
+        $log->user_id = Auth::id(); // Gunakan Auth untuk mendapatkan ID user yang sedang login
         $log->save();
     }
 }

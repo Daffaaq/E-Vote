@@ -11,6 +11,7 @@ use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\VotingController;
 use App\Http\Controllers\AspirasiController;
 use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -146,6 +147,12 @@ Route::middleware(['auth', 'check.role:superadmin'])->group(function () {
         Route::post('change-password', [DashboardController::class, 'changePassword'])->name('superadmin.changePassword');
         Route::post('delete-profile-photo', [DashboardController::class, 'deleteProfilePhoto'])->name('superadmin.deleteProfilePhoto');
     });
+    Route::prefix('/dashboardSuperadmin')->group(function () {
+        Route::get('/log', [LogController::class, 'index'])->name('log.superadmin.index');
+        Route::post('log/list', [LogController::class, 'list'])->name('log.superadmin.list');
+        Route::get('log/show/{uuid}', [LogController::class, 'show'])->name('log.superadmin.show');
+        Route::delete('log/destroy/{uuid}', [LogController::class, 'destroy'])->name('log.superadmin.destroy');
+    });
 });
 Route::middleware(['auth', 'check.role:admin'])->group(function () {
     Route::get('/dashboardAdmin', [DashboardController::class, 'indexAdmin'])->name('dashboard.admin');
@@ -218,7 +225,7 @@ Route::middleware(['auth', 'checkStatus', 'check.role:voter'])->group(function (
         Route::get('/Detail/{slug}', [DashboardController::class, 'detaiCandidate'])->name('detail.candidate.voter');
     });
     Route::prefix('/dashboardVoter')->group(function () {
-        Route::post('/Profile/Update', [DashboardController::class, 'UpdateProfile'])->name('update.candidate.voter');
+        Route::post('/Profile/Update', [DashboardController::class, 'updateProfile1'])->name('update.candidate.voter');
     });
     Route::prefix('/dashboardVoter')->group(function () {
         Route::post('/vote', [VotingController::class, 'vote'])->name('vote.cast');

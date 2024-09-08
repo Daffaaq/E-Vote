@@ -10,6 +10,7 @@ use App\Models\Periode;
 use App\Models\profile;
 use App\Models\Students;
 use App\Models\Votes;
+use App\Models\Log as ModelsLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -105,18 +106,43 @@ class LoginController extends Controller
                 return redirect()->route('login')->with('error', 'Role pengguna tidak valid')->withInput();
             }
 
+            $currentUrl = url()->current();
+            $cleanedUrl = preg_replace('/\/[a-f0-9\-]{36}/', '', $currentUrl);
+
+            $log = new ModelsLog();
+            $log->action = 'login';
+            $log->url = $cleanedUrl;
+            $log->tanggal = now()->format('Y-m-d');
+            $log->waktu = now()->format('H:i:s');
+            $log->data = 'User Name: ' . $user->name . ' | Login successful.';
+            $log->periode_id = Periode::where('actif', 1)->value('id'); // Ambil periode yang aktif
+            $log->user_id = $user->id;
+            $log->save();
+
             return redirect()->route($route)->with('success', 'Login berhasil!');
         } else {
             return redirect()->route('login')->with('error', 'Username dan password tidak sesuai')->withInput();
         }
     }
 
-
-
-
-
     function logout()
     {
+        $user = Auth::user();
+
+        // Logging logout
+        $currentUrl = url()->current();
+        $cleanedUrl = preg_replace('/\/[a-f0-9\-]{36}/', '', $currentUrl);
+
+        $log = new ModelsLog();
+        $log->action = 'logout';
+        $log->url = $cleanedUrl;
+        $log->tanggal = now()->format('Y-m-d');
+        $log->waktu = now()->format('H:i:s');
+        $log->data = 'User Name: ' . $user->name . ' | Logout successful.';
+        $log->periode_id = Periode::where('actif', 1)->value('id'); // Ambil periode yang aktif
+        $log->user_id = $user->id;
+        $log->save();
+
         Auth::logout();
         return redirect('');
     }

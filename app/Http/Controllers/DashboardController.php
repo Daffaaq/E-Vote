@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\VotesExport;
+use App\Models\Log as ModelsLog;
 use App\Services\UserService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -260,7 +261,6 @@ class DashboardController extends Controller
 
     public function updateProfile(Request $request)
     {
-        // dd($request->all());
         // Validasi file gambar
         $request->validate([
             'foto_profile' => 'required|image',
@@ -280,6 +280,19 @@ class DashboardController extends Controller
         $user->foto_profile = $path;
         // dd($user->foto_profile);
         $user->save();
+
+        $currentUrl = url()->current();
+        $cleanedUrl = preg_replace('/\/[a-f0-9\-]{36}/', '', $currentUrl);
+
+        $log = new ModelsLog();
+        $log->action = 'update';
+        $log->url = $cleanedUrl;
+        $log->tanggal = now()->format('Y-m-d');
+        $log->waktu = now()->format('H:i:s');
+        $log->data = 'User Name: ' . $user->name . ' | Profile picture updated.';
+        $log->periode_id = Periode::where('actif', 1)->value('id'); // Ambil periode yang aktif
+        $log->user_id = $user->id;
+        $log->save();
         // dd($user);
         // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'Profile picture updated successfully');
@@ -298,6 +311,19 @@ class DashboardController extends Controller
             $user->foto_profile = null;
             $user->save();
 
+            $currentUrl = url()->current();
+            $cleanedUrl = preg_replace('/\/[a-f0-9\-]{36}/', '', $currentUrl);
+
+            $log = new ModelsLog();
+            $log->action = 'delete';
+            $log->url = $cleanedUrl;
+            $log->tanggal = now()->format('Y-m-d');
+            $log->waktu = now()->format('H:i:s');
+            $log->data = 'User Name: ' . $user->name . ' | Profile picture deleted.';
+            $log->periode_id = Periode::where('actif', 1)->value('id'); // Ambil periode yang aktif
+            $log->user_id = $user->id;
+            $log->save();
+
             return redirect()->back()->with('success', 'Foto profil berhasil dihapus.');
         }
 
@@ -313,6 +339,9 @@ class DashboardController extends Controller
         ]);
 
         $user = Auth::user();
+        if ($user->role !== 'superadmin' && 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
 
         // Check if current password matches
         if (!Hash::check($request->current_password, $user->password)) {
@@ -324,6 +353,19 @@ class DashboardController extends Controller
         // Update password
         $user->password = Hash::make($request->new_password);
         $user->save();
+
+        $currentUrl = url()->current();
+        $cleanedUrl = preg_replace('/\/[a-f0-9\-]{36}/', '', $currentUrl);
+
+        $log = new ModelsLog();
+        $log->action = 'update';
+        $log->url = $cleanedUrl;
+        $log->tanggal = now()->format('Y-m-d');
+        $log->waktu = now()->format('H:i:s');
+        $log->data = 'User Name: ' . $user->name . ' | Password changed.'; // Mengganti ID dengan Name
+        $log->periode_id = Periode::where('actif', 1)->value('id'); // Ambil periode yang aktif
+        $log->user_id = $user->id;
+        $log->save();
 
         return redirect()->back()->with('success', 'Password changed successfully');
     }
@@ -426,30 +468,30 @@ class DashboardController extends Controller
 
 
 
-    // public function updateProfile(UpdateAuthRequest $request)
-    // {
-    //     // Ambil pengguna yang sedang diautentikasi
-    //     $user = Auth::user();
+    public function updateProfile1(UpdateAuthRequest $request)
+    {
+        // Ambil pengguna yang sedang diautentikasi
+        $user = Auth::user();
 
-    //     // Ambil data yang telah tervalidasi dari request
-    //     $validatedData = $request->validated();
+        // Ambil data yang telah tervalidasi dari request
+        $validatedData = $request->validated();
 
-    //     // Panggil service untuk memperbarui profil
-    //     $profile = $this->authService->updateProfile($user, $validatedData);
+        // Panggil service untuk memperbarui profil
+        $profile = $this->authService->updateProfile($user, $validatedData);
 
-    //     if ($profile) {
-    //         return response()->json([
-    //             'success' => true,
-    //             'message' => 'Profil berhasil diperbarui',
-    //             'profile' => $profile
-    //         ], 200);
-    //     } else {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'Profil tidak ditemukan'
-    //         ], 404);
-    //     }
-    // }
+        if ($profile) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Profil berhasil diperbarui',
+                'profile' => $profile
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Profil tidak ditemukan'
+            ], 404);
+        }
+    }
 
     public function detaiCandidate($slug)
     {

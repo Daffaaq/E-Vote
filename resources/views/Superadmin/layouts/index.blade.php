@@ -148,6 +148,12 @@
                                 <span>Your Profile</span>
                             </a>
                         </li>
+                        <li class="sidebar-item {{ request()->routeIs('log.superadmin.index','log.superadmin.show') ? 'active' : '' }}"">
+                            <a href="{{ route('log.superadmin.index') }}" class="sidebar-link">
+                                <i class="bi bi-grid-fill"></i>
+                                <span>Log Sistem</span>
+                            </a>
+                        </li>
                         <li class="sidebar-item {{ request()->routeIs('logout') ? 'active' : '' }}">
                             <a href="{{ route('logout') }}" class="sidebar-link">
                                 <i class="bi bi-grid-fill"></i>

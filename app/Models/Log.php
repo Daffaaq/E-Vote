@@ -26,7 +26,8 @@ class Log extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id');
+        // Defaultnya Laravel mencari kolom 'id' sebagai primary key di tabel users
+        return $this->belongsTo(User::class, 'user_id', 'id');  // Kolom 'id' di tabel users
     }
 
     /**
@@ -34,7 +35,8 @@ class Log extends Model
      */
     public function periode()
     {
-        return $this->belongsTo(Periode::class, 'periode_id', 'periode_id');
+        // Pastikan foreign key dan primary key sesuai dengan yang ada di tabel periode
+        return $this->belongsTo(Periode::class, 'periode_id', 'id'); // Kolom 'id' di tabel periodes
     }
 
     protected static function boot()
