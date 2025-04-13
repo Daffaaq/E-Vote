@@ -416,7 +416,7 @@
     </div>
 
     <div class="form-message text-center p-2">
-        @if (now() < \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote))
+        {{-- @if (now() < \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote))
             <div class="alert alert-warning">
                 Voting Akan Segera Berlangsung dalam
                 {{ now()->diffInDays(\Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote)->endOfDay()) }} hari
@@ -429,7 +429,29 @@
             </div>
         @else
             <div class="alert alert-danger">Voting Selesai</div>
-        @endif
+        @endif --}}
+        <div class="form-message text-center p-2">
+            @if ($statusSetVote && $statusSetVote->set_vote == 0)
+                <div class="alert alert-dark">
+                    Voting saat ini <strong>dinonaktifkan</strong> oleh panitia. Silakan tunggu informasi selanjutnya.
+                </div>
+            @elseif (now() < \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote))
+                <div class="alert alert-warning">
+                    Voting Akan Segera Berlangsung dalam
+                    {{ now()->diffInDays(\Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote)->endOfDay()) }} hari
+                </div>
+            @elseif (now() >= \Carbon\Carbon::parse($jadwalVotes->tanggal_awal_vote) &&
+                    now() < \Carbon\Carbon::parse($jadwalVotes->tanggal_akhir_vote)->endOfDay())
+                <div class="alert alert-success">
+                    Voting Sedang Berlangsung, tersisa
+                    {{ now()->diffInDays(\Carbon\Carbon::parse($jadwalVotes->tanggal_akhir_vote)->endOfDay()) }} hari
+                    lagi
+                </div>
+            @else
+                <div class="alert alert-danger">Voting Selesai</div>
+            @endif
+        </div>
+
     </div>
 
 
